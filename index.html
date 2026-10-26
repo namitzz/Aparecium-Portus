@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<script>
+/* ==========================================================================
+   ✒  TRIP DATA: EDIT EVERYTHING ABOUT THE TRIP HERE  ✒
+   --------------------------------------------------------------------------
+   This one object is the whole trip. Change it and the app follows; you
+   never need to touch the code below it.
+
+   • Times are 24-hour "HH:MM" strings in the trip's local time zone
+     (trip.timeZone). The phone's own time zone is ignored.
+   • Dates are "YYYY-MM-DD".
+   • duration is in minutes.
+   • lat / lng: in Google Maps, long-press a spot and copy the two numbers.
+   • photo: any image URL. If it fails to load, a gold monogram of the
+     place's first letter is shown instead, so a blank "" is fine too.
+   • bookingNote, link, bookingTime and travel are optional: delete them or
+     leave them as "".
+   • travel (on a stop) overrides the automatic travel estimate shown
+     *before* that stop in the timeline, e.g. "20 min walk".
+
+   ⚠  EVERYTHING BELOW IS PLACEHOLDER DATA. Replace it with the real plan.
+   ========================================================================== */
+const TRIP_DATA = {
+
+  /* ── The trip ─────────────────────────────────────────────────────────── */
+  trip: {
+    name: "London, Halloween Weekend",       // PLACEHOLDER
+    city: "London",
+    startDate: "2026-10-31",
+    endDate: "2026-11-03",
+    originCity: "Birmingham",
+    timeZone: "Europe/London",               // all times below are in this zone
+
+    // Optional: the journey there, shown as a train ticket at the top of Day 1
+    travelThere: {                           // PLACEHOLDER times
+      mode: "Train",
+      from: "Birmingham New Street",
+      to: "London Euston",
+      depart: "08:03",
+      arrive: "09:27",
+      operator: "Avanti West Coast",
+      note: "Coach C · seats 41–44"
+    },
+    // Optional: the journey home, shown at the end of the last day
+    travelHome: {                            // PLACEHOLDER times
+      mode: "Train",
+      from: "London Euston",
+      to: "Birmingham New Street",
+      depart: "17:43",
+      arrive: "19:07",
+      operator: "Avanti West Coast",
+      note: "Off-peak return"
+    }
+  },
+
+  /* ── Where we're staying ──────────────────────────────────────────────── */
+  homeBase: {                                // PLACEHOLDER hotel
+    name: "Our Hotel (placeholder)",
+    address: "Russell Square, London WC1B 5BE",
+    lat: 51.5218,
+    lng: -0.1260,
+    photo: ""
+  },
+
+  /* ── The days, in order. Stops are listed in visit order. ─────────────── */
+  days: [
+    // ── DAY 1 (PLACEHOLDER) ──
+    {
+      date: "2026-10-31",
+      title: "Day 1: Arrival and the West End",
+      accentColour: "#6B1E2A",
+      stops: [
+        {
+          id: "kings-cross",
+          name: "Platform 9¾, King's Cross",
+          time: "10:00", duration: 45,
+          activity: "Trolley photo at the wall, then a browse of the shop",
+          description: "The famous half-vanished luggage trolley sits in the station concourse. Staff hand out house scarves for the photo, and the shop next door is packed with wands and robes.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Platform_9_3-4_at_King's_Cross_Station.jpg?width=800",
+          lat: 51.5321, lng: -0.1240,
+          bookingNote: "Free, but the queue can top an hour at weekends. Head straight here from Euston.",
+          link: "https://www.harrypotterplatform934.com/"
+        },
+        {
+          id: "british-museum",
+          name: "British Museum",
+          time: "11:15", duration: 120,
+          activity: "The Rosetta Stone, the mummies and the Lewis Chessmen",
+          description: "Two million years of human history under one glass roof. The Lewis Chessmen in Room 40 inspired the wizard chess set in the first film.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/British_Museum_from_NE_2.JPG?width=800",
+          lat: 51.5194, lng: -0.1270,
+          bookingNote: "Free. Book a timed entry slot online.",
+          link: "https://www.britishmuseum.org/"
+        },
+        {
+          id: "covent-garden",
+          name: "Covent Garden",
+          time: "14:00", duration: 75,
+          activity: "Street performers, the Apple Market and a wander",
+          description: "The old fruit and flower market is now a covered piazza of stalls, shops and buskers. On Halloween the performers usually dress for the occasion.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Covent_Garden_Market_building.jpg?width=800",
+          lat: 51.5117, lng: -0.1229
+        },
+        {
+          id: "cecil-court",
+          name: "Cecil Court",
+          time: "15:30", duration: 30,
+          activity: "Browse the antique bookshops and map dealers",
+          description: "A narrow Victorian lane of old bookshops, said to be one of the inspirations for Diagon Alley. Look out for the antique maps and prints.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Cecil_Court,_London.jpg?width=800",
+          lat: 51.5108, lng: -0.1275
+        },
+        {
+          id: "minalima",
+          name: "House of MinaLima",
+          time: "16:15", duration: 45,
+          activity: "Free exhibition of the films' graphic props",
+          description: "The design studio behind the Marauder's Map, the Daily Prophet and the Hogwarts letters. Four floors of original artwork, free to wander.",
+          photo: "",
+          lat: 51.5144, lng: -0.1354,
+          link: "https://minalima.com/"
+        },
+        {
+          id: "palace-theatre",
+          name: "Cursed Child, Palace Theatre",
+          time: "19:00", duration: 210,
+          activity: "Harry Potter and the Cursed Child, on Halloween night",
+          description: "The stage play picks up nineteen years after the final book. The stage effects are best enjoyed knowing as little as possible beforehand.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Palace_Theatre,_London.jpg?width=800",
+          lat: 51.5133, lng: -0.1295,
+          bookingNote: "Tickets needed. Arrive 30 minutes early for bag checks.",
+          link: "https://www.harrypottertheplay.com/"
+        }
+      ]
+    },
+
+    // ── DAY 2 (PLACEHOLDER) ──
+    {
+      date: "2026-11-01",
+      title: "Day 2: The Making of Harry Potter",
+      accentColour: "#1F3B2C",
+      stops: [
+        {
+          id: "euston-am",
+          name: "London Euston",
+          time: "08:40", duration: 20,
+          activity: "Meet under the departure boards for the Watford Junction train",
+          description: "Trains to Watford Junction run every few minutes and take about 20 minutes. The Studio Tour shuttle bus waits outside the station.",
+          photo: "",
+          lat: 51.5282, lng: -0.1337
+        },
+        {
+          id: "wb-studio",
+          name: "Warner Bros. Studio Tour",
+          time: "10:00", duration: 270,
+          activity: "The Great Hall, Diagon Alley, the Hogwarts Express and Butterbeer",
+          description: "The real sets, costumes and props from all eight films, in the studios where they were made. Allow at least four hours; most people want more.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Warner_Bros._Studio_Tour_London.jpg?width=800",
+          lat: 51.6904, lng: -0.4181,
+          travel: "Train and shuttle bus, about 50 min",
+          bookingNote: "Timed tickets. Arrive 20 minutes before the slot.",
+          link: "https://www.wbstudiotour.co.uk/"
+        },
+        {
+          id: "leadenhall",
+          name: "Leadenhall Market",
+          time: "16:15", duration: 40,
+          activity: "Find the blue door used as the Leaky Cauldron entrance",
+          description: "A painted Victorian covered market in the City. It stood in for Diagon Alley in the first film, and the optician's door on Bull's Head Passage was the Leaky Cauldron.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Leadenhall_Market_In_London_-_Feb_2006_rotated.jpg?width=800",
+          lat: 51.5128, lng: -0.0834,
+          travel: "Train back and the Tube, about 1 hr 15 min"
+        },
+        {
+          id: "millennium-bridge",
+          name: "Millennium Bridge",
+          time: "17:15", duration: 30,
+          activity: "Cross the bridge the Death Eaters wrecked",
+          description: "The steel footbridge from St Paul's to Tate Modern, famously destroyed in the opening of Half-Blood Prince. Best at dusk, with the city lighting up.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Millennium_Bridge,_London-4.jpg?width=800",
+          lat: 51.5095, lng: -0.0985
+        },
+        {
+          id: "st-pauls",
+          name: "St Paul's Cathedral",
+          time: "17:55", duration: 35,
+          activity: "Evensong, or a look at the dome lit up at night",
+          description: "Wren's great dome has watched over the City since 1710. Sunday evensong is free and open to all.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/St_Pauls_aerial_(cropped).jpg?width=800",
+          lat: 51.5138, lng: -0.0984
+        }
+      ]
+    },
+
+    // ── DAY 3 (PLACEHOLDER) ──
+    {
+      date: "2026-11-02",
+      title: "Day 3: Royal London and the River",
+      accentColour: "#2C3E6B",
+      stops: [
+        {
+          id: "westminster-abbey",
+          name: "Westminster Abbey",
+          time: "09:30", duration: 90,
+          activity: "The Coronation Chair, Poets' Corner and the cloisters",
+          description: "Every coronation since 1066 has happened here. Poets' Corner holds memorials to Chaucer, Dickens and Austen.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Westminster-Abbey.JPG?width=800",
+          lat: 51.4993, lng: -0.1273,
+          bookingNote: "Book online to skip the ticket queue.",
+          link: "https://www.westminster-abbey.org/"
+        },
+        {
+          id: "big-ben",
+          name: "Big Ben and Parliament Square",
+          time: "11:15", duration: 25,
+          activity: "Photos of the Elizabeth Tower and Westminster Bridge",
+          description: "The best angle is from the middle of Westminster Bridge. The bell chimes on the hour.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Clock_Tower_-_Palace_of_Westminster,_London_-_May_2007.jpg?width=800",
+          lat: 51.5007, lng: -0.1246
+        },
+        {
+          id: "london-eye",
+          name: "London Eye",
+          time: "12:00", duration: 60,
+          activity: "A 30-minute flight above the Thames",
+          description: "One slow rotation in a glass capsule, with views as far as Windsor on a clear day.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/London_Eye_Twilight_April_2006.jpg?width=800",
+          lat: 51.5033, lng: -0.1196,
+          bookingNote: "Timed tickets for the 12:00 slot."
+        },
+        {
+          id: "tate-modern",
+          name: "Tate Modern",
+          time: "14:15", duration: 90,
+          activity: "The Turbine Hall and the free viewing level",
+          description: "Modern art in a converted power station. The tenth-floor viewing level looks straight across to St Paul's.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Tate_Modern_-_Bankside_Power_Station.jpg?width=800",
+          lat: 51.5076, lng: -0.0994
+        },
+        {
+          id: "tower-bridge",
+          name: "Tower Bridge",
+          time: "16:30", duration: 60,
+          activity: "Walk the glass floor high above the river",
+          description: "The high-level walkways have glass panels to look down on the traffic and boats 42 metres below.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Tower_Bridge_from_Shad_Thames.jpg?width=800",
+          lat: 51.5055, lng: -0.0754
+        },
+        {
+          id: "sky-garden",
+          name: "Sky Garden",
+          time: "18:15", duration: 60,
+          activity: "A free rooftop garden with the whole city lit up below",
+          description: "Three storeys of gardens at the top of the Walkie-Talkie building. The night views over the river are spectacular.",
+          photo: "",
+          lat: 51.5112, lng: -0.0835,
+          bookingNote: "Free, but it must be booked. Slots open three weeks ahead."
+        }
+      ]
+    },
+
+    // ── DAY 4 (PLACEHOLDER) ──
+    {
+      date: "2026-11-03",
+      title: "Day 4: Museums, Markets and Home",
+      accentColour: "#6E4B1F",
+      stops: [
+        {
+          id: "portobello",
+          name: "Portobello Road",
+          time: "09:45", duration: 75,
+          activity: "Antique shops and the pastel houses of Notting Hill",
+          description: "A long, colourful street of antique dealers, vintage shops and cafés. The famous blue door from the film is just around the corner.",
+          photo: "",
+          lat: 51.5155, lng: -0.2050,
+          travel: "Tube from Russell Square, about 30 min"
+        },
+        {
+          id: "kensington-gardens",
+          name: "Kensington Gardens",
+          time: "11:20", duration: 45,
+          activity: "The Peter Pan statue and the Italian Gardens",
+          description: "The quieter western half of Hyde Park. The bronze Peter Pan stands by the Long Water, close to where J. M. Barrie lived.",
+          photo: "",
+          lat: 51.5086, lng: -0.1757
+        },
+        {
+          id: "nhm",
+          name: "Natural History Museum",
+          time: "12:20", duration: 120,
+          activity: "Hope the blue whale and the dinosaur gallery",
+          description: "A cathedral of a building, almost as impressive as what's inside. Don't miss the vault of gems and the earthquake room.",
+          photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Natural_History_Museum_London_Jan_2006.jpg?width=800",
+          lat: 51.4967, lng: -0.1764,
+          bookingNote: "Free. Timed entry recommended."
+        },
+        {
+          id: "harrods",
+          name: "Harrods",
+          time: "14:45", duration: 60,
+          activity: "The Food Halls and the toy department",
+          description: "The tiled Food Halls are worth seeing even if you buy nothing. The toy department has its own wizarding corner.",
+          photo: "",
+          lat: 51.4994, lng: -0.1632
+        },
+        {
+          id: "euston-pm",
+          name: "London Euston",
+          time: "17:15", duration: 25,
+          activity: "Collect bags and catch the train home",
+          description: "Bags first from the hotel, then the Tube to Euston. Platforms are announced about 15 minutes before departure.",
+          photo: "",
+          lat: 51.5282, lng: -0.1337
+        }
+      ]
+    }
+  ],
+
+  /* ── Places to eat. "days" lists the day numbers each belongs to. ─────── */
+  restaurants: [
+    // Day 1 (PLACEHOLDER)
+    { id: "dishoom-cg", name: "Dishoom Covent Garden", cuisine: "Bombay café", priceLevel: "££",
+      photo: "", lat: 51.5124, lng: -0.1269, note: "Try the black daal and the chai", days: [1], bookingTime: "13:15" },
+    { id: "kanada-ya", name: "Kanada-Ya", cuisine: "Japanese ramen", priceLevel: "££",
+      photo: "", lat: 51.5153, lng: -0.1278, note: "Try the tonkotsu ramen", days: [1] },
+    { id: "bao-soho", name: "Bao Soho", cuisine: "Taiwanese", priceLevel: "££",
+      photo: "", lat: 51.5131, lng: -0.1365, note: "Pre-theatre: try the classic bao", days: [1], bookingTime: "17:30" },
+
+    // Day 2 (PLACEHOLDER)
+    { id: "backlot-cafe", name: "The Backlot Café", cuisine: "Studio café", priceLevel: "£",
+      photo: "", lat: 51.6907, lng: -0.4172, note: "Try the Butterbeer, both fizzy and ice cream", days: [2] },
+    { id: "cheshire-cheese", name: "Ye Olde Cheshire Cheese", cuisine: "Historic pub", priceLevel: "££",
+      photo: "", lat: 51.5144, lng: -0.1074, note: "Steak and ale pie in a 1667 pub", days: [2] },
+    { id: "duck-waffle", name: "Duck & Waffle", cuisine: "British, 40 floors up", priceLevel: "£££",
+      photo: "", lat: 51.5160, lng: -0.0810, note: "Try the signature duck and waffle", days: [2], bookingTime: "19:30" },
+
+    // Day 3 (PLACEHOLDER)
+    { id: "borough-market", name: "Borough Market", cuisine: "Street food", priceLevel: "£",
+      photo: "", lat: 51.5055, lng: -0.0910, note: "Try the toasted cheese at Kappacasein", days: [3] },
+    { id: "padella", name: "Padella", cuisine: "Fresh pasta", priceLevel: "££",
+      photo: "", lat: 51.5054, lng: -0.0902, note: "Try the pici cacio e pepe. Queue early.", days: [3] },
+    { id: "anchor", name: "The Anchor Bankside", cuisine: "Riverside pub", priceLevel: "££",
+      photo: "", lat: 51.5078, lng: -0.0938, note: "Fish and chips by the river", days: [3], bookingTime: "20:00" },
+
+    // Day 4 (PLACEHOLDER)
+    { id: "churchill-arms", name: "The Churchill Arms", cuisine: "Thai in a flower-covered pub", priceLevel: "££",
+      photo: "", lat: 51.5069, lng: -0.1946, note: "Try the pad thai", days: [4] },
+    { id: "daquise", name: "Daquise", cuisine: "Polish", priceLevel: "££",
+      photo: "", lat: 51.4937, lng: -0.1747, note: "Try the pierogi", days: [4], bookingTime: "12:00" }
+  ]
+};
+/* ======================== END OF TRIP DATA ================================ */
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aparecium Portus</title>
+<meta name="description" content="An enchanted map that guides us through the trip, day by day.">
+<meta name="theme-color" content="#120D0A">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portus">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://a.basemaps.cartocdn.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Homemade+Apple&family=IM+Fell+English:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+<style>
+@property --accent { syntax: '<color>'; inherits: true; initial-value: #6B1E2A; }
+
+:root {
+  --parchment: #F3E9D2;
+  --ink: #2B1D14;
+  --gold: #C9A227;
+  --burgundy: #6B1E2A;
+  --green: #1F3B2C;
+  --night: #120D0A;
+
+  --paper: var(--parchment);
+  --paper-2: #E9DAB6;
+  --text: var(--ink);
+  --text-soft: #5A4433;
+  --line: rgba(43, 29, 20, .2);
+  --line-strong: rgba(43, 29, 20, .38);
+  --gold-ink: #7E5F0F;
+  --seal: #8E1F2C;
+  --step-ink: rgba(43, 29, 20, .78);
+  --route: var(--accent);
+  --tile-filter: sepia(.6) saturate(.8) hue-rotate(-8deg) contrast(.96) brightness(1.02);
+  --tile-opacity: .86;
+  --noise: none;
+  --noise-l: none;
+  --noise-d: none;
+  --shadow: 0 6px 22px rgba(18, 13, 10, .28);
+
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --header-h: 160px;
+  --col: 440px;
+  --col-left: max(0px, calc((100% - var(--col)) / 2));
+  --col-w: min(100%, var(--col));
+
+  --f-head: 'Cinzel Decorative', 'Cinzel', 'Trajan Pro', Georgia, serif;
+  --f-fell: 'IM Fell English', 'EB Garamond', Georgia, serif;
+  --f-body: 'EB Garamond', Garamond, Georgia, 'Times New Roman', serif;
+  --f-hand: 'Homemade Apple', 'IM Fell English', cursive;
+
+  --accent: #6B1E2A;
+  transition: --accent .9s ease;
+  --noise-current: var(--noise-l);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #2A1D14;
+    --paper-2: #1F150E;
+    --text: #F1E2BC;
+    --text-soft: #CDB98E;
+    --line: rgba(233, 203, 98, .22);
+    --line-strong: rgba(233, 203, 98, .42);
+    --gold-ink: #E2BE4A;
+    --seal: #A3303F;
+    --step-ink: rgba(240, 214, 140, .85);
+    --route: color-mix(in srgb, var(--accent) 30%, #E9CB62);
+    --tile-filter: sepia(.75) saturate(1.25) hue-rotate(-10deg) brightness(.95);
+    --tile-opacity: .9;
+    --noise-current: var(--noise-d);
+    --shadow: 0 6px 22px rgba(0, 0, 0, .55);
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; overscroll-behavior: none; background: var(--night); }
+body {
+  font-family: var(--f-body); font-size: 17px; line-height: 1.45; color: var(--text);
+  -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+}
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+a { color: inherit; }
+img { display: block; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+[hidden] { display: none !important; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.paper { background-color: var(--paper); background-image: var(--noise-current); }
+
+/* ── App shell ─────────────────────────────────────────────────────────── */
+#app { position: fixed; inset: 0; overflow: hidden; background: var(--paper); z-index: 1; }
+#map.leaflet-container, #map {
+  position: absolute; inset: 0; z-index: 0; isolation: isolate; font-family: var(--f-body);
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(ellipse 30% 22% at 22% 30%, rgba(140, 96, 40, .10), transparent 70%),
+    radial-gradient(ellipse 26% 18% at 78% 68%, rgba(140, 96, 40, .09), transparent 70%),
+    var(--noise-current);
+}
+#map .leaflet-tile-pane { filter: var(--tile-filter); opacity: var(--tile-opacity); }
+.map-vignette {
+  position: absolute; inset: 0; pointer-events: none; z-index: 5;
+  background: radial-gradient(ellipse 85% 75% at 50% 50%, transparent 62%, rgba(70, 42, 16, .30) 100%);
+}
+.map-error { position: absolute; inset: 0; display: grid; place-items: center; padding: 32px; text-align: center; font-family: var(--f-fell); font-size: 19px; z-index: 6; }
+
+.mapfx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 6; }
+.wash {
+  position: absolute; top: 0; bottom: 0; left: 0; width: 300%;
+  background: linear-gradient(90deg, transparent 0%, rgba(43, 22, 18, .9) 30%, rgba(18, 13, 10, .94) 50%, rgba(43, 22, 18, .9) 70%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--accent) 55%, #120D0A) 30%, rgba(18, 13, 10, .94) 50%, color-mix(in srgb, var(--accent) 55%, #120D0A) 70%, transparent 100%);
+  transform: translate3d(-100%, 0, 0); opacity: 0; will-change: transform;
+}
+.dust { position: absolute; left: 0; top: 0; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%;
+  background: radial-gradient(circle, #FFF4C2 0%, #E9C54F 45%, rgba(201, 162, 39, 0) 72%); pointer-events: none; }
+
+/* ── Header ────────────────────────────────────────────────────────────── */
+.header {
+  position: absolute; top: 0; left: var(--col-left); width: var(--col-w); z-index: 20;
+  padding: calc(var(--safe-t) + 8px) calc(14px + var(--safe-r)) 8px calc(14px + var(--safe-l));
+  box-shadow: var(--shadow);
+  border-bottom: 1.5px solid rgba(201, 162, 39, .7);
+}
+.header::before { /* dark band behind the iPhone status bar */
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: var(--safe-t);
+  background: linear-gradient(180deg, #120D0A, #2B1D14); border-bottom: 1px solid rgba(201, 162, 39, .5);
+}
+@media (min-width: 520px) { .header { border-radius: 0 0 18px 18px; border: 1.5px solid rgba(201, 162, 39, .7); border-top: 0; } }
+.hparticles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; border-radius: inherit; }
+.brand {
+  position: relative; margin: 0; text-align: center; font-family: var(--f-head); font-weight: 700;
+  font-size: 23px; line-height: 1.2; letter-spacing: .02em;
+  background: linear-gradient(180deg, #F3D97C 0%, #C9A227 48%, #7E5F0F 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(43, 29, 20, .45));
+}
+.daytitle { position: relative; margin-top: 1px; text-align: center; font-family: var(--f-fell); font-style: italic; font-size: 17px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.countdown {
+  position: relative; display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin: 5px auto 0; max-width: 100%; min-height: 34px; padding: 4px 14px;
+  border-radius: 999px; border: 1px solid var(--line-strong); overflow: hidden;
+  font-size: 16px; line-height: 1.2; background: rgba(201, 162, 39, .10);
+}
+.countdown .cd-txt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.countdown b { font-weight: 600; }
+.countdown .cd-dot { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+.countdown.soon { border-color: var(--gold); }
+.countdown.soon::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255, 236, 160, .65), transparent);
+  transform: translate3d(-120%, 0, 0); animation: shimmer 2.2s ease-in-out infinite; pointer-events: none;
+}
+@keyframes shimmer { 0% { transform: translate3d(-120%, 0, 0); } 60%, 100% { transform: translate3d(330%, 0, 0); } }
+
+.progress { position: relative; height: 12px; margin: 8px 4px 2px; }
+.ink-track { position: absolute; left: 0; right: 0; top: 5px; height: 2px; border-radius: 2px; background: repeating-linear-gradient(90deg, var(--line-strong) 0 4px, transparent 4px 8px); }
+.ink-fill {
+  position: absolute; left: 0; right: 0; top: 4px; height: 4px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--text) 0%, var(--text) 70%, color-mix(in srgb, var(--text) 70%, transparent) 100%);
+  transform-origin: 0 50%; transform: scaleX(0); transition: transform 1.2s cubic-bezier(.3, .7, .2, 1);
+}
+.ptick { position: absolute; top: 1px; width: 2px; height: 10px; margin-left: -1px; background: var(--gold); border-radius: 1px; }
+.nib { position: absolute; top: -6px; left: 0; width: 18px; height: 18px; margin-left: -3px; transition: left 1.2s cubic-bezier(.3, .7, .2, 1); pointer-events: none; }
+
+.tabs { position: relative; display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x proximity; padding: 6px 2px 2px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs::before, .tabs::after { content: ''; flex: 1 0 0; }
+.tab {
+  flex: 0 0 auto; scroll-snap-align: center; min-height: 48px; min-width: 76px; padding: 4px 10px;
+  border-radius: 999px; border: 1.5px solid var(--line-strong);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.12;
+  transition: background-color .4s, border-color .4s, color .4s;
+}
+.tab-day { font-family: var(--f-fell); font-size: 17px; display: flex; align-items: center; gap: 3px; }
+.tab-date { font-size: 13px; opacity: .85; }
+.tab[aria-selected="true"] { background: var(--accent); color: #F8EED6; border-color: var(--gold); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14), 0 2px 8px rgba(0, 0, 0, .28); }
+.star { color: #E9C54F; font-size: 14px; text-shadow: 0 0 6px #FFD56A, 0 0 12px #FFB800; animation: twinkle 2.4s ease-in-out infinite; }
+@keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+
+/* ── Mode toggle ───────────────────────────────────────────────────────── */
+.modes {
+  position: absolute; z-index: 15; top: calc(var(--header-h) + 10px); left: 50%; transform: translateX(-50%);
+  display: grid; grid-template-columns: repeat(3, 1fr); padding: 3px; border-radius: 999px; transition: opacity .3s;
+  border: 1.5px solid var(--gold); box-shadow: var(--shadow); width: min(330px, calc(100% - 28px));
+}
+.card-open .modes { opacity: 0; pointer-events: none; }
+.mode { position: relative; z-index: 1; min-height: 44px; font-family: var(--f-fell); font-size: 17px; border-radius: 999px; transition: color .35s; }
+.mode[aria-checked="true"] { color: #F8EED6; }
+.mode-thumb {
+  position: absolute; z-index: 0; top: 3px; bottom: 3px; left: 3px; width: calc((100% - 6px) / 3); border-radius: 999px;
+  background: var(--accent); box-shadow: inset 0 0 0 1px rgba(233, 203, 98, .7), 0 1px 4px rgba(0, 0, 0, .3);
+  transition: transform .45s cubic-bezier(.3, 1.3, .5, 1);
+}
+
+/* ── Bottom sheet ──────────────────────────────────────────────────────── */
+.sheet {
+  position: absolute; z-index: 18; left: var(--col-left); width: var(--col-w); bottom: 0; height: 70%;
+  display: flex; flex-direction: column; border-radius: 20px 20px 0 0;
+  box-shadow: 0 -8px 26px rgba(18, 13, 10, .32); border-top: 2px solid var(--gold);
+  transform: translate3d(0, 100%, 0); will-change: transform;
+}
+.sheet::before { /* rolled scroll edge */
+  content: ''; position: absolute; left: 10px; right: 10px; top: -7px; height: 12px; border-radius: 7px; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, #F7E7B8 0%, #D9BE79 45%, #9C7A3A 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .5);
+}
+.sheet-float { position: absolute; left: 0; right: 0; top: -66px; height: 56px; pointer-events: none; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 calc(12px + var(--safe-r)) 0 calc(12px + var(--safe-l)); transition: opacity .3s; }
+.sheet.is-full .sheet-float { opacity: 0; }
+.sheet.is-full .sheet-float * { pointer-events: none !important; }
+.attrib { pointer-events: auto; font-size: 11px; line-height: 1.2; color: var(--text); opacity: .8; padding: 2px 6px; border-radius: 6px; background: color-mix(in srgb, var(--paper) 80%, transparent); margin-bottom: 2px; }
+.attrib a { text-decoration: none; }
+.fabs { display: flex; gap: 10px; pointer-events: auto; }
+.fab {
+  width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle at 35% 30%, #3A2A1C, #1B120C); color: #F1D67A;
+  border: 2px solid var(--gold); box-shadow: 0 4px 12px rgba(0, 0, 0, .4), inset 0 0 0 2px rgba(0, 0, 0, .35);
+}
+.fab svg { width: 24px; height: 24px; }
+.fab.is-on { box-shadow: 0 0 0 3px rgba(233, 197, 79, .35), 0 4px 12px rgba(0, 0, 0, .4); }
+.sheet-grab { flex: 0 0 auto; touch-action: none; cursor: grab; padding: 8px calc(18px + var(--safe-r)) 8px calc(18px + var(--safe-l)); }
+.sheet-grab:active { cursor: grabbing; }
+.handle { width: 46px; height: 5px; border-radius: 3px; background: var(--line-strong); margin: 0 auto 8px; }
+.sheet-head { display: flex; align-items: center; gap: 12px; min-height: 52px; }
+.dnum { flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; text-align: center; line-height: 1;
+  background: var(--accent); color: #F8EED6; border: 2px solid var(--gold); font-family: var(--f-fell); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+.dnum b { display: block; font-family: var(--f-head); font-size: 18px; letter-spacing: 0; }
+.shead-t { min-width: 0; flex: 1; }
+.shead-title { font-family: var(--f-fell); font-size: 19px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.shead-sub { font-size: 15px; color: var(--text-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sheet-body {
+  flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding: 2px calc(14px + var(--safe-r)) calc(var(--sheet-off, 0px) + 30px + var(--safe-b)) calc(14px + var(--safe-l));
+}
+
+/* ── Timeline ──────────────────────────────────────────────────────────── */
+.sec-title { display: flex; align-items: center; gap: 10px; margin: 18px 4px 8px; font-family: var(--f-head); font-size: 15px; color: var(--gold-ink); letter-spacing: .04em; }
+.sec-title::before, .sec-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.tl { list-style: none; margin: 0; padding: 0; position: relative; }
+.tl::before { /* gold thread */
+  content: ''; position: absolute; left: 92px; top: 30px; bottom: 30px; width: 2px; margin-left: -1px;
+  background: linear-gradient(180deg, #E9C54F, #9C7A12 50%, #E9C54F); border-radius: 1px; opacity: .85;
+}
+.tl-item {
+  position: relative; display: grid; grid-template-columns: 50px 48px 1fr; gap: 10px; align-items: center; width: 100%;
+  min-height: 64px; padding: 8px 8px 8px 0; border-radius: 14px; text-align: left; transition: background-color .4s, box-shadow .4s, opacity .4s;
+}
+.tl-time { font-family: var(--f-fell); font-size: 17px; text-align: right; }
+.tl-node { position: relative; width: 48px; height: 48px; border-radius: 50%; z-index: 1; }
+.tl-node .ph { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2.5px solid var(--gold); box-shadow: 0 0 0 1.5px var(--paper), 0 2px 5px rgba(0, 0, 0, .3); background: #2B1D14; }
+.tl-node .num { position: absolute; right: -5px; bottom: -3px; width: 21px; height: 21px; display: grid; place-items: center; font-size: 12px; font-weight: 600; color: #F6E7C1; background: var(--seal-img) center/contain no-repeat; }
+.tl-tick { position: absolute; left: -5px; top: -3px; width: 20px; height: 20px; border-radius: 50%; display: none; place-items: center; background: var(--green); color: #F1D67A; border: 1.5px solid var(--gold); }
+.tl-tick svg { width: 12px; height: 12px; }
+.tl-name { font-weight: 600; font-size: 18px; line-height: 1.2; }
+.tl-act { font-size: 16px; line-height: 1.3; color: var(--text-soft); }
+.tl-badge { display: inline-block; margin-left: 6px; padding: 0 7px; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; vertical-align: 2px; background: var(--gold); color: #2B1D14; }
+.tl-item.done { opacity: .55; }
+.tl-item.done .tl-tick { display: grid; }
+.tl-item.done .ph { filter: sepia(.8) saturate(.6); }
+.tl-item.hl { background: radial-gradient(ellipse at 30% 50%, rgba(233, 197, 79, .26), rgba(233, 197, 79, .08) 70%); box-shadow: 0 0 0 1.5px rgba(201, 162, 39, .75), 0 0 18px rgba(233, 197, 79, .38); }
+.tl-gap { display: flex; align-items: center; min-height: 26px; padding-left: 104px; font-family: var(--f-fell); font-style: italic; font-size: 15px; color: var(--text-soft); }
+
+.mm-end { display: flex; align-items: center; gap: 12px; width: 100%; margin: 14px 0 4px; padding: 10px 14px; min-height: 56px; border-radius: 14px; border: 1px dashed var(--line-strong); text-align: left; }
+.mm-end .seal-big { flex: 0 0 auto; width: 40px; height: 40px; display: grid; place-items: center; color: #F6E7C1; font-family: var(--f-head); font-size: 13px; background: var(--seal-img) center/contain no-repeat; }
+.mm-end-t { font-family: var(--f-fell); font-style: italic; font-size: 17px; line-height: 1.25; }
+.mm-end-t small { display: block; font-style: normal; font-family: var(--f-body); font-size: 14px; color: var(--text-soft); }
+
+/* Train ticket */
+.ticket {
+  position: relative; margin: 6px 4px 14px; padding: 12px 18px 12px; color: #2B1D14;
+  background-color: #F4E6C3; background-image: var(--noise-l), linear-gradient(135deg, rgba(255, 255, 255, .35), transparent 50%);
+  border-radius: 6px; box-shadow: 0 3px 10px rgba(0, 0, 0, .25); transform: rotate(-.8deg);
+  -webkit-mask: radial-gradient(circle 9px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 9px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+          mask: radial-gradient(circle 9px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 9px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+}
+.ticket::before { content: ''; position: absolute; inset: 5px; border: 1.5px solid rgba(107, 30, 42, .55); border-radius: 3px; pointer-events: none; }
+.tk-top { display: flex; justify-content: space-between; font-family: var(--f-head); font-size: 11px; letter-spacing: .12em; color: #6B1E2A; }
+.tk-route { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 6px 0 2px; font-family: var(--f-head); font-size: 19px; line-height: 1.1; }
+.tk-route span:nth-child(2) { font-family: var(--f-fell); color: #6B1E2A; font-size: 22px; }
+.tk-stations { display: flex; justify-content: space-between; gap: 8px; font-style: italic; font-size: 14px; color: #5A4433; }
+.tk-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1.5px dashed rgba(43, 29, 20, .35); text-align: center; }
+.tk-row small { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6B1E2A; }
+.tk-row b { font-family: var(--f-fell); font-size: 20px; font-weight: 400; }
+.tk-foot { margin-top: 6px; font-size: 13px; color: #5A4433; text-align: center; }
+.ticket.done { opacity: .6; }
+
+/* Where to eat */
+.food-list { display: grid; gap: 10px; }
+.food-item { display: grid; grid-template-columns: 58px 1fr; gap: 12px; align-items: center; width: 100%; min-height: 70px; padding: 8px 10px; border-radius: 14px; text-align: left; border: 1px solid var(--line); background: rgba(184, 115, 51, .08); }
+.food-item .ph { width: 58px; height: 58px; border-radius: 50%; object-fit: cover; border: 2.5px solid #B87333; background: #2B1D14; }
+.food-name { font-weight: 600; font-size: 18px; line-height: 1.2; }
+.food-meta { font-size: 15px; color: var(--text-soft); }
+.food-note { font-family: var(--f-fell); font-style: italic; font-size: 16px; line-height: 1.25; }
+.chip { display: inline-block; padding: 0 8px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #C97B1E; color: #FFF5E0; vertical-align: 1px; }
+.empty-note { font-style: italic; color: var(--text-soft); text-align: center; padding: 10px; }
+.sheet-attrib { margin-top: 26px; font-size: 13px; color: var(--text-soft); text-align: center; }
+
+/* ── Monogram fallback for photos ─────────────────────────────────────── */
+.mono { display: flex; align-items: center; justify-content: center; font-family: var(--f-head); font-weight: 700; color: #E9C54F; line-height: 1;
+  background: radial-gradient(circle at 35% 30%, #4A3522, #1B120C 75%); text-shadow: 0 1px 0 #3B2A08, 0 0 10px rgba(233, 197, 79, .4); overflow: hidden; }
+.tl-node .mono, .food-item .mono { font-size: 21px; }
+.pin .mono { font-size: 20px; }
+.card-photo .mono { font-size: 72px; }
+
+/* ── Map markers ───────────────────────────────────────────────────────── */
+.pin-wrap { background: none; border: 0; }
+.pin { position: relative; width: 100%; height: 100%; animation: pinPop .6s cubic-bezier(.2, 1.5, .4, 1) both; animation-delay: var(--delay, 0ms); }
+.pin-frame { position: absolute; inset: 6px; border-radius: 50%; overflow: hidden; background: #2B1D14; box-shadow: 0 3px 8px rgba(0, 0, 0, .45); }
+.pin-frame .ph, .pin-frame .mono { width: 100%; height: 100%; object-fit: cover; }
+.pin::before { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: var(--frame-gold) center/contain no-repeat; }
+.pin-food::before { background-image: var(--frame-copper); }
+.seal { position: absolute; z-index: 3; right: -5px; bottom: -3px; width: 25px; height: 25px; display: grid; place-items: center;
+  background: var(--seal-img) center/contain no-repeat; color: #F6E7C1; font-family: var(--f-fell); font-size: 14px; font-weight: 700; text-shadow: 0 1px 0 rgba(0, 0, 0, .45); }
+.seal-food { background-image: var(--seal-amber); }
+.seal-food svg { width: 13px; height: 13px; }
+.pin-pulse { position: absolute; inset: -1px; border-radius: 50%; border: 3px solid #E9C54F; opacity: 0; z-index: 0; pointer-events: none; }
+.pin.is-hl .pin-pulse { animation: pulse 2.2s ease-out infinite; }
+.pin.is-hl .pin-pulse + .pin-pulse { animation-delay: 1.1s; }
+@keyframes pulse { 0% { transform: scale(.9); opacity: .9; } 100% { transform: scale(1.75); opacity: 0; } }
+.pin.is-done .pin-frame { filter: sepia(.85) saturate(.55) brightness(.92); }
+.pin-spark { position: absolute; left: 50%; top: 50%; width: 70px; height: 70px; margin: -35px; pointer-events: none; z-index: 4; opacity: 0;
+  background: radial-gradient(circle, rgba(255, 246, 200, .95) 0 6%, rgba(255, 214, 106, .5) 14%, transparent 40%),
+              conic-gradient(from 0deg, transparent 0 10%, rgba(255, 230, 150, .9) 12%, transparent 14% 35%, rgba(255, 230, 150, .9) 37%, transparent 39% 60%, rgba(255, 230, 150, .9) 62%, transparent 64% 85%, rgba(255, 230, 150, .9) 87%, transparent 89%);
+  -webkit-mask: radial-gradient(circle, #000 30%, transparent 70%); mask: radial-gradient(circle, #000 30%, transparent 70%);
+  animation: sparkPop .7s ease-out both; animation-delay: var(--delay, 0ms); }
+@keyframes pinPop { 0% { transform: scale(0) rotate(-25deg); opacity: 0; } 55% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+@keyframes sparkPop { 0% { transform: scale(.2) rotate(0); opacity: 0; } 25% { opacity: 1; } 100% { transform: scale(1.5) rotate(40deg); opacity: 0; } }
+.pin.materialise { animation: pinMat .7s cubic-bezier(.2, 1.2, .4, 1) both; animation-delay: var(--delay, 0ms); }
+@keyframes pinMat { 0% { transform: scale(.4) translateY(8px); opacity: 0; } 100% { transform: none; opacity: 1; } }
+.pin.dissolve { animation: pinDissolve .45s ease-in forwards !important; }
+@keyframes pinDissolve { 0% { transform: none; opacity: 1; } 100% { transform: scale(.35) translateY(-10px); opacity: 0; } }
+.pin.bounce { animation: pinBounce .6s cubic-bezier(.3, 1.6, .5, 1) both !important; }
+@keyframes pinBounce { 0% { transform: scale(1); } 40% { transform: scale(1.25) translateY(-6px); } 100% { transform: none; } }
+
+.pin-home { animation-name: pinPop; }
+.pin-home .crest { position: absolute; inset: 0; background: var(--crest) center/contain no-repeat; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .45)); }
+.pin-home::before { display: none; }
+
+.route-main { stroke: var(--route); }
+.route-ghost { stroke: var(--route); }
+.route-bleed { stroke: var(--route); }
+.route-fade { transition: opacity .4s ease !important; opacity: 0 !important; }
+
+.step-wrap { background: none; border: 0; }
+.step { position: absolute; left: -3px; top: -5px; width: 6px; height: 11px; opacity: 0; animation: stepFade var(--cycle, 4s) linear infinite; animation-delay: var(--d, 0ms); }
+.step::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 7px; border-radius: 50% 50% 45% 45%; background: var(--step-ink); }
+.step::after { content: ''; position: absolute; left: 1px; right: 1px; bottom: 0; height: 3px; border-radius: 50%; background: var(--step-ink); }
+@keyframes stepFade { 0% { opacity: 0; } 3% { opacity: .95; } 28% { opacity: 0; } 100% { opacity: 0; } }
+
+.me-wrap { background: none; border: 0; }
+.me { position: absolute; left: 0; top: 0; }
+.me-feet { position: absolute; left: -9px; top: -11px; width: 18px; height: 22px; transition: transform .3s ease-out; }
+.me-feet i { position: absolute; top: 3px; width: 6px; height: 11px; animation: meStep 1.2s ease-in-out infinite; }
+.me-feet i::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 7px; border-radius: 50% 50% 45% 45%; background: var(--ink); }
+.me-feet i::after { content: ''; position: absolute; left: 1px; right: 1px; bottom: 0; height: 3px; border-radius: 50%; background: var(--ink); }
+.me-feet i:first-child { left: 2px; top: 7px; }
+.me-feet i:last-child { right: 2px; animation-delay: .6s; }
+@keyframes meStep { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+.me-label {
+  position: absolute; left: 0; top: 14px; transform: translateX(-50%); white-space: nowrap;
+  font-family: var(--f-hand); font-size: 13px; line-height: 1; color: #2B1D14; padding: 7px 12px 4px;
+  background: #F3E9D2; border: 1.2px solid #2B1D14; border-radius: 3px;
+}
+.me-label::before { content: ''; position: absolute; inset: -6px; border-radius: 10px; z-index: -1; box-shadow: 0 0 14px 6px rgba(255, 212, 100, .75); animation: meGlow 2.6s ease-in-out infinite; }
+@keyframes meGlow { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+
+/* ── Place card (parchment scroll) ─────────────────────────────────────── */
+.card-layer { position: absolute; inset: 0; z-index: 40; pointer-events: none; }
+.card {
+  position: absolute; pointer-events: auto; display: flex; flex-direction: column;
+  left: calc(var(--col-left) + 10px + var(--safe-l)); width: calc(var(--col-w) - 20px - var(--safe-l) - var(--safe-r));
+  bottom: calc(10px + var(--safe-b)); max-height: calc(100% - var(--header-h) - 150px - var(--safe-b));
+  will-change: transform;
+}
+.rod { position: relative; z-index: 2; flex: 0 0 auto; height: 16px; margin: 0 -6px; border-radius: 8px;
+  background: linear-gradient(180deg, #F7E3A0 0%, #C9A227 40%, #7E5F0F 100%); box-shadow: 0 3px 6px rgba(0, 0, 0, .35); }
+.rod::before, .rod::after { content: ''; position: absolute; top: -3px; width: 14px; height: 22px; border-radius: 6px; background: linear-gradient(180deg, #5B3B1E, #2B1D14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2); }
+.rod::before { left: -8px; } .rod::after { right: -8px; }
+.card-paper { position: relative; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin: -8px 0; padding-top: 8px; padding-bottom: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, .4); }
+.card-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.card-photo { position: relative; height: clamp(120px, 21vh, 200px); margin: 0 10px; border-radius: 4px; overflow: hidden; background: #2B1D14; box-shadow: inset 0 0 0 2px var(--gold); }
+.card-photo .ph, .card-photo .mono { width: 100%; height: 100%; object-fit: cover; }
+.card-photo::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 0 2px #C9A227, inset 0 0 0 5px rgba(43, 29, 20, .5), inset 0 0 40px rgba(43, 29, 20, .45); pointer-events: none; }
+.card-close { position: absolute; z-index: 3; top: 14px; right: 16px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: rgba(18, 13, 10, .72); color: #F1D67A; border: 1.5px solid var(--gold); }
+.card-close svg { width: 18px; height: 18px; }
+.card-content { padding: 12px 18px 6px; -webkit-user-select: text; user-select: text; }
+.card-kicker { font-family: var(--f-head); font-size: 12px; letter-spacing: .08em; color: var(--gold-ink); }
+.card-title { margin: 2px 0 2px; font-family: var(--f-fell); font-weight: 400; font-size: 27px; line-height: 1.12; }
+.card-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 16px; color: var(--text-soft); }
+.card-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.card-meta svg { width: 15px; height: 15px; }
+.card-doing { margin: 10px 0 6px; padding: 8px 12px; border-left: 3px solid var(--accent); background: rgba(201, 162, 39, .1); border-radius: 0 8px 8px 0; font-size: 17px; line-height: 1.35; }
+.card-doing small { display: block; font-family: var(--f-head); font-size: 11px; letter-spacing: .1em; color: var(--gold-ink); }
+.card-desc { margin: 8px 0; font-size: 17px; line-height: 1.5; }
+.card-booking { display: flex; gap: 10px; align-items: flex-start; margin: 10px 0 4px; padding: 9px 12px; border-radius: 10px; border: 1px dashed var(--line-strong); font-size: 16px; line-height: 1.35; }
+.card-booking .seal-mini { flex: 0 0 auto; width: 24px; height: 24px; background: var(--seal-img) center/contain no-repeat; }
+.card-link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 16px; color: var(--gold-ink); text-underline-offset: 3px; }
+.card-status { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; font-family: var(--f-body); font-size: 12px; letter-spacing: .04em; text-transform: uppercase; vertical-align: 3px; background: var(--gold); color: #2B1D14; }
+.card-actions { flex: 0 0 auto; display: grid; grid-template-columns: 52px 1fr 52px; gap: 10px; padding: 10px 14px 6px; border-top: 1px solid var(--line); }
+.nav-btn { height: 52px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--gold); color: var(--text); }
+.nav-btn svg { width: 22px; height: 22px; }
+.nav-btn:disabled { opacity: .3; cursor: default; }
+.portus-btn {
+  position: relative; overflow: hidden; min-height: 52px; border-radius: 999px; display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: radial-gradient(ellipse at 40% 30%, #8E2A38, #4E1019 80%); color: #F6DE8A; border: 1.5px solid #E9C54F;
+  box-shadow: 0 3px 10px rgba(78, 16, 25, .5), inset 0 1px 0 rgba(255, 255, 255, .15);
+  font-family: var(--f-head); font-size: 19px; letter-spacing: .06em;
+}
+.portus-btn small { font-family: var(--f-body); font-size: 13px; letter-spacing: 0; opacity: .85; }
+.portus-btn svg { width: 22px; height: 22px; }
+
+.vortex { position: fixed; inset: 0; z-index: 60; pointer-events: none; display: grid; place-items: center; }
+.vortex-disc { width: 160vmax; height: 160vmax; border-radius: 50%; opacity: 0;
+  background: repeating-conic-gradient(from 0deg, rgba(201, 162, 39, .0) 0deg 12deg, rgba(233, 197, 79, .55) 18deg, rgba(18, 13, 10, .0) 26deg 30deg),
+              radial-gradient(circle, rgba(18, 13, 10, .95) 0 6%, rgba(43, 29, 20, .7) 22%, rgba(18, 13, 10, .0) 62%); }
+
+/* ── Mischief Managed ──────────────────────────────────────────────────── */
+.mischief { position: absolute; left: 0; right: 0; top: calc(var(--header-h) - 2px); bottom: 0; z-index: 30; perspective: 1600px; pointer-events: auto; }
+.mm-panels { position: absolute; inset: 0; display: flex; }
+.mm-panel { position: relative; flex: 1 1 0; height: 100%; background-color: var(--paper); background-image: var(--noise-current), linear-gradient(90deg, rgba(90, 60, 30, .10), transparent 20%, transparent 80%, rgba(90, 60, 30, .14)); -webkit-backface-visibility: visible; backface-visibility: visible; }
+.mm-panel.l { transform-origin: 100% 50%; } .mm-panel.r { transform-origin: 0 50%; }
+.mm-text { position: absolute; left: 0; right: 0; top: 38%; text-align: center; font-family: var(--f-fell); font-style: italic; font-size: clamp(34px, 10vw, 54px); color: var(--text); pointer-events: none; }
+.mm-text span { display: inline-block; opacity: 0; }
+.mm-text .sp { width: .3em; }
+.mm-text.write span { animation: inkLetter .45s ease-out both; }
+.mm-sub { position: absolute; left: 0; right: 0; top: calc(38% + 1.6em + 20px); text-align: center; font-family: var(--f-fell); font-size: 18px; color: var(--text-soft); opacity: 0; pointer-events: none; }
+@keyframes inkLetter { 0% { opacity: 0; transform: translateY(6px) scale(.7) rotate(-8deg); } 60% { opacity: 1; } 100% { opacity: 1; transform: none; } }
+
+/* ── Toast ─────────────────────────────────────────────────────────────── */
+.toast { position: absolute; z-index: 50; left: 50%; top: calc(var(--header-h) + 66px); max-width: min(90%, 380px); padding: 10px 16px; border-radius: 12px;
+  background: #2B1D14; color: #F3E9D2; border: 1px solid var(--gold); font-size: 16px; text-align: center; box-shadow: var(--shadow);
+  transform: translate(-50%, -8px); opacity: 0; transition: opacity .3s, transform .3s; pointer-events: none; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ── Sparkles (global) ─────────────────────────────────────────────────── */
+#fx { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
+.spark { position: absolute; left: 0; top: 0; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; pointer-events: none;
+  background: radial-gradient(circle, #FFFBE6 0 20%, #FFD95E 45%, rgba(255, 196, 0, 0) 72%); border-radius: 50%; }
+.spark.star { width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 0;
+  background: radial-gradient(circle, #FFFBE6 0 12%, transparent 30%), conic-gradient(from 45deg, transparent 0 20%, #FFE38A 25%, transparent 30% 45%, #FFE38A 50%, transparent 55% 70%, #FFE38A 75%, transparent 80% 95%, #FFE38A 100%);
+  -webkit-mask: radial-gradient(circle, #000 25%, transparent 70%); mask: radial-gradient(circle, #000 25%, transparent 70%); }
+
+/* ── Candle particles ──────────────────────────────────────────────────── */
+.mote { position: absolute; bottom: -10px; left: var(--x); width: var(--s); height: var(--s); border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 236, 170, .95) 0 25%, rgba(255, 180, 60, .45) 50%, rgba(255, 150, 0, 0) 72%);
+  animation: moteRise var(--dur) linear infinite, moteFlicker 1.7s ease-in-out infinite alternate; animation-delay: var(--del), var(--del2); opacity: 0; }
+@keyframes moteRise { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(var(--dx), var(--rise), 0); } }
+@keyframes moteFlicker { 0% { opacity: .05; } 30% { opacity: var(--o); } 100% { opacity: calc(var(--o) * .4); } }
+
+/* ── Opening (the reveal) ──────────────────────────────────────────────── */
+#intro {
+  position: fixed; inset: 0; z-index: 100; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px;
+  background: radial-gradient(ellipse 70% 55% at 50% 45%, #2A1B10 0%, #170F0A 55%, #0A0705 100%); color: #F3E9D2;
+  padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l);
+}
+.intro-particles { position: absolute; inset: 0; pointer-events: none; }
+.skip { position: absolute; z-index: 5; top: calc(var(--safe-t) + 8px); right: calc(var(--safe-r) + 10px); min-width: 64px; min-height: 44px; padding: 0 14px;
+  font-family: var(--f-fell); font-size: 17px; color: rgba(243, 233, 210, .75); text-decoration: underline; text-underline-offset: 4px; }
+.fold-stage { position: relative; width: var(--W, 320px); height: calc(var(--W, 320px) * 1.1); transform: translateZ(0); }
+.foldmap { position: absolute; inset: 0; perspective: 1400px; }
+.fpanel { position: absolute; top: 0; bottom: 0; transform-style: preserve-3d; transition: transform .85s cubic-bezier(.55, .05, .25, 1); }
+.fp-left { left: 0; width: 25%; transform-origin: 100% 50%; transform: rotateY(179.4deg); }
+.fp-centre { left: 25%; width: 50%; }
+.fp-right { left: 75%; width: 25%; transform-origin: 0 50%; transform: rotateY(-179deg); }
+.foldmap.open .fp-left, .foldmap.open .fp-right { transform: rotateY(0deg); }
+.face { position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden; background-color: #F3E9D2; background-image: var(--noise-l); }
+.face.front { background-image: var(--inside-map), var(--noise-l); background-size: var(--W) calc(var(--W) * 1.1), auto; background-repeat: no-repeat, repeat; }
+.fp-left .front { background-position: 0 0, 0 0; box-shadow: inset -18px 0 22px -16px rgba(90, 55, 20, .45), inset 0 0 0 1px rgba(90, 55, 20, .25); border-radius: 4px 0 0 4px; }
+.fp-centre .front { background-position: calc(var(--W) * -.25) 0, 0 0; box-shadow: inset 18px 0 22px -16px rgba(90, 55, 20, .4), inset -18px 0 22px -16px rgba(90, 55, 20, .4), inset 0 0 0 1px rgba(90, 55, 20, .2); }
+.fp-right .front { background-position: calc(var(--W) * -.75) 0, 0 0; box-shadow: inset 18px 0 22px -16px rgba(90, 55, 20, .45), inset 0 0 0 1px rgba(90, 55, 20, .25); border-radius: 0 4px 4px 0; }
+.face.back { transform: rotateY(180deg); background-image: var(--noise-l), linear-gradient(90deg, #EBDDBA, #F3E9D2 40%, #E7D6AE); box-shadow: inset 0 0 0 1px rgba(90, 55, 20, .3), inset 0 0 30px rgba(120, 80, 30, .25); }
+.foldmap::after { content: ''; position: absolute; left: 25%; right: 25%; top: 0; bottom: 0; box-shadow: 0 18px 40px rgba(0, 0, 0, .6); z-index: -1; transition: left .9s, right .9s; }
+.foldmap.open::after { left: 0; right: 0; }
+.packet-face { position: absolute; left: 25%; width: 50%; top: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #2B1D14; pointer-events: none; z-index: 3; transition: opacity .4s; }
+.spell { height: 1.4em; font-family: var(--f-fell); font-style: italic; font-size: calc(var(--W) * .088); white-space: nowrap; filter: drop-shadow(0 0 6px rgba(255, 200, 80, .7)); }
+.spell span { display: inline-block; opacity: 0; background: linear-gradient(180deg, #F3D97C, #C9A227 55%, #8A6A12); -webkit-background-clip: text; background-clip: text; color: transparent; padding: 0 .02em; }
+.spell.write span { animation: inkLetter .5s ease-out both; }
+.hint { margin: 10px 8px 0; font-family: var(--f-fell); font-style: italic; font-size: 16px; color: rgba(43, 29, 20, .5); transition: opacity .4s; }
+.packet-seal { position: absolute; bottom: 14%; left: 50%; width: 46px; height: 46px; margin-left: -23px; display: grid; place-items: center; font-family: var(--f-head); font-size: 14px; color: #F6E7C1; background: var(--seal-img) center/contain no-repeat; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .35)); transition: transform .4s, opacity .4s; }
+.inside-title { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; z-index: 2; opacity: 0; }
+.inside-title h2 { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: calc(var(--W) * .085); line-height: 1.15;
+  background: linear-gradient(180deg, #E8C860, #A07C12 60%, #6E520C); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 1px 0 rgba(43, 29, 20, .4)); }
+.inside-title p { margin: 8px 0 0; font-family: var(--f-fell); font-style: italic; font-size: 16px; color: #2B1D14; }
+.wand { position: relative; z-index: 4; width: 112px; height: 112px; border-radius: 50%; display: grid; place-items: center; transition: opacity .4s, transform .4s;
+  background: radial-gradient(circle, rgba(255, 200, 90, .16), rgba(255, 200, 90, 0) 70%); }
+.wand svg { width: 96px; height: 96px; overflow: visible; }
+.wand-tipglow { animation: wandGlow 1.8s ease-in-out infinite; transform-origin: 94px 26px; }
+@keyframes wandGlow { 0%, 100% { opacity: .55; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.15); } }
+.wand-label { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--f-fell); font-size: 14px; color: rgba(243, 233, 210, .55); }
+.wand.flick svg { animation: flick .45s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes flick { 0% { transform: rotate(0); } 40% { transform: rotate(-16deg); } 100% { transform: rotate(0); } }
+.intro-fading { transition: opacity .35s ease; opacity: 0; }
+
+/* ── Reduced motion: simple fades only ─────────────────────────────────── */
+.rm .mote, .rm .hparticles, .rm .intro-particles { display: none; }
+.rm .pin, .rm .pin.materialise, .rm .pin-home { animation: fadeIn .35s ease both !important; }
+.rm .pin.dissolve { animation: fadeOut .3s ease both !important; }
+.rm .pin.bounce { animation: none !important; }
+.rm .pin-spark { display: none; }
+.rm .pin.is-hl .pin-pulse { animation: none; opacity: .9; transform: scale(1.12); }
+.rm .step { animation: none; opacity: .55; }
+.rm .star, .rm .wand-tipglow, .rm .me-feet i, .rm .me-label::before { animation: none; }
+.rm .countdown.soon::after { display: none; }
+.rm .spell.write span, .rm .mm-text.write span { animation: fadeIn .4s ease both; }
+.rm .fpanel, .rm .mode-thumb { transition-duration: .01s; }
+.rm .ink-fill, .rm .nib { transition: none; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="map" aria-label="Enchanted map"></div>
+  <div class="map-vignette"></div>
+  <div class="mapfx" id="mapfx"><div class="wash" id="wash"></div></div>
+
+  <header class="header paper" id="header">
+    <div class="hparticles" id="hParticles"></div>
+    <h1 class="brand">Aparecium Portus</h1>
+    <div class="daytitle" id="dayTitle"></div>
+    <button class="countdown" id="countdown" type="button"><span class="cd-dot"></span><span class="cd-txt" id="cdText">Revealing…</span></button>
+    <div class="progress" id="progress" role="progressbar" aria-label="Trip progress" aria-valuemin="0" aria-valuemax="100">
+      <div class="ink-track"></div>
+      <div class="ink-fill" id="inkFill"></div>
+      <svg class="nib" id="nib" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21 C 8 14, 13 8, 21 3 C 20 9, 15 15, 6 19 Z" fill="#C9A227" stroke="#5B430C" stroke-width="1"/><path d="M3 21 L 9 15" stroke="#2B1D14" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </div>
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Days"></nav>
+  </header>
+
+  <div class="modes paper" id="modes" role="radiogroup" aria-label="What to show on the map">
+    <span class="mode-thumb" id="modeThumb"></span>
+    <button class="mode" type="button" role="radio" data-mode="itinerary">Itinerary</button>
+    <button class="mode" type="button" role="radio" data-mode="food">Food</button>
+    <button class="mode" type="button" role="radio" data-mode="both">Both</button>
+  </div>
+
+  <section class="sheet paper" id="sheet" aria-label="The day's timeline">
+    <div class="sheet-float">
+      <div class="attrib">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a></div>
+      <div class="fabs">
+        <button class="fab" id="fabLocate" type="button" aria-label="Locate me" title="Locate me">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3"/></svg>
+        </button>
+        <button class="fab" id="fabHome" type="button" aria-label="Home base" title="Home base">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2.5l8 3v6c0 5-3.6 8.5-8 10-4.4-1.5-8-5-8-10v-6z"/><path d="M8 13.5l4-3.5 4 3.5V17h-3v-2.5h-2V17H8z" fill="currentColor" stroke="none"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="sheet-grab" id="sheetGrab">
+      <div class="handle"></div>
+      <div class="sheet-head" id="sheetHead"></div>
+    </div>
+    <div class="sheet-body" id="sheetBody"></div>
+  </section>
+
+  <div class="card-layer" id="cardLayer" hidden>
+    <article class="card" id="card" role="dialog" aria-labelledby="cardTitle">
+      <div class="rod rod-top"></div>
+      <div class="card-paper paper" id="cardPaper">
+        <button class="card-close" id="cardClose" type="button" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+        </button>
+        <div class="card-scroll" id="cardScroll"></div>
+        <div class="card-actions">
+          <button class="nav-btn" id="cardPrev" type="button" aria-label="Previous stop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <button class="portus-btn" id="cardPortus" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 12m-1 0a1 1 0 1 0 2 0a3 3 0 1 0-6 0a5 5 0 1 0 10 0a7 7 0 1 0-14 0a9 9 0 0 0 9 9"/></svg>
+            <span>Portus</span><small>directions</small>
+          </button>
+          <button class="nav-btn" id="cardNext" type="button" aria-label="Next stop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+        </div>
+      </div>
+      <div class="rod rod-bottom" id="rodBottom"></div>
+    </article>
+  </div>
+
+  <div class="mischief" id="mischief" hidden aria-live="polite">
+    <div class="mm-panels"><div class="mm-panel l"></div><div class="mm-panel c"></div><div class="mm-panel r"></div></div>
+    <div class="mm-text" id="mmText"></div>
+    <div class="mm-sub" id="mmSub"></div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<div id="intro" aria-label="Opening">
+  <div class="intro-particles" id="introParticles"></div>
+  <button class="skip" id="skipIntro" type="button">Skip</button>
+  <div class="fold-stage" id="foldStage">
+    <div class="foldmap" id="foldMap">
+      <div class="fpanel fp-centre"><div class="face front"></div></div>
+      <div class="fpanel fp-left"><div class="face front"></div><div class="face back"></div></div>
+      <div class="fpanel fp-right"><div class="face front"></div><div class="face back"></div></div>
+      <div class="inside-title" id="insideTitle"><h2>Aparecium<br>Portus</h2><p id="insideSub"></p></div>
+    </div>
+    <div class="packet-face" id="packetFace">
+      <div class="spell" id="spell" aria-label="Aparecium"></div>
+      <p class="hint" id="hint">Tap your wand to reveal</p>
+      <span class="packet-seal" id="packetSeal">AP</span>
+    </div>
+  </div>
+  <button class="wand" id="wand" type="button" aria-label="Tap your wand to reveal the map">
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <defs>
+        <linearGradient id="wandWood" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#2A1A10"/><stop offset=".55" stop-color="#7A5634"/><stop offset="1" stop-color="#3B2616"/></linearGradient>
+        <radialGradient id="wandTip"><stop offset="0" stop-color="#FFF8DC"/><stop offset=".35" stop-color="#FFD76A"/><stop offset="1" stop-color="#FFB000" stop-opacity="0"/></radialGradient>
+      </defs>
+      <circle class="wand-tipglow" cx="94" cy="26" r="24" fill="url(#wandTip)"/>
+      <path d="M20 102 L93 27" stroke="url(#wandWood)" stroke-width="6" stroke-linecap="round"/>
+      <path d="M20 102 L42 80" stroke="#1A0F08" stroke-width="10" stroke-linecap="round"/>
+      <path d="M26 96 l4 4 M32 90 l4 4 M38 84 l4 4" stroke="#7A5634" stroke-width="1.6" stroke-linecap="round"/>
+      <circle cx="44" cy="78" r="5.5" fill="#4A2F1A" stroke="#1A0F08" stroke-width="1.2"/>
+      <circle cx="94" cy="26" r="3.4" fill="#FFF6D0"/>
+    </svg>
+    <span class="wand-label sr">Tap your wand</span>
+  </button>
+</div>
+
+<div id="fx" aria-hidden="true"></div>
+<div class="vortex" id="vortex" hidden><div class="vortex-disc" id="vortexDisc"></div></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+'use strict';
+
+/* ═════════════════════════ Basics ═════════════════════════ */
+const D = TRIP_DATA;
+const TZ = (D.trip && D.trip.timeZone) || 'Europe/London';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const params = new URLSearchParams(location.search);
+const mqRM = matchMedia('(prefers-reduced-motion: reduce)');
+const mqDark = matchMedia('(prefers-color-scheme: dark)');
+let RM = mqRM.matches;
+const applyRM = () => { RM = mqRM.matches; document.documentElement.classList.toggle('rm', RM); };
+applyRM();
+(mqRM.addEventListener ? mqRM.addEventListener('change', applyRM) : mqRM.addListener(applyRM));
+
+const UA = navigator.userAgent;
+const IS_IOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_ANDROID = /Android/i.test(UA);
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('aparecium.' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('aparecium.' + k, JSON.stringify(v)); } catch (e) { /* private mode */ } }
+};
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const app = $('#app');
+const svgUrl = s => `url("data:image/svg+xml,${encodeURIComponent(s)}")`;
+
+/* ═════════════════════════ Time (always in the trip's zone) ═════════════════════════ */
+const zoneFmt = new Intl.DateTimeFormat('en-GB', { timeZone: TZ, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+function zoneParts(ms) { const o = {}; for (const p of zoneFmt.formatToParts(new Date(ms))) o[p.type] = p.value; return o; }
+function tzOffset(ms) { const p = zoneParts(ms); return Date.UTC(+p.year, +p.month - 1, +p.day, (+p.hour) % 24, +p.minute, +p.second) - Math.floor(ms / 1000) * 1000; }
+function zonedToEpoch(date, time) {
+  const [y, m, d] = date.split('-').map(Number); const [h, mi] = (time || '00:00').split(':').map(Number);
+  const guess = Date.UTC(y, m - 1, d, h, mi);
+  let t = guess - tzOffset(guess); const o2 = tzOffset(t); if (guess - o2 !== t) t = guess - o2;
+  return t;
+}
+function zonedDate(ms) { const p = zoneParts(ms); return `${p.year}-${p.month}-${p.day}`; }
+function fmtDate(date, opts) { const [y, m, d] = date.split('-').map(Number); return new Intl.DateTimeFormat('en-GB', Object.assign({ timeZone: 'UTC' }, opts)).format(new Date(Date.UTC(y, m - 1, d, 12))); }
+// ?now=2026-10-31T11:50 lets you preview the trip as if it were that moment (in trip time); the clock keeps running from there.
+const NOW_OVERRIDE = (() => { const v = params.get('now'); if (!v) return null; const [d, t] = v.split('T'); if (!/^\d{4}-\d\d-\d\d$/.test(d)) return null; return { base: zonedToEpoch(d, (t || '12:00').slice(0, 5)), at: Date.now() }; })();
+const nowMs = () => NOW_OVERRIDE ? NOW_OVERRIDE.base + (Date.now() - NOW_OVERRIDE.at) : Date.now();
+function fmtDur(min) { min = Math.round(min); if (min < 60) return `${min} min`; const h = Math.floor(min / 60), m = min % 60; return m ? `${h} hr ${m} min` : `${h} hr`; }
+function fmtUntil(ms) {
+  const min = Math.ceil(ms / 60000);
+  if (min <= 1) return 'under a minute';
+  if (min < 60) return `${min} min`;
+  if (min < 24 * 60) return fmtDur(min);
+  const days = Math.floor(min / 1440), h = Math.floor((min % 1440) / 60);
+  return `${days} day${days > 1 ? 's' : ''}${h ? ` ${h} hr` : ''}`;
+}
+
+/* ═════════════════════════ Data prep ═════════════════════════ */
+const T = D.trip || {};
+const DAYS = (D.days || []).map((d, i) => Object.assign({}, d, { index: i, num: i + 1 }));
+DAYS.forEach(day => {
+  day.stops = (day.stops || []).map((s, k) => {
+    const start = zonedToEpoch(day.date, s.time);
+    return Object.assign({}, s, { kind: 'stop', key: 'stop:' + day.num + ':' + s.id, order: k + 1, day, start, end: start + (s.duration || 60) * 60000 });
+  });
+  day.food = (D.restaurants || []).filter(r => (r.days || []).includes(day.num))
+    .map(r => Object.assign({}, r, { kind: 'food', key: 'food:' + day.num + ':' + r.id, day }));
+});
+const HOME = D.homeBase ? Object.assign({}, D.homeBase, { kind: 'home', key: 'home', id: 'home' }) : null;
+function makeJourney(j, day, label) {
+  if (!j || !day) return null;
+  const start = zonedToEpoch(day.date, j.depart); let end = zonedToEpoch(day.date, j.arrive); if (end < start) end += 864e5;
+  return Object.assign({}, j, { kind: 'journey', key: 'journey:' + label, name: label, day, start, end });
+}
+const J_THERE = makeJourney(T.travelThere, DAYS[0], `${T.travelThere && T.travelThere.mode || 'Train'} to ${T.city || 'the city'}`);
+const J_HOME = makeJourney(T.travelHome, DAYS[DAYS.length - 1], `${T.travelHome && T.travelHome.mode || 'Train'} home to ${T.originCity || 'home'}`);
+const EVENTS = [J_THERE, ...DAYS.flatMap(d => d.stops), J_HOME].filter(Boolean).sort((a, b) => a.start - b.start);
+const TRIP_START = EVENTS.length ? EVENTS[0].start : nowMs();
+const TRIP_END = EVENTS.length ? Math.max(...EVENTS.map(e => e.end)) : nowMs();
+const ITEMS = new Map();
+DAYS.forEach(d => { d.stops.forEach(s => ITEMS.set(s.key, s)); d.food.forEach(f => ITEMS.set(f.key, f)); });
+if (HOME) ITEMS.set('home', HOME);
+[J_THERE, J_HOME].forEach(j => j && ITEMS.set(j.key, j));
+
+/* ═════════════════════════ Generated art ═════════════════════════ */
+function makeNoise(rgb, maxA, density) {
+  try {
+    const c = document.createElement('canvas'); c.width = c.height = 180; const g = c.getContext('2d'); const img = g.createImageData(180, 180); const r = mulberry32(42);
+    for (let i = 0; i < img.data.length; i += 4) { const v = r(); if (v < density) { img.data[i] = rgb[0]; img.data[i + 1] = rgb[1]; img.data[i + 2] = rgb[2]; img.data[i + 3] = Math.round(r() * maxA); } }
+    g.putImageData(img, 0, 0);
+    g.strokeStyle = `rgba(${rgb.join(',')},${maxA / 600})`; g.lineWidth = .6;
+    for (let k = 0; k < 26; k++) { g.beginPath(); const x = r() * 180, y = r() * 180; g.moveTo(x, y); g.quadraticCurveTo(x + r() * 30 - 15, y + r() * 30 - 15, x + r() * 40 - 20, y + r() * 40 - 20); g.stroke(); }
+    return `url(${c.toDataURL('image/png')})`;
+  } catch (e) { return 'none'; }
+}
+const rootStyle = document.documentElement.style;
+rootStyle.setProperty('--noise-l', makeNoise([110, 72, 30], 46, .5));
+rootStyle.setProperty('--noise-d', makeNoise([240, 205, 140], 22, .45));
+
+const beads = (r, n, rad, fill) => Array.from({ length: n }, (_, i) => { const a = i / n * Math.PI * 2; return `<circle cx='${(32 + Math.cos(a) * r).toFixed(2)}' cy='${(32 + Math.sin(a) * r).toFixed(2)}' r='${rad}' fill='${fill}' stroke='#3b2a08' stroke-width='.4'/>`; }).join('');
+const frameSvg = (c) => `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='${c[0]}'/><stop offset='.4' stop-color='${c[1]}'/><stop offset='.65' stop-color='${c[2]}'/><stop offset='1' stop-color='${c[3]}'/></linearGradient></defs><circle cx='32' cy='32' r='27.6' fill='none' stroke='#2b1d08' stroke-width='6.6'/><circle cx='32' cy='32' r='27.6' fill='none' stroke='url(#g)' stroke-width='5'/><circle cx='32' cy='32' r='27.6' fill='none' stroke='#fff3c4' stroke-width='.6' stroke-dasharray='1.2 2.6' opacity='.7'/>${beads(30.6, 16, 1.25, 'url(#g)')}<path d='M27.5 3.2 L32 .4 L36.5 3.2 L32 6Z' fill='url(#g)' stroke='#2b1d08' stroke-width='.6'/></svg>`;
+function sealSvg(c1, c2, c3, seed) {
+  const r = mulberry32(seed), n = 20, pts = [];
+  for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, rad = 14 + (r() - .5) * 2.6; pts.push(`${(16 + Math.cos(a) * rad).toFixed(2)},${(16 + Math.sin(a) * rad).toFixed(2)}`); }
+  return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><radialGradient id='s' cx='.38' cy='.32' r='.8'><stop offset='0' stop-color='${c1}'/><stop offset='.6' stop-color='${c2}'/><stop offset='1' stop-color='${c3}'/></radialGradient></defs><polygon points='${pts.join(' ')}' fill='url(#s)' stroke='${c3}' stroke-width='1' stroke-linejoin='round'/><circle cx='16' cy='16' r='10' fill='none' stroke='rgba(0,0,0,.3)' stroke-width='1.3'/><circle cx='15.4' cy='15.4' r='10' fill='none' stroke='rgba(255,255,255,.2)' stroke-width='.6'/></svg>`;
+}
+const CREST = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 54'><defs><linearGradient id='b' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#8E2A38'/><stop offset='1' stop-color='#4E1019'/></linearGradient><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#FBE9A6'/><stop offset='.5' stop-color='#C9A227'/><stop offset='1' stop-color='#7E5F0F'/></linearGradient></defs><path d='M23 3 L42 9 V24 C42 38 33 46.5 23 51 C13 46.5 4 38 4 24 V9 Z' fill='url(#b)' stroke='url(#g)' stroke-width='3'/><path d='M23 7.5 L38 12.2 V24 C38 35.5 31 42.5 23 46.4 C15 42.5 8 35.5 8 24 V12.2 Z' fill='none' stroke='rgba(233,197,79,.5)' stroke-width='.8'/><path d='M13 29 L23 20 L33 29 V38.5 H27 V32 H19 V38.5 H13 Z' fill='url(#g)' stroke='#3b2a08' stroke-width='.6'/><path d='M29 23 V19 H31.5 V25.3' fill='url(#g)'/><circle cx='23' cy='14' r='1.6' fill='#E9C54F'/></svg>`;
+rootStyle.setProperty('--frame-gold', svgUrl(frameSvg(['#FBE9A6', '#C9A227', '#7E5F0F', '#E8C95E'])));
+rootStyle.setProperty('--frame-copper', svgUrl(frameSvg(['#F6CFA6', '#B87333', '#6E3B17', '#E3A26C'])));
+rootStyle.setProperty('--seal-img', svgUrl(sealSvg('#C2404A', '#8E1F2C', '#5A0F18', 7)));
+rootStyle.setProperty('--seal-amber', svgUrl(sealSvg('#F4B955', '#C97B1E', '#7A4210', 11)));
+rootStyle.setProperty('--crest', svgUrl(CREST));
+const INSIDE = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 440'><g fill='none' stroke='#5a4026' stroke-linecap='round'>
+<path d='M-10 300 C 60 270, 110 335, 170 300 S 260 245, 300 282 S 380 322, 410 290' stroke-width='16' opacity='.13'/>
+<path d='M-10 300 C 60 270, 110 335, 170 300 S 260 245, 300 282 S 380 322, 410 290' stroke-width='1.4' opacity='.55'/>
+<path d='M-10 314 C 60 284, 110 349, 170 314 S 260 259, 300 296 S 380 336, 410 304' stroke-width='1' opacity='.35'/>
+<path d='M50 110 C 110 150, 150 110, 205 165 S 300 200, 340 150' stroke-dasharray='2 7' stroke-width='2.2' opacity='.5'/>
+<path d='M70 400 C 130 350, 210 392, 262 336 S 330 360, 372 330' stroke-dasharray='2 7' stroke-width='2.2' opacity='.5'/>
+<path d='M120 60 V 250 M 40 210 H 330' stroke-width='.8' opacity='.25'/>
+<g opacity='.45' stroke-width='1.2'><rect x='60' y='170' width='26' height='22'/><path d='M60 170 L73 158 L86 170'/><rect x='238' y='120' width='34' height='26'/><path d='M238 120 V108 H246 V120 M264 120 V108 H272 V120'/><rect x='150' y='360' width='22' height='30'/><path d='M150 360 L161 344 L172 360'/><circle cx='330' cy='380' r='12'/><path d='M318 380 H342 M330 368 V392'/></g>
+</g>
+<g transform='translate(318 78)' opacity='.6'><circle r='30' fill='none' stroke='#5a4026' stroke-width='1'/><circle r='24' fill='none' stroke='#5a4026' stroke-width='.6' stroke-dasharray='1 3'/><path d='M0 -36 L6 -6 L36 0 L6 6 L0 36 L-6 6 L-36 0 L-6 -6Z' fill='#9C7A12' stroke='#5a4026' stroke-width='.8'/><path d='M0 -36 L6 -6 L0 0Z M36 0 L6 6 L0 0Z M0 36 L-6 6 L0 0Z M-36 0 L-6 -6 L0 0Z' fill='#5a4026' opacity='.55'/></g>
+<g fill='#5a4026' opacity='.35'><ellipse cx='96' cy='255' rx='3' ry='5' transform='rotate(30 96 255)'/><ellipse cx='108' cy='246' rx='3' ry='5' transform='rotate(30 108 246)'/><ellipse cx='116' cy='262' rx='3' ry='5' transform='rotate(30 116 262)'/><ellipse cx='128' cy='252' rx='3' ry='5' transform='rotate(30 128 252)'/></g>
+</svg>`;
+rootStyle.setProperty('--inside-map', svgUrl(INSIDE));
+
+/* ═════════════════════════ Photos & monograms ═════════════════════════ */
+function thumb(url, w) { if (!url) return ''; return /Special:FilePath/i.test(url) ? url.replace(/([?&])width=\d+/, '$1width=' + w).replace(/^([^?]+)$/, '$1?width=' + w) : url; }
+function photo(item, w, eager) {
+  const letter = esc((item.name || '?').trim().replace(/^(the|ye)\s+/i, '').charAt(0).toUpperCase());
+  if (!item.photo) return `<span class="ph mono" aria-hidden="true">${letter}</span>`;
+  return `<img class="ph" src="${esc(thumb(item.photo, w))}" alt="" ${eager ? '' : 'loading="lazy"'} decoding="async" referrerpolicy="no-referrer" data-mono="${letter}">`;
+}
+document.addEventListener('error', e => {
+  const img = e.target;
+  if (!img || img.tagName !== 'IMG' || !img.dataset.mono) return;
+  const s = document.createElement('span'); s.className = img.className + ' mono'; s.setAttribute('aria-hidden', 'true'); s.textContent = img.dataset.mono;
+  img.replaceWith(s);
+}, true);
+
+/* ═════════════════════════ FX: sparkles, dust, particles ═════════════════════════ */
+const fxLayer = $('#fx');
+let liveSparks = 0;
+function sparkle(x, y, n = 7, spread = 34, opts = {}) {
+  if (RM) return;
+  for (let i = 0; i < n && liveSparks < 90; i++) {
+    const el = document.createElement('i'); el.className = 'spark' + (i % 3 === 0 ? ' star' : '');
+    fxLayer.appendChild(el); liveSparks++;
+    const a = (opts.angle != null ? opts.angle + (Math.random() - .5) * (opts.cone || 1.2) : Math.random() * Math.PI * 2);
+    const d = spread * (.45 + Math.random() * .75);
+    const dx = Math.cos(a) * d, dy = Math.sin(a) * d + (opts.fall ? 14 : 0);
+    const s = .6 + Math.random() * .9;
+    el.animate([
+      { transform: `translate3d(${x}px,${y}px,0) scale(${s})`, opacity: 1 },
+      { transform: `translate3d(${x + dx}px,${y + dy}px,0) scale(0) rotate(90deg)`, opacity: 0 }
+    ], { duration: 520 + Math.random() * 380, easing: 'cubic-bezier(.2,.7,.3,1)', delay: opts.stagger ? i * opts.stagger : 0, fill: 'both' })
+      .onfinish = () => { el.remove(); liveSparks--; };
+  }
+}
+// Wand-flick trail on every tap
+(() => {
+  let down = null;
+  document.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; }, { passive: true, capture: true });
+  document.addEventListener('pointerup', e => {
+    if (!down || e.target.closest('#wand')) return;
+    const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y);
+    if (moved < 10 && performance.now() - down.t < 500) {
+      sparkle(e.clientX, e.clientY, 4, 22);
+      sparkle(e.clientX - 16, e.clientY + 12, 3, 14, { angle: -0.6, cone: .6, stagger: 30 });
+    }
+    down = null;
+  }, { passive: true, capture: true });
+})();
+function motes(container, n, opts = {}) {
+  if (!container) return;
+  const r = Math.random; let html = '';
+  for (let i = 0; i < n; i++) {
+    const dur = (opts.dur || 9) * (.7 + r() * .8);
+    html += `<span class="mote" style="--x:${(r() * 100).toFixed(1)}%;--s:${(opts.size || 5) * (.5 + r())}px;--dur:${dur.toFixed(1)}s;--del:-${(r() * dur).toFixed(1)}s;--del2:-${(r() * 2).toFixed(1)}s;--dx:${((r() - .5) * 60).toFixed(0)}px;--rise:-${opts.rise || 110}vh;--o:${(.35 + r() * .55).toFixed(2)}"></span>`;
+  }
+  container.innerHTML = html;
+}
+
+/* ═════════════════════════ State ═════════════════════════ */
+const MODES = ['itinerary', 'food', 'both'];
+const todayStr = zonedDate(nowMs());
+const todayIdx = DAYS.findIndex(d => d.date === todayStr);
+const saved = store.get('view', null);
+const state = {
+  day: saved && Number.isInteger(saved.day) ? saved.day : 0,
+  mode: saved && MODES.includes(saved.mode) ? saved.mode : 'itinerary',
+  introDone: false
+};
+if (todayIdx >= 0 && (!saved || saved.date !== todayStr)) state.day = todayIdx; // a new trip day: open on today
+state.day = clamp(state.day, 0, Math.max(0, DAYS.length - 1));
+const saveView = () => store.set('view', { day: state.day, mode: state.mode, date: zonedDate(nowMs()) });
+const curDay = () => DAYS[state.day];
+const showsStops = m => m !== 'food';
+const showsFood = m => m !== 'itinerary';
+
+function computeStates(day, now = nowMs()) {
+  let hlFound = false;
+  day.stops.forEach(s => {
+    if (s.end <= now) s.state = 'done';
+    else if (s.start <= now) { s.state = 'current'; hlFound = true; }
+    else if (!hlFound) { s.state = 'next'; hlFound = true; }
+    else s.state = 'later';
+  });
+  return day.stops.find(s => s.state === 'current' || s.state === 'next') || null;
+}
+
+/* ═════════════════════════ Header ═════════════════════════ */
+const elHeader = $('#header'), elTabs = $('#tabs'), elCd = $('#countdown'), elCdText = $('#cdText');
+function renderTabs() {
+  const today = zonedDate(nowMs());
+  elTabs.innerHTML = DAYS.map(d => `<button class="tab" type="button" role="tab" data-day="${d.index}" aria-selected="${d.index === state.day}" aria-label="Day ${d.num}, ${esc(fmtDate(d.date, { weekday: 'long', day: 'numeric', month: 'long' }))}${d.date === today ? ', today' : ''}">
+    <span class="tab-day">Day ${d.num}${d.date === today ? '<span class="star" aria-hidden="true">★</span>' : ''}</span>
+    <span class="tab-date">${esc(fmtDate(d.date, { weekday: 'short', day: 'numeric', month: 'short' }))}</span></button>`).join('');
+}
+function updateTabs() {
+  $$('.tab', elTabs).forEach(t => t.setAttribute('aria-selected', String(+t.dataset.day === state.day)));
+  const sel = $(`.tab[data-day="${state.day}"]`, elTabs);
+  if (sel) elTabs.scrollTo({ left: sel.offsetLeft - (elTabs.clientWidth - sel.offsetWidth) / 2, behavior: RM ? 'auto' : 'smooth' });
+  $('#dayTitle').textContent = curDay() ? curDay().title : '';
+}
+elTabs.addEventListener('click', e => { const t = e.target.closest('.tab'); if (t) selectDay(+t.dataset.day); });
+
+let cdTarget = null;
+function updateCountdown() {
+  const now = nowMs();
+  const current = EVENTS.find(e => e.start <= now && now < e.end);
+  const next = EVENTS.find(e => e.start > now);
+  let html, soon = false;
+  if (next) {
+    const ms = next.start - now; soon = ms < 15 * 60000;
+    html = `Next: <b>${esc(next.name)}</b> in ${fmtUntil(ms)}`;
+    cdTarget = next;
+  } else if (current) {
+    html = `Now: <b>${esc(current.name)}</b>`; cdTarget = current;
+  } else {
+    html = EVENTS.length ? '<b>Mischief managed.</b> Until next time.' : 'Add stops to the trip data'; cdTarget = null;
+  }
+  elCdText.innerHTML = html;
+  elCd.classList.toggle('soon', soon);
+  elCd.setAttribute('aria-label', elCdText.textContent);
+  const p = clamp((now - TRIP_START) / Math.max(1, TRIP_END - TRIP_START), 0, 1);
+  $('#inkFill').style.transform = `scaleX(${p})`;
+  $('#nib').style.left = (p * 100) + '%';
+  $('#progress').setAttribute('aria-valuenow', String(Math.round(p * 100)));
+}
+function renderProgressTicks() {
+  const prog = $('#progress');
+  DAYS.slice(1).forEach(d => {
+    const t = zonedToEpoch(d.date, '00:00'); const p = clamp((t - TRIP_START) / Math.max(1, TRIP_END - TRIP_START), 0, 1);
+    const s = document.createElement('span'); s.className = 'ptick'; s.style.left = (p * 100) + '%'; prog.appendChild(s);
+  });
+}
+elCd.addEventListener('click', () => {
+  if (!cdTarget) return;
+  if (cdTarget.kind === 'journey') { if (cdTarget.day.index !== state.day) selectDay(cdTarget.day.index); Sheet.set('half'); return; }
+  const go = () => focusItem(ITEMS.get(cdTarget.key));
+  if (cdTarget.day.index !== state.day) { selectDay(cdTarget.day.index).then(go); } else go();
+});
+
+/* ═════════════════════════ Mode toggle ═════════════════════════ */
+function updateModeUI() {
+  const i = MODES.indexOf(state.mode);
+  $$('.mode').forEach(b => b.setAttribute('aria-checked', String(b.dataset.mode === state.mode)));
+  $('#modeThumb').style.transform = `translateX(${i * 100}%)`;
+}
+$('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (b) setMode(b.dataset.mode); });
+
+/* ═════════════════════════ Bottom sheet ═════════════════════════ */
+const elSheet = $('#sheet'), elGrab = $('#sheetGrab'), elBody = $('#sheetBody');
+const safeProbe = document.createElement('div'); safeProbe.style.cssText = 'position:fixed;visibility:hidden;pointer-events:none;padding-bottom:env(safe-area-inset-bottom,0px)'; document.body.appendChild(safeProbe);
+const Sheet = {
+  state: store.get('sheet', 'peek'), y: 0, h: 0, snaps: { peek: 120, half: 400, full: 600 }, headerBottom: 160,
+  measure() {
+    const H = window.innerHeight;
+    this.headerBottom = Math.round(elHeader.getBoundingClientRect().bottom);
+    rootStyle.setProperty('--header-h', this.headerBottom + 'px');
+    const safeB = parseFloat(getComputedStyle(safeProbe).paddingBottom) || 0;
+    this.h = Math.max(200, H - this.headerBottom - 4);
+    elSheet.style.height = this.h + 'px';
+    const peek = Math.min(this.h, elGrab.offsetHeight + 12 + safeB);
+    this.snaps = { peek, half: clamp(Math.round(H * .5), peek + 60, this.h), full: this.h };
+    this.set(this.state, false);
+  },
+  offset(st) { return this.h - this.snaps[st]; },
+  visible() { return this.h - this.y; },
+  apply(y, anim) {
+    this.y = y;
+    elSheet.style.transition = anim && !RM ? 'transform .45s cubic-bezier(.22,.9,.26,1)' : 'none';
+    elSheet.style.transform = `translate3d(0,${y}px,0)`;
+  },
+  set(st, anim = true) {
+    if (!this.snaps[st]) st = 'peek';
+    this.state = st; store.set('sheet', st);
+    this.apply(this.offset(st), anim);
+    elBody.style.setProperty('--sheet-off', this.offset(st) + 'px');
+    elSheet.classList.toggle('is-full', st === 'full');
+  }
+};
+(() => {
+  let drag = null;
+  const start = y => { drag = { y0: y, t0: Sheet.y, last: y, lastT: performance.now(), v: 0, moved: false }; elSheet.style.transition = 'none'; };
+  const move = y => {
+    const dy = y - drag.y0; if (Math.abs(dy) > 5) drag.moved = true;
+    const t = performance.now(), dt = t - drag.lastT; if (dt > 0) drag.v = .6 * ((y - drag.last) / dt) + .4 * drag.v;
+    drag.last = y; drag.lastT = t;
+    let ny = drag.t0 + dy; const maxY = Sheet.offset('peek');
+    if (ny < 0) ny *= .3; if (ny > maxY) ny = maxY + (ny - maxY) * .3;
+    Sheet.apply(ny, false);
+  };
+  const end = () => {
+    if (!drag) return;
+    if (!drag.moved) { Sheet.set({ peek: 'half', half: 'full', full: 'peek' }[Sheet.state]); drag = null; return; }
+    const proj = Sheet.y + drag.v * 220;
+    let best = 'peek', bd = Infinity;
+    for (const st of ['peek', 'half', 'full']) { const d = Math.abs(Sheet.offset(st) - proj); if (d < bd) { bd = d; best = st; } }
+    Sheet.set(best); drag = null;
+  };
+  elGrab.addEventListener('pointerdown', e => { if (e.button > 0) return; try { elGrab.setPointerCapture(e.pointerId); } catch (_) {} start(e.clientY); });
+  elGrab.addEventListener('pointermove', e => { if (drag) move(e.clientY); });
+  elGrab.addEventListener('pointerup', end);
+  elGrab.addEventListener('pointercancel', end);
+  elGrab.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); Sheet.set({ peek: 'half', half: 'full', full: 'peek' }[Sheet.state]); } });
+  elGrab.tabIndex = 0; elGrab.setAttribute('role', 'button'); elGrab.setAttribute('aria-label', 'Show more or less of the timeline');
+  // Dragging from the list itself: moves the sheet unless it's full and the list is scrolled
+  let tc = null;
+  elBody.addEventListener('touchstart', e => { if (e.touches.length !== 1) { tc = null; return; } tc = { x: e.touches[0].clientX, y: e.touches[0].clientY, decided: false, sheet: false }; }, { passive: true });
+  elBody.addEventListener('touchmove', e => {
+    if (!tc) return; const t = e.touches[0]; const dy = t.clientY - tc.y, dx = t.clientX - tc.x;
+    if (!tc.decided) {
+      if (Math.abs(dy) < 7 && Math.abs(dx) < 7) return;
+      tc.decided = true;
+      if (Math.abs(dx) > Math.abs(dy)) { tc = null; return; }
+      if (Sheet.state !== 'full' || (elBody.scrollTop <= 0 && dy > 0)) { tc.sheet = true; start(tc.y); }
+    }
+    if (tc.sheet) { if (e.cancelable) e.preventDefault(); move(t.clientY); }
+  }, { passive: false });
+  const tEnd = () => { if (tc && tc.sheet) end(); tc = null; };
+  elBody.addEventListener('touchend', tEnd); elBody.addEventListener('touchcancel', tEnd);
+})();
+
+/* ═════════════════════════ Timeline ═════════════════════════ */
+const TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+function haversine(a, b) { const R = 6371, r = Math.PI / 180; const dLat = (b.lat - a.lat) * r, dLng = (b.lng - a.lng) * r; const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLng / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); }
+function travelNote(a, b) {
+  if (b.travel) return b.travel;
+  const km = haversine(a, b) * 1.3;
+  if (km < 2.2) return `${Math.max(2, Math.round(km / 4.8 * 60))} min walk`;
+  if (km < 25) return `About ${Math.round(10 + km * 2.4)} min by Tube`;
+  return `About ${fmtDur(15 + km * 1.2)} by train`;
+}
+function ticketHTML(j, label) {
+  return `<div class="ticket${j.end <= nowMs() ? ' done' : ''}" role="group" aria-label="${esc(label)}: ${esc(j.from)} to ${esc(j.to)}, departs ${esc(j.depart)}, arrives ${esc(j.arrive)}">
+    <div class="tk-top"><span>PORTUS RAILWAY</span><span>${esc(label.toUpperCase())}</span></div>
+    <div class="tk-route"><span>${esc(j === J_HOME ? (T.city || '') : (T.originCity || ''))}</span><span>⟶</span><span>${esc(j === J_HOME ? (T.originCity || '') : (T.city || ''))}</span></div>
+    <div class="tk-stations"><span>${esc(j.from)}</span><span>${esc(j.to)}</span></div>
+    <div class="tk-row"><div><small>Depart</small><b>${esc(j.depart)}</b></div><div><small>Date</small><b>${esc(fmtDate(j.day.date, { day: 'numeric', month: 'short' }))}</b></div><div><small>Arrive</small><b>${esc(j.arrive)}</b></div></div>
+    <div class="tk-foot">${esc([j.operator, j.note].filter(Boolean).join(' · '))}</div>
+  </div>`;
+}
+function renderSheet() {
+  const day = curDay(); if (!day) { elBody.innerHTML = '<p class="empty-note">No days in the trip data yet.</p>'; return; }
+  computeStates(day);
+  const hl = day.stops.find(s => s.state === 'current' || s.state === 'next');
+  const allDone = day.stops.length && day.stops.every(s => s.state === 'done');
+  $('#sheetHead').innerHTML = `<div class="dnum">Day<b>${day.num}</b></div><div class="shead-t">
+    <div class="shead-title">${esc(day.title.replace(/^Day\s*\d+\s*[:\-–]\s*/i, ''))}</div>
+    <div class="shead-sub">${esc(fmtDate(day.date, { weekday: 'long', day: 'numeric', month: 'long' }))} · ${hl ? (hl.state === 'current' ? 'Now: ' : 'Next: ') + esc(hl.name) + ' ' + esc(hl.time) : allDone ? 'Day complete ✓' : `${day.stops.length} stops`}</div></div>`;
+  let h = '';
+  if (day.index === 0 && J_THERE) h += ticketHTML(J_THERE, 'Single');
+  h += '<ol class="tl" aria-label="Stops">';
+  day.stops.forEach((s, k) => {
+    if (k > 0) h += `<li class="tl-gap" aria-hidden="true">${esc(travelNote(day.stops[k - 1], s))}</li>`;
+    h += `<li><button class="tl-item ${stateClass(s)}" type="button" data-key="${esc(s.key)}" aria-label="${esc(s.time)}, ${esc(s.name)}: ${esc(s.activity || '')}${s.state === 'done' ? ' (done)' : ''}">
+      <span class="tl-time">${esc(s.time)}</span>
+      <span class="tl-node">${photo(s, 160)}<span class="num">${s.order}</span><span class="tl-tick">${TICK}</span></span>
+      <span class="tl-text"><span class="tl-name">${esc(s.name)}</span>${s.state === 'current' ? '<span class="tl-badge">Now</span>' : ''}<br><span class="tl-act">${esc(s.activity || '')}</span></span></button></li>`;
+  });
+  h += '</ol>';
+  if (day.stops.length) {
+    const last = day.index === DAYS.length - 1;
+    h += `<button class="mm-end" type="button" id="mmEnd"><span class="seal-big">AP</span><span class="mm-end-t">“Mischief Managed”<small>${last ? 'Tap when the trip is done' : `Tap when we're done to close the map and open Day ${day.num + 1}`}</small></span></button>`;
+  }
+  if (day.index === DAYS.length - 1 && J_HOME) h += ticketHTML(J_HOME, 'Return');
+  if (showsFood(state.mode)) {
+    h += '<h3 class="sec-title">Where to Eat</h3>';
+    h += day.food.length ? '<div class="food-list">' + day.food.map(f => `<button class="food-item" type="button" data-key="${esc(f.key)}" aria-label="${esc(f.name)}, ${esc(f.cuisine || '')}, ${esc(f.priceLevel || '')}">
+      ${photo(f, 160)}<span><span class="food-name">${esc(f.name)}</span> ${f.bookingTime ? `<span class="chip">Booked ${esc(f.bookingTime)}</span>` : ''}<br>
+      <span class="food-meta">${esc([f.cuisine, f.priceLevel].filter(Boolean).join(' · '))}</span><br><span class="food-note">${esc(f.note || '')}</span></span></button>`).join('') + '</div>'
+      : '<p class="empty-note">No restaurants listed for this day yet.</p>';
+  }
+  h += '<p class="sheet-attrib">Map tiles © OpenStreetMap contributors, © CARTO. All times are UK time.</p>';
+  elBody.innerHTML = h;
+}
+function stateClass(s) { return (s.state === 'done' ? 'done' : '') + ((s.state === 'current' || s.state === 'next') ? ' hl' : ''); }
+elBody.addEventListener('click', e => {
+  if (e.target.closest('#mmEnd')) { playMischief(); return; }
+  const b = e.target.closest('[data-key]'); if (!b) return;
+  const item = ITEMS.get(b.dataset.key); if (!item) return;
+  if (item.kind === 'stop' && !showsStops(state.mode)) { setMode('both').then(() => focusItem(item)); return; }
+  focusItem(item);
+});
+
+/* ═════════════════════════ Map ═════════════════════════ */
+let map = null, tiles = null;
+const TILE_URLS = {
+  light: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+  dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+};
+const layers = { stops: [], food: [], routes: [], steps: [], home: null };
+let routeSegs = [], pendingDraws = [], stepTimer = null;
+const SEG_MS = 520;
+
+function initMap() {
+  if (typeof L === 'undefined') {
+    $('#map').innerHTML = '<div class="map-error">The map could not be summoned. Check the connection and reopen the app.</div>';
+    return false;
+  }
+  map = L.map('map', { zoomControl: false, attributionControl: false, zoomSnap: .25, zoomDelta: .5, wheelPxPerZoomLevel: 90, maxZoom: 19, minZoom: 3, worldCopyJump: true });
+  tiles = L.tileLayer(mqDark.matches ? TILE_URLS.dark : TILE_URLS.light, { subdomains: 'abcd', maxZoom: 20, detectRetina: false, keepBuffer: 3 }).addTo(map);
+  (mqDark.addEventListener ? mqDark.addEventListener('change', () => tiles.setUrl(mqDark.matches ? TILE_URLS.dark : TILE_URLS.light)) : null);
+  map.createPane('routes').style.zIndex = 410;
+  map.createPane('steps').style.zIndex = 420;
+  map.createPane('me').style.zIndex = 650;
+  layers.renderer = L.svg({ pane: 'routes', padding: .6 });
+  map.on('zoomstart', finishDraws);
+  map.on('zoomend', () => { if (layers.steps.length || stepTimer === 'on') buildSteps(); });
+  map.on('click', () => Card.close());
+  const day = curDay();
+  if (day) fitTo(visiblePoints(), false); else map.setView([51.5074, -0.1278], 12);
+  if (HOME) {
+    layers.home = L.marker([HOME.lat, HOME.lng], { icon: L.divIcon({ className: 'pin-wrap', html: '<div class="pin pin-home"><div class="crest"></div></div>', iconSize: [46, 54], iconAnchor: [23, 51] }), title: HOME.name, keyboard: true, zIndexOffset: 500 })
+      .on('click', () => openCard(HOME)).addTo(map);
+    layers.home._item = HOME;
+  }
+  return true;
+}
+function mapPad() {
+  const wide = window.innerWidth > 700;
+  return { tl: [wide ? 80 : 40, Sheet.headerBottom + 100], br: [wide ? 80 : 40, Sheet.visible() + 100] };
+}
+function visiblePoints(mode = state.mode, day = curDay()) {
+  if (!day) return [];
+  const pts = [];
+  if (showsStops(mode)) day.stops.forEach(s => pts.push([s.lat, s.lng]));
+  if (showsFood(mode)) day.food.forEach(f => pts.push([f.lat, f.lng]));
+  if (!pts.length && HOME) pts.push([HOME.lat, HOME.lng]);
+  return pts;
+}
+function fitTo(pts, animate) {
+  return new Promise(resolve => {
+    if (!map || !pts.length) return resolve();
+    const p = mapPad(); const b = L.latLngBounds(pts);
+    const opts = { paddingTopLeft: p.tl, paddingBottomRight: p.br, maxZoom: 16 };
+    if (!animate || RM) { map.fitBounds(b, Object.assign(opts, { animate: false })); return resolve(); }
+    let done = false; const fin = () => { if (!done) { done = true; resolve(); } };
+    map.once('moveend', fin); setTimeout(fin, 1400);
+    map.flyToBounds(b, Object.assign(opts, { duration: .85 }));
+  });
+}
+function flyToItem(item, bottomPad, zoom) {
+  return new Promise(resolve => {
+    if (!map) return resolve();
+    const z = zoom || Math.max(map.getZoom(), 16);
+    const top = Sheet.headerBottom + 20;
+    const dy = (bottomPad - top) / 2;
+    const target = map.unproject(map.project([item.lat, item.lng], z).add([0, dy]), z);
+    let done = false; const fin = () => { if (!done) { done = true; resolve(); } };
+    if (RM) { map.setView(target, z, { animate: false }); return resolve(); }
+    map.once('moveend', fin); setTimeout(fin, 1600);
+    map.flyTo(target, z, { duration: .9 });
+  });
+}
+
+/* Hand-drawn quill route between two stops */
+function wobble(a, b, seed, jseed, amp = 1) {
+  const r = mulberry32(seed), rj = mulberry32(jseed);
+  const lat0 = (a.lat + b.lat) / 2 * Math.PI / 180, kx = Math.cos(lat0);
+  const ax = a.lng * kx, ay = a.lat, bx = b.lng * kx, by = b.lat;
+  const dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy) || 1e-9, nx = -dy / len, ny = dx / len;
+  const bend = (r() * .5 + .25) * (r() < .5 ? -1 : 1) * len * .2;
+  const cx = (ax + bx) / 2 + nx * bend, cy = (ay + by) / 2 + ny * bend;
+  const p1 = rj() * 6.283, p2 = rj() * 6.283, f1 = 2 + rj() * 2, f2 = 5 + rj() * 4, N = 30, pts = [];
+  for (let i = 0; i <= N; i++) {
+    const t = i / N, u = 1 - t;
+    let x = u * u * ax + 2 * u * t * cx + t * t * bx, y = u * u * ay + 2 * u * t * cy + t * t * by;
+    const j = Math.sin(Math.PI * t) * len * amp * (.012 * Math.sin(f1 * t * 6.283 + p1) + .006 * Math.sin(f2 * t * 6.283 + p2));
+    x += nx * j; y += ny * j; pts.push([y, x / kx]);
+  }
+  return pts;
+}
+function finishDraws() { pendingDraws.splice(0).forEach(f => f()); }
+function drawIn(layer, delay, dur) {
+  const el = layer.getElement && layer.getElement(); if (!el) return;
+  if (RM) { el.style.opacity = '0'; el.style.transition = 'opacity .4s ease'; requestAnimationFrame(() => { el.style.opacity = ''; }); return; }
+  let len = 0; try { len = el.getTotalLength(); } catch (e) { return; }
+  if (!len) return;
+  el.style.strokeDasharray = `${len} ${len}`; el.style.strokeDashoffset = String(len);
+  el.getBoundingClientRect();
+  el.style.transition = `stroke-dashoffset ${dur}ms cubic-bezier(.45,.05,.55,.95) ${delay}ms`;
+  el.style.strokeDashoffset = '0';
+  const done = () => { el.style.transition = ''; el.style.strokeDasharray = ''; el.style.strokeDashoffset = ''; };
+  el.addEventListener('transitionend', done, { once: true });
+  pendingDraws.push(done);
+}
+
+function pinHTML(item, delay, cls) {
+  const style = `style="--delay:${delay}ms"`;
+  if (item.kind === 'stop') return `<div class="pin pin-stop ${cls || ''}" ${style}><span class="pin-pulse"></span><span class="pin-pulse"></span><div class="pin-frame">${photo(item, 160, true)}</div><span class="seal">${item.order}</span><span class="pin-spark" ${style}></span></div>`;
+  return `<div class="pin pin-food ${cls || ''}" ${style}><span class="pin-pulse"></span><div class="pin-frame">${photo(item, 140, true)}</div><span class="seal seal-food"><svg viewBox="0 0 24 24" fill="none" stroke="#FFF2D6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 1-4 0V3M5 10v11"/><path d="M19 3c-2.2 1.6-3 4.6-3 8h3v10"/></svg></span><span class="pin-spark" ${style}></span></div>`;
+}
+function addStops(opts = {}) {
+  const day = curDay(); if (!map || !day || layers.stops.length) return;
+  const anim = opts.anim && !RM, base = opts.baseDelay || 0;
+  const hl = computeStates(day);
+  day.stops.forEach((s, k) => {
+    const delay = anim ? base + k * SEG_MS : 0;
+    const cls = [opts.materialise ? 'materialise' : '', s === hl ? 'is-hl' : '', s.state === 'done' ? 'is-done' : ''].join(' ');
+    const m = L.marker([s.lat, s.lng], { icon: L.divIcon({ className: 'pin-wrap', html: pinHTML(s, delay, cls), iconSize: [56, 56], iconAnchor: [28, 28] }), title: s.name, keyboard: true, riseOnHover: true, zIndexOffset: s === hl ? 1000 : 0 })
+      .on('click', () => openCard(s)).addTo(map);
+    m._item = s; layers.stops.push(m);
+  });
+  routeSegs = [];
+  const seed = day.num * 101;
+  for (let k = 0; k < day.stops.length - 1; k++) {
+    const a = day.stops[k], b = day.stops[k + 1];
+    const main = wobble(a, b, seed + k, seed + k * 7 + 1, 1), ghost = wobble(a, b, seed + k, seed + k * 7 + 3, .8);
+    routeSegs.push(main);
+    const common = { renderer: layers.renderer, interactive: false, lineCap: 'round', lineJoin: 'round', smoothFactor: .5 };
+    const lines = [
+      L.polyline(main, Object.assign({ weight: 8, opacity: .12, className: 'route route-bleed' }, common)),
+      L.polyline(main, Object.assign({ weight: 3.4, opacity: .88, className: 'route route-main' }, common)),
+      L.polyline(ghost, Object.assign({ weight: 1.3, opacity: .55, className: 'route route-ghost' }, common))
+    ];
+    lines.forEach(l => { l.addTo(map); layers.routes.push(l); if (anim || RM) drawIn(l, anim ? base + k * SEG_MS + 150 : 0, SEG_MS); });
+  }
+  clearTimeout(stepTimer);
+  stepTimer = setTimeout(() => { stepTimer = 'on'; buildSteps(); }, anim ? base + day.stops.length * SEG_MS + 200 : 50);
+}
+function addFood(opts = {}) {
+  const day = curDay(); if (!map || !day || layers.food.length) return;
+  const anim = opts.anim && !RM;
+  day.food.forEach((f, k) => {
+    const delay = anim ? (opts.baseDelay || 0) + k * 160 : 0;
+    const m = L.marker([f.lat, f.lng], { icon: L.divIcon({ className: 'pin-wrap', html: pinHTML(f, delay, opts.materialise ? 'materialise' : ''), iconSize: [48, 48], iconAnchor: [24, 24] }), title: f.name, keyboard: true, riseOnHover: true })
+      .on('click', () => openCard(f)).addTo(map);
+    m._item = f; layers.food.push(m);
+    if (anim && opts.materialise) setTimeout(() => dustAt(m.getLatLng(), true), delay);
+  });
+}
+function removeMarkers(list, animate) {
+  list.splice(0).forEach(m => {
+    const el = m.getElement(), pin = el && el.querySelector('.pin');
+    if (!animate || !pin) { m.remove(); return; }
+    if (!RM) dustAt(m.getLatLng(), false);
+    pin.classList.add('dissolve'); setTimeout(() => m.remove(), 470);
+  });
+}
+function removeRoutes(animate) {
+  finishDraws(); clearSteps();
+  layers.routes.splice(0).forEach(l => {
+    const el = l.getElement();
+    if (!animate || !el) { l.remove(); return; }
+    el.classList.add('route-fade'); setTimeout(() => l.remove(), 420);
+  });
+  routeSegs = [];
+}
+function clearSteps() { if (typeof stepTimer === 'number') clearTimeout(stepTimer); stepTimer = null; layers.steps.splice(0).forEach(m => m.remove()); }
+function footSegment(day) {
+  const n = day.stops.length; if (n < 2) return -1;
+  const hi = day.stops.findIndex(s => s.state === 'current' || s.state === 'next');
+  if (hi < 0) return -1;
+  if (day.stops[hi].state === 'current') return hi < n - 1 ? hi : -1;
+  return Math.max(0, hi - 1);
+}
+/* Footprints that walk from the current stop to the next, looping */
+function buildSteps() {
+  layers.steps.splice(0).forEach(m => m.remove());
+  const day = curDay(); if (!map || !day || !showsStops(state.mode) || !routeSegs.length) return;
+  computeStates(day);
+  const seg = footSegment(day); if (seg < 0 || !routeSegs[seg]) return;
+  const pts = routeSegs[seg].map(p => map.latLngToLayerPoint(p));
+  let total = 0; for (let i = 1; i < pts.length; i++) total += pts[i].distanceTo(pts[i - 1]);
+  const trim = 30; if (total < trim * 2 + 20) return;
+  const spacing = Math.max(15, (total - trim * 2) / 46);
+  const count = Math.floor((total - trim * 2) / spacing);
+  const stepMs = 230, cycle = Math.max(3200, count * stepMs + 1600);
+  let dist = trim, acc = 0, i = 1, k = 0;
+  while (k < count && i < pts.length) {
+    const a = pts[i - 1], b = pts[i], l = a.distanceTo(b);
+    if (acc + l < dist) { acc += l; i++; continue; }
+    const t = (dist - acc) / l, x = a.x + (b.x - a.x) * t, y = a.y + (b.y - a.y) * t;
+    const ang = Math.atan2(b.y - a.y, b.x - a.x), side = k % 2 ? 1 : -1;
+    const px = x + Math.cos(ang + Math.PI / 2) * 3.5 * side, py = y + Math.sin(ang + Math.PI / 2) * 3.5 * side;
+    const deg = ang * 180 / Math.PI + 90;
+    const m = L.marker(map.layerPointToLatLng([px, py]), { pane: 'steps', interactive: false, keyboard: false,
+      icon: L.divIcon({ className: 'step-wrap', iconSize: [0, 0], html: `<i class="step" style="transform:rotate(${deg.toFixed(1)}deg)${side > 0 ? ' scaleX(-1)' : ''};--d:${k * stepMs}ms;--cycle:${cycle}ms"></i>` }) }).addTo(map);
+    layers.steps.push(m); dist += spacing; k++;
+  }
+  stepTimer = 'on';
+}
+function dustAt(latlng, gather) {
+  if (RM || !map) return;
+  const c = map.latLngToContainerPoint(latlng); const fx = $('#mapfx');
+  for (let i = 0; i < 10; i++) {
+    const d = document.createElement('i'); d.className = 'dust'; fx.appendChild(d);
+    const a = Math.random() * Math.PI * 2, r = 16 + Math.random() * 26;
+    const ox = Math.cos(a) * r, oy = Math.sin(a) * r - (gather ? 0 : 14);
+    const from = gather ? `translate3d(${c.x + ox}px,${c.y + oy}px,0) scale(1.3)` : `translate3d(${c.x}px,${c.y}px,0) scale(1)`;
+    const to = gather ? `translate3d(${c.x}px,${c.y}px,0) scale(.2)` : `translate3d(${c.x + ox}px,${c.y + oy - 16}px,0) scale(.2)`;
+    d.animate([{ transform: from, opacity: gather ? 0 : 1 }, { opacity: 1, offset: .35 }, { transform: to, opacity: 0 }],
+      { duration: 650 + Math.random() * 300, easing: 'cubic-bezier(.2,.6,.3,1)', delay: Math.random() * 120, fill: 'both' }).onfinish = () => d.remove();
+  }
+}
+function refreshMarkerStates() {
+  const day = curDay(); if (!day) return;
+  const hl = computeStates(day);
+  layers.stops.forEach(m => {
+    const el = m.getElement(), pin = el && el.querySelector('.pin'); if (!pin) return;
+    pin.classList.toggle('is-hl', m._item === hl); pin.classList.toggle('is-done', m._item.state === 'done');
+    m.setZIndexOffset(m._item === hl ? 1000 : 0);
+  });
+}
+function markerFor(item) { return [...layers.stops, ...layers.food, layers.home].find(m => m && m._item === item) || (item.kind === 'home' ? layers.home : null); }
+
+// Once a marker has popped in, freeze it so later class changes (e.g. a bounce) don't replay the entrance
+document.addEventListener('animationend', e => {
+  const t = e.target;
+  if (t.classList && t.classList.contains('pin') && /^(pinPop|pinMat|pinBounce)$/.test(e.animationName)) t.style.animation = 'none';
+});
+// Focus or scrollIntoView can scroll an overflow:hidden container; the app shell must never move
+[app, document.body, document.documentElement].forEach(el => el.addEventListener('scroll', () => { if (el.scrollTop || el.scrollLeft) { el.scrollTop = 0; el.scrollLeft = 0; } }));
+
+/* ═════════════════════════ Day & mode switching ═════════════════════════ */
+let opId = 0;
+function syncLayers(anim, materialise) {
+  if (showsStops(state.mode)) addStops({ anim, materialise }); else { removeMarkers(layers.stops, anim); removeRoutes(anim); }
+  if (showsFood(state.mode)) addFood({ anim, materialise, baseDelay: materialise ? 0 : (showsStops(state.mode) ? curDay().stops.length * SEG_MS * .6 : 0) }); else removeMarkers(layers.food, anim);
+}
+function inkWash(mid) {
+  const w = $('#wash');
+  return new Promise(resolve => {
+    if (RM) { mid(); resolve(); return; }
+    w.style.opacity = '1';
+    const a = w.animate([{ transform: 'translate3d(-100%,0,0)' }, { transform: 'translate3d(-33.34%,0,0)', offset: .5 }, { transform: 'translate3d(33.4%,0,0)' }], { duration: 1050, easing: 'cubic-bezier(.45,0,.55,1)' });
+    setTimeout(mid, 525);
+    a.onfinish = () => { w.style.opacity = '0'; resolve(); };
+  });
+}
+async function selectDay(i, opts = {}) {
+  if (!DAYS[i]) return;
+  if (i === state.day && !opts.force) return;
+  const my = ++opId;
+  Card.close(true);
+  state.day = i; saveView(); updateTabs();
+  const anim = opts.anim !== false && state.introDone;
+  const swap = () => {
+    rootStyle.setProperty('--accent', curDay().accentColour || '#6B1E2A');
+    removeMarkers(layers.stops, false); removeMarkers(layers.food, false); removeRoutes(false);
+    renderSheet(); elBody.scrollTop = 0; fitTo(visiblePoints(), false);
+  };
+  if (anim) await inkWash(swap); else swap();
+  if (my !== opId) return;
+  if (state.introDone) syncLayers(anim, false);
+}
+async function setMode(m) {
+  if (!MODES.includes(m) || m === state.mode) return;
+  const my = ++opId;
+  state.mode = m; saveView(); updateModeUI(); renderSheet();
+  Card.close(true);
+  if (!showsStops(m)) { removeMarkers(layers.stops, true); removeRoutes(true); }
+  if (!showsFood(m)) removeMarkers(layers.food, true);
+  await fitTo(visiblePoints(), true);
+  if (my !== opId) return;
+  syncLayers(true, true);
+}
+
+/* ═════════════════════════ Place card ═════════════════════════ */
+const ICON_CLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+const ICON_GLASS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12M6 21h12M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9s10 4 10 9"/></svg>';
+const elLayer = $('#cardLayer'), elCard = $('#card'), elPaper = $('#cardPaper'), elRod = $('#rodBottom'), elScroll = $('#cardScroll');
+const Card = {
+  item: null, open: false, anims: [],
+  list(item) { if (!item || !item.day) return []; return item.kind === 'stop' ? item.day.stops : item.kind === 'food' ? item.day.food : []; },
+  fill(item) {
+    this.item = item;
+    const day = item.day;
+    if (item.kind === 'stop') computeStates(day);
+    let kicker = '', meta = '', doing = '', status = '';
+    if (item.kind === 'stop') {
+      kicker = `Stop ${item.order} of ${day.stops.length} · Day ${day.num}`;
+      meta = `<span>${ICON_CLOCK}${esc(item.time)}</span><span>${ICON_GLASS}${esc(fmtDur(item.duration || 60))}</span>`;
+      doing = item.activity ? `<div class="card-doing"><small>What we're doing</small>${esc(item.activity)}</div>` : '';
+      status = item.state === 'current' ? '<span class="card-status">Now</span>' : item.state === 'done' ? '<span class="card-status" style="background:#1F3B2C;color:#F1D67A">Visited ✓</span>' : item.state === 'next' ? '<span class="card-status">Next</span>' : '';
+    } else if (item.kind === 'food') {
+      kicker = `Where to eat · Day ${day.num}`;
+      meta = `<span>${esc([item.cuisine, item.priceLevel].filter(Boolean).join(' · '))}</span>${item.bookingTime ? `<span>${ICON_CLOCK}Table booked for ${esc(item.bookingTime)}</span>` : ''}`;
+      doing = item.note ? `<div class="card-doing"><small>Our note</small>${esc(item.note)}</div>` : '';
+    } else {
+      kicker = 'Home base';
+      meta = `<span>${esc(item.address || '')}</span>`;
+    }
+    elScroll.innerHTML = `<div class="card-photo">${photo(item, 900, true)}</div>
+      <div class="card-content">
+        <div class="card-kicker">${esc(kicker)}</div>
+        <h2 class="card-title" id="cardTitle">${esc(item.name)}${status}</h2>
+        <div class="card-meta">${meta}</div>
+        ${doing}
+        ${item.description ? `<p class="card-desc">${esc(item.description)}</p>` : ''}
+        ${item.bookingNote ? `<div class="card-booking"><span class="seal-mini"></span><span><b>Booking:</b> ${esc(item.bookingNote)}</span></div>` : ''}
+        ${item.link ? `<a class="card-link" href="${esc(item.link)}" target="_blank" rel="noopener">More about this place ↗</a>` : ''}
+      </div>`;
+    elScroll.scrollTop = 0;
+    const list = this.list(item), idx = list.indexOf(item);
+    const noun = item.kind === 'food' ? 'restaurant' : 'stop';
+    $('#cardPrev').disabled = idx <= 0; $('#cardNext').disabled = idx < 0 || idx >= list.length - 1;
+    $('#cardPrev').setAttribute('aria-label', `Previous ${noun}`); $('#cardNext').setAttribute('aria-label', `Next ${noun}`);
+    $('#cardPrev').style.visibility = $('#cardNext').style.visibility = list.length > 1 ? '' : 'hidden';
+  },
+  measure() { elLayer.hidden = false; elCard.style.visibility = 'hidden'; const h = elCard.offsetHeight; elCard.style.visibility = ''; return h; },
+  stop() { this.anims.forEach(a => { try { a.cancel(); } catch (e) {} }); this.anims = []; },
+  unroll() {
+    this.stop(); elLayer.hidden = false; this.open = true; app.classList.add('card-open');
+    elCard.style.transform = ''; elCard.style.opacity = '';
+    if (RM) { this.anims = [elCard.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250 })]; return; }
+    const h = elPaper.offsetHeight;
+    this.anims = [
+      elPaper.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)' }], { duration: 620, easing: 'cubic-bezier(.3,.8,.3,1)' }),
+      elRod.animate([{ transform: `translate3d(0,${-h}px,0)` }, { transform: 'translate3d(0,0,0)' }], { duration: 620, easing: 'cubic-bezier(.3,.8,.3,1)' }),
+      elCard.animate([{ opacity: 0 }, { opacity: 1, offset: .15 }, { opacity: 1 }], { duration: 620 })
+    ];
+  },
+  close(instant) {
+    if (!this.open) return;
+    this.open = false; this.stop();
+    app.classList.remove('card-open');
+    const finish = () => { if (!this.open) { elLayer.hidden = true; this.item = null; } };
+    if (instant || RM) { if (RM && !instant) { elCard.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200 }).onfinish = finish; } else finish(); return; }
+    const h = elPaper.offsetHeight;
+    this.anims = [
+      elPaper.animate([{ clipPath: 'inset(0 0 0% 0)' }, { clipPath: 'inset(0 0 100% 0)' }], { duration: 420, easing: 'cubic-bezier(.6,0,.7,.4)', fill: 'forwards' }),
+      elRod.animate([{ transform: 'translate3d(0,0,0)' }, { transform: `translate3d(0,${-h}px,0)` }], { duration: 420, easing: 'cubic-bezier(.6,0,.7,.4)', fill: 'forwards' }),
+      elCard.animate([{ opacity: 1 }, { opacity: 1, offset: .75 }, { opacity: 0 }], { duration: 420, fill: 'forwards' })
+    ];
+    this.anims[0].onfinish = () => { this.stop(); finish(); };
+  }
+};
+async function openCard(item, opts = {}) {
+  if (!item) return;
+  if (Card.open && Card.item === item) return;
+  const swapping = Card.open;
+  Card.fill(item);
+  const h = Card.measure();
+  const bottomPad = h + 30 + (parseFloat(getComputedStyle(safeProbe).paddingBottom) || 0);
+  if (opts.fly) {
+    elLayer.hidden = true;
+    await flyToItem(item, bottomPad, 16);
+    bounce(item);
+    Card.unroll();
+  } else {
+    if (swapping) { Card.open = true; elLayer.hidden = false; app.classList.add('card-open'); if (!RM) elPaper.animate([{ opacity: .3 }, { opacity: 1 }], { duration: 300 }); }
+    else Card.unroll();
+    flyToItem(item, bottomPad, Math.max(map ? map.getZoom() : 15, 15));
+  }
+  setTimeout(() => { if (Card.open) $('#cardClose').focus({ preventScroll: true }); }, 50);
+}
+function bounce(item) {
+  const m = markerFor(item); const pin = m && m.getElement() && m.getElement().querySelector('.pin');
+  if (!pin || RM) return; pin.classList.remove('bounce'); void pin.offsetWidth; pin.classList.add('bounce');
+  setTimeout(() => pin.classList.remove('bounce'), 650);
+  const r = pin.getBoundingClientRect(); sparkle(r.left + r.width / 2, r.top + r.height / 2, 10, 40);
+}
+function focusItem(item) {
+  if (!item) return;
+  Card.close(true);
+  Sheet.set('peek');
+  setTimeout(() => openCard(item, { fly: true }), RM ? 0 : 120);
+}
+$('#cardClose').addEventListener('click', () => Card.close());
+document.addEventListener('keydown', e => { if (e.key === 'Escape') Card.close(); });
+function cardStep(dir) {
+  const list = Card.list(Card.item), idx = list.indexOf(Card.item), next = list[idx + dir];
+  if (next) openCard(next);
+}
+$('#cardPrev').addEventListener('click', () => cardStep(-1));
+$('#cardNext').addEventListener('click', () => cardStep(1));
+(() => { // swipe the card left/right for next/previous
+  let sx = null, sy = null;
+  elCard.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  elCard.addEventListener('touchend', e => { if (sx == null) return; const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null; if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) cardStep(dx < 0 ? 1 : -1); }, { passive: true });
+})();
+
+/* ═════════════════════════ Portus: directions in the phone's maps app ═════════════════════════ */
+function directionsUrl(item) {
+  const ll = `${item.lat},${item.lng}`;
+  let walk = false;
+  if (item.kind === 'stop' && item.order > 1) walk = haversine(item.day.stops[item.order - 2], item) < 1.7;
+  if (item.kind === 'food') { const hl = item.day.stops.find(s => s.state === 'current' || s.state === 'next') || item.day.stops[0]; walk = hl ? haversine(hl, item) < 1.7 : false; }
+  const gmode = walk ? 'walking' : 'transit';
+  const web = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(ll)}&travelmode=${gmode}`;
+  if (IS_IOS) return `https://maps.apple.com/?daddr=${encodeURIComponent(ll)}&q=${encodeURIComponent(item.name)}&dirflg=${walk ? 'w' : 'r'}`;
+  if (IS_ANDROID) return `intent://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(ll)}&travelmode=${gmode}#Intent;scheme=https;package=com.google.android.apps.maps;S.browser_fallback_url=${encodeURIComponent(web)};end`;
+  return web;
+}
+let portusBusy = false;
+async function portus() {
+  const item = Card.item; if (!item || portusBusy) return;
+  portusBusy = true;
+  const url = directionsUrl(item);
+  const vortex = $('#vortex'), disc = $('#vortexDisc');
+  if (!RM) {
+    const r = $('#cardPortus').getBoundingClientRect(); sparkle(r.left + r.width / 2, r.top + r.height / 2, 14, 60);
+    vortex.hidden = false;
+    disc.animate([{ transform: 'rotate(0) scale(1.4)', opacity: 0 }, { opacity: 1, offset: .35 }, { transform: 'rotate(-540deg) scale(.15)', opacity: 0 }], { duration: 760, easing: 'cubic-bezier(.5,0,.6,1)' });
+    elCard.animate([{ transform: 'none', opacity: 1 }, { transform: 'rotate(200deg) scale(.5)', opacity: .9, offset: .55 }, { transform: 'rotate(560deg) scale(.03)', opacity: 0 }], { duration: 720, easing: 'cubic-bezier(.55,0,.75,.3)', fill: 'forwards' });
+  }
+  await wait(RM ? 120 : 700);
+  if (IS_IOS || IS_ANDROID) location.href = url; else window.open(url, '_blank', 'noopener');
+  setTimeout(() => {
+    vortex.hidden = true; portusBusy = false;
+    elCard.getAnimations().forEach(a => a.cancel());
+    Card.close(true);
+  }, 900);
+}
+$('#cardPortus').addEventListener('click', portus);
+
+/* ═════════════════════════ "You are here" (Marauder's Map style) ═════════════════════════ */
+const Loc = {
+  watch: null, pos: null, marker: null, circle: null, wantFly: false, heading: null, raf: 0,
+  start(fly) {
+    if (!navigator.geolocation) { toast("This phone can't share its location."); return; }
+    this.wantFly = fly;
+    if (this.watch == null) {
+      this.watch = navigator.geolocation.watchPosition(p => this.update(p), e => this.error(e), { enableHighAccuracy: true, maximumAge: 15000, timeout: 25000 });
+      this.orient();
+      if (fly) toast('Searching for you on the map…');
+    } else if (this.pos && fly) this.fly();
+    $('#fabLocate').classList.add('is-on');
+  },
+  orient() {
+    const handler = e => {
+      let h = null;
+      if (typeof e.webkitCompassHeading === 'number') h = e.webkitCompassHeading;
+      else if (e.absolute && typeof e.alpha === 'number') h = 360 - e.alpha;
+      if (h == null) return;
+      this.heading = h;
+      if (!this.raf) this.raf = requestAnimationFrame(() => { this.raf = 0; this.paintHeading(); });
+    };
+    try {
+      if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission().then(s => { if (s === 'granted') addEventListener('deviceorientation', handler); }).catch(() => {});
+      } else if ('ondeviceorientationabsolute' in window) addEventListener('deviceorientationabsolute', handler);
+      else if (window.DeviceOrientationEvent) addEventListener('deviceorientation', handler);
+    } catch (e) { /* no compass */ }
+  },
+  paintHeading() { const el = this.marker && this.marker.getElement(); const f = el && el.querySelector('.me-feet'); if (f && this.heading != null) f.style.transform = `rotate(${Math.round(this.heading)}deg)`; },
+  update(p) {
+    if (!map) return;
+    const ll = [p.coords.latitude, p.coords.longitude];
+    const first = !this.pos; this.pos = ll;
+    if (p.coords.heading != null && !isNaN(p.coords.heading) && (p.coords.speed || 0) > .6 && this.heading == null) this.heading = p.coords.heading;
+    if (!this.marker) {
+      this.circle = L.circle(ll, { radius: p.coords.accuracy || 30, pane: 'steps', interactive: false, stroke: true, color: '#C9A227', weight: 1, opacity: .5, fillColor: '#E9C54F', fillOpacity: .1 }).addTo(map);
+      this.marker = L.marker(ll, { pane: 'me', interactive: false, keyboard: false, icon: L.divIcon({ className: 'me-wrap', iconSize: [0, 0], html: '<div class="me"><div class="me-feet"><i></i><i></i></div><div class="me-label">You are here</div></div>' }) }).addTo(map);
+    } else { this.marker.setLatLng(ll); this.circle.setLatLng(ll).setRadius(p.coords.accuracy || 30); }
+    this.paintHeading();
+    if (this.wantFly || first && this.wantFly) this.fly();
+  },
+  fly() { this.wantFly = false; if (!this.pos || !map) return; flyToItem({ lat: this.pos[0], lng: this.pos[1] }, Sheet.visible() + 60, Math.max(map.getZoom(), 16)); },
+  error(e) {
+    if (e.code === 1) { toast('Location is switched off for this app. Allow it in your phone settings to appear on the map.'); this.stopWatch(); }
+    else if (this.wantFly) toast("Couldn't find you just now. Try again in a moment.");
+  },
+  stopWatch() { if (this.watch != null) navigator.geolocation.clearWatch(this.watch); this.watch = null; $('#fabLocate').classList.remove('is-on'); }
+};
+$('#fabLocate').addEventListener('click', () => Loc.start(true));
+$('#fabHome').addEventListener('click', () => HOME && focusItem(HOME));
+if (navigator.permissions && navigator.permissions.query) navigator.permissions.query({ name: 'geolocation' }).then(r => { if (r.state === 'granted') Loc.start(false); }).catch(() => {});
+
+let toastTimer = 0;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3600); }
+
+/* ═════════════════════════ Mischief Managed ═════════════════════════ */
+let mmBusy = false;
+function writeLetters(el, text, perLetter) {
+  el.innerHTML = [...text].map((ch, i) => ch === ' ' ? '<span class="sp"> </span>' : `<span style="animation-delay:${i * perLetter}ms">${esc(ch)}</span>`).join('');
+  el.classList.remove('write'); void el.offsetWidth; el.classList.add('write');
+}
+async function playMischief(fromAuto) {
+  if (mmBusy || !state.introDone) return;
+  mmBusy = true;
+  const day = curDay(), last = day.index >= DAYS.length - 1;
+  const nextIdx = last ? day.index : day.index + 1;
+  store.set('mm.' + day.date, true);
+  Card.close(true); Sheet.set('peek');
+  const mm = $('#mischief'), panels = $$('.mm-panel', mm), txt = $('#mmText'), sub = $('#mmSub');
+  const [pl, , pr] = panels;
+  panels.forEach(p => { p.style.transform = ''; p.style.opacity = '0'; });
+  txt.innerHTML = ''; sub.style.opacity = '0';
+  sub.textContent = last ? 'Until the next adventure.' : `Day ${nextIdx + 1} awaits…`;
+  mm.hidden = false;
+  const fade = (el, a, b, d, delay = 0) => el.animate([{ opacity: a }, { opacity: b }], { duration: d, delay, fill: 'forwards', easing: 'ease' });
+  panels.forEach(p => fade(p, 0, 1, RM ? 300 : 900));
+  await wait(RM ? 300 : 500);
+  writeLetters(txt, 'Mischief Managed', RM ? 0 : 75);
+  await wait(RM ? 500 : 16 * 75 + 600);
+  fade(sub, 0, 1, 500);
+  await wait(RM ? 900 : 1300);
+  fade(txt, 1, 0, 350); fade(sub, 1, 0, 350);
+  await wait(350);
+  const ease = 'cubic-bezier(.55,.05,.3,1)';
+  if (!RM) {
+    pl.animate([{ transform: 'rotateY(0)' }, { transform: 'rotateY(179.5deg)' }], { duration: 750, easing: ease, fill: 'forwards' });
+    pr.animate([{ transform: 'rotateY(0)' }, { transform: 'rotateY(-179deg)' }], { duration: 750, delay: 220, easing: ease, fill: 'forwards' });
+    await wait(1050);
+  }
+  if (nextIdx !== state.day) await selectDay(nextIdx, { anim: false }); else { removeMarkers(layers.stops, false); removeMarkers(layers.food, false); removeRoutes(false); fitTo(visiblePoints(), false); }
+  await wait(RM ? 100 : 350);
+  if (!RM) {
+    pr.animate([{ transform: 'rotateY(-179deg)' }, { transform: 'rotateY(0)' }], { duration: 750, easing: ease, fill: 'forwards' });
+    pl.animate([{ transform: 'rotateY(179.5deg)' }, { transform: 'rotateY(0)' }], { duration: 750, delay: 220, easing: ease, fill: 'forwards' });
+    await wait(1000);
+  }
+  panels.forEach(p => fade(p, 1, 0, 600));
+  await wait(450);
+  syncLayers(true, false);
+  await wait(250);
+  mm.hidden = true; panels.forEach(p => p.getAnimations().forEach(a => a.cancel()));
+  txt.getAnimations && txt.getAnimations().forEach(a => a.cancel()); sub.getAnimations().forEach(a => a.cancel());
+  mmBusy = false;
+}
+
+/* ═════════════════════════ Live clock ═════════════════════════ */
+let lastSegKey = '';
+function tick() {
+  updateCountdown();
+  const day = curDay(); if (!day) return;
+  const before = day.stops.map(s => s.state).join();
+  computeStates(day);
+  const after = day.stops.map(s => s.state).join();
+  if (before !== after) { renderSheet(); refreshMarkerStates(); }
+  const segKey = day.index + ':' + footSegment(day);
+  if (segKey !== lastSegKey) { lastSegKey = segKey; if (stepTimer === 'on') buildSteps(); }
+  // Auto "Mischief Managed" when the last stop of today ends (once per day, within 6 hours)
+  const now = nowMs(), tIdx = DAYS.findIndex(d => d.date === zonedDate(now));
+  if (tIdx >= 0 && state.introDone && !document.hidden && !mmBusy && tIdx < DAYS.length - 1) {
+    const td = DAYS[tIdx], lastStop = td.stops[td.stops.length - 1];
+    if (lastStop && now >= lastStop.end && now - lastStop.end < 6 * 3600e3 && !store.get('mm.' + td.date, false)) {
+      const go = () => playMischief(true);
+      if (state.day !== tIdx) selectDay(tIdx, { anim: false }).then(go); else go();
+    }
+  }
+}
+
+/* ═════════════════════════ The opening reveal ═════════════════════════ */
+const intro = $('#intro');
+function blob(cx, cy, R, ph) {
+  const n = 44, pts = [];
+  for (let i = 0; i < n; i++) {
+    const a = i / n * Math.PI * 2, k = 1 + .1 * Math.sin(a * 3 + ph) + .06 * Math.sin(a * 7 + ph * 1.7) + .035 * Math.sin(a * 13 + ph * .6);
+    pts.push(`${(cx + Math.cos(a) * R * k).toFixed(1)}px ${(cy + Math.sin(a) * R * k).toFixed(1)}px`);
+  }
+  return `polygon(${pts.join(',')})`;
+}
+function inkReveal(dur) {
+  return new Promise(resolve => {
+    const w = innerWidth, h = innerHeight, maxR = Math.hypot(w, h) / 2 / .78;
+    app.style.zIndex = '200';
+    let a;
+    try {
+      a = app.animate([0, .06, .22, .5, 1].map((f, i) => ({ clipPath: blob(w / 2, h / 2, maxR * f, i * 1.1) })), { duration: dur, easing: 'cubic-bezier(.45,.05,.25,1)', fill: 'both' });
+    } catch (e) { a = null; }
+    const done = () => { app.style.zIndex = ''; if (a) a.cancel(); resolve(); };
+    if (a) a.onfinish = done; else { app.animate([{ opacity: 0 }, { opacity: 1 }], { duration: dur }).onfinish = done; }
+  });
+}
+let introSkipped = false, introFinished = false;
+async function finishIntro(fast) {
+  if (introFinished) return; introFinished = true;
+  store.set('introDate', zonedDate(nowMs()));
+  if (fast || RM) {
+    app.style.zIndex = '200';
+    await new Promise(r => { app.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RM ? 400 : 350, easing: 'ease' }).onfinish = r; });
+    app.style.zIndex = '';
+  } else await inkReveal(1000);
+  intro.remove();
+  onAppReady();
+}
+function setupIntroGeometry() {
+  const W = Math.round(Math.min(innerWidth * .86, 400, (innerHeight * .6) / 1.1));
+  $('#foldStage').style.setProperty('--W', W + 'px');
+  $('#foldStage').closest('#intro').style.setProperty('--W', W + 'px');
+  $('#insideSub').textContent = `${T.city || ''} · ${DAYS.length ? fmtDate(DAYS[0].date, { day: 'numeric', month: 'short' }) + ' – ' + fmtDate(DAYS[DAYS.length - 1].date, { day: 'numeric', month: 'short', year: 'numeric' }) : ''}`;
+}
+async function fullIntro() {
+  const wand = $('#wand'); if (introSkipped) return;
+  wand.disabled = true;
+  wand.classList.add('flick');
+  const tip = wand.getBoundingClientRect(); const tx = tip.left + tip.width * (94 / 120), ty = tip.top + tip.height * (26 / 120);
+  sparkle(tx, ty, 26, 80); setTimeout(() => sparkle(tx, ty, 14, 50), 120);
+  $('#hint').style.opacity = '0';
+  if (RM) { finishIntro(true); return; }
+  await wait(350); if (introSkipped) return;
+  const spell = $('#spell'); writeLetters(spell, 'Aparecium', 115);
+  const rects = () => $$('span', spell).map(s => s.getBoundingClientRect());
+  setTimeout(() => rects().forEach((r, i) => setTimeout(() => !introSkipped && sparkle(r.left + r.width * .7, r.top + r.height * .55, 3, 16), i * 115 + 120)), 30);
+  await wait(9 * 115 + 650); if (introSkipped) return;
+  wand.style.opacity = '0';
+  const seal = $('#packetSeal'); seal.style.transform = 'scale(1.35)'; seal.style.opacity = '0';
+  const sr = seal.getBoundingClientRect(); sparkle(sr.left + sr.width / 2, sr.top + sr.height / 2, 10, 40);
+  $('#packetFace').style.opacity = '0';
+  await wait(250); if (introSkipped) return;
+  const fm = $('#foldMap');
+  $('.fp-left', fm).style.transitionDelay = '0ms'; $('.fp-right', fm).style.transitionDelay = '280ms';
+  fm.classList.add('open');
+  await wait(1150); if (introSkipped) return;
+  const it = $('#insideTitle');
+  it.animate([{ opacity: 0, transform: 'scale(.92)', filter: 'blur(3px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }], { duration: 650, easing: 'ease-out', fill: 'forwards' });
+  const ir = it.getBoundingClientRect(); sparkle(ir.left + ir.width / 2, ir.top + ir.height / 2, 18, 110);
+  await wait(950); if (introSkipped) return;
+  finishIntro(false);
+}
+async function quickIntro() {
+  $('#wand').style.display = 'none'; $('#packetFace').style.display = 'none';
+  const fm = $('#foldMap'); $$('.fpanel', fm).forEach(p => { p.style.transition = 'none'; }); fm.classList.add('open');
+  $('#insideTitle').style.opacity = '1';
+  await wait(RM ? 200 : 300);
+  if (introSkipped) return;
+  if (RM) finishIntro(true); else { introFinished = true; store.set('introDate', zonedDate(nowMs())); await inkReveal(700); intro.remove(); onAppReady(); }
+}
+function startIntro() {
+  setupIntroGeometry();
+  motes($('#introParticles'), 26, { dur: 11, size: 6 });
+  $('#skipIntro').addEventListener('click', () => { introSkipped = true; finishIntro(true); });
+  const mode = params.get('intro');
+  if (mode === 'skip') { introSkipped = true; intro.remove(); introFinished = true; onAppReady(); return; }
+  const full = mode === 'full' || (mode !== 'quick' && store.get('introDate', '') !== zonedDate(nowMs()));
+  if (full) $('#wand').addEventListener('click', fullIntro, { once: true });
+  else quickIntro();
+}
+
+/* ═════════════════════════ Boot ═════════════════════════ */
+function onAppReady() {
+  state.introDone = true;
+  syncLayers(true, false);
+  tick();
+  setInterval(tick, 15000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { tick(); renderTabs(); updateTabs(); } });
+}
+rootStyle.setProperty('--accent', (curDay() && curDay().accentColour) || '#6B1E2A');
+motes($('#hParticles'), 9, { dur: 7, size: 4, rise: 24 });
+renderTabs(); renderProgressTicks(); updateTabs(); updateModeUI(); renderSheet(); updateCountdown();
+Sheet.measure();
+initMap();
+let rz = 0;
+const onResize = () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { Sheet.measure(); if (map) map.invalidateSize(); if (stepTimer === 'on') buildSteps(); }); };
+addEventListener('resize', onResize);
+if (window.ResizeObserver) new ResizeObserver(onResize).observe(elHeader);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(onResize);
+startIntro();
+
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+});
+</script>
+</body>
+</html>
