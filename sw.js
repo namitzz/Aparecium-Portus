@@ -1,7 +1,7 @@
 /* Aparecium Portus service worker: keeps the app usable with patchy signal (e.g. on the Tube).
    The page is always fetched fresh when online, so edits to index.html show up straight away. */
-const SHELL = 'portus-shell-v1';
-const MEDIA = 'portus-media-v1';
+const SHELL = 'portus-shell-v2';
+const MEDIA = 'portus-media-v2';
 const MEDIA_LIMIT = 400;
 const SHELL_FILES = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './apple-touch-icon.png'];
 
