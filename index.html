@@ -40,6 +40,7 @@ const TRIP_DATA = {
 
     // Written in ink on the folded map before it opens. Put your group's names here.
     presentedBy: "Messrs Moony, Wormtail, Padfoot & Prongs",
+    presentedTagline: "Purveyors of Aids to Magical Mischief-Makers",   // second line on the cover ("" to hide)
 
     // Optional: the journey there, shown as a train ticket at the top of Day 1
     travelThere: {                           // PLACEHOLDER times
@@ -802,7 +803,7 @@ img { display: block; }
 @keyframes moteFlicker { 0% { opacity: .05; } 35% { opacity: var(--o); } 100% { opacity: calc(var(--o) * .35); } }
 
 /* ── Opening ───────────────────────────────────────────────────────────── */
-#intro { position: fixed; inset: 0; z-index: 100; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+#intro { position: fixed; inset: 0; z-index: 100; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
   background: radial-gradient(ellipse 65% 50% at 50% 42%, #2C1C10 0%, #170F09 55%, #070504 100%); color: #F3E9D2;
   padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
 .intro-particles { position: absolute; inset: 0; pointer-events: none; }
@@ -810,39 +811,51 @@ img { display: block; }
   font-family: var(--f-sc); letter-spacing: .1em; font-size: 15px; color: rgba(243, 233, 210, .55); }
 .fold-stage { position: relative; width: var(--W, 320px); height: calc(var(--W, 320px) * 1.1); }
 .foldmap { position: absolute; inset: 0; perspective: 1500px; }
-.fpanel { position: absolute; top: 0; bottom: 0; transform-style: preserve-3d; transition: transform 1s cubic-bezier(.55, .05, .25, 1); }
+.fpanel { position: absolute; top: 0; bottom: 0; transform-style: preserve-3d; transition: transform 1.5s cubic-bezier(.5, .05, .25, 1); }
 .fp-left { left: 0; width: 25%; transform-origin: 100% 50%; transform: rotateY(179.4deg); }
 .fp-centre { left: 25%; width: 50%; }
 .fp-right { left: 75%; width: 25%; transform-origin: 0 50%; transform: rotateY(-179deg); }
 .fp-right .back { background-position: 0 0, -283px -167px, -71px -131px; }
 .foldmap.open .fp-left, .foldmap.open .fp-right { transform: rotateY(0deg); }
 .face { position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden; background-color: #EFE2C4; }
-.face.front { background-image: var(--inside-map), var(--stains-strong), var(--fibres); background-size: var(--W) calc(var(--W) * 1.1), 600px 600px, 200px 200px; background-repeat: no-repeat, repeat, repeat; }
-.fp-left .front { background-position: 0 0, 0 0, 0 0; box-shadow: inset -22px 0 26px -18px rgba(80, 48, 16, .5), inset 0 0 30px rgba(110, 70, 25, .3); }
-.fp-centre .front { background-position: calc(var(--W) * -.25) 0, -173px -59px, -41px -13px; box-shadow: inset 22px 0 26px -18px rgba(80, 48, 16, .45), inset -22px 0 26px -18px rgba(80, 48, 16, .45), inset 0 0 30px rgba(110, 70, 25, .25); }
-.fp-right .front { background-position: calc(var(--W) * -.75) 0, -389px -241px, -113px -71px; box-shadow: inset 22px 0 26px -18px rgba(80, 48, 16, .5), inset 0 0 30px rgba(110, 70, 25, .3); }
+.face.front { background-image: var(--stains-strong), var(--fibres); background-size: 600px 600px, 200px 200px; }
+.fp-left .front { background-position: 0 0, 0 0; box-shadow: inset -22px 0 26px -18px rgba(80, 48, 16, .5), inset 0 0 30px rgba(110, 70, 25, .3); }
+.fp-centre .front { background-position: -173px -59px, -41px -13px; box-shadow: inset 22px 0 26px -18px rgba(80, 48, 16, .45), inset -22px 0 26px -18px rgba(80, 48, 16, .45), inset 0 0 30px rgba(110, 70, 25, .25); }
+.fp-right .front { background-position: -389px -241px, -113px -71px; box-shadow: inset 22px 0 26px -18px rgba(80, 48, 16, .5), inset 0 0 30px rgba(110, 70, 25, .3); }
 .face.back { transform: rotateY(180deg); background-image: linear-gradient(90deg, rgba(80, 48, 16, .2), transparent 30%, rgba(255, 250, 235, .15) 60%, rgba(80, 48, 16, .15)), var(--stains-strong), var(--fibres);
   background-size: auto, 600px 600px, 200px 200px; box-shadow: inset 0 0 28px rgba(110, 70, 25, .35), inset 0 0 0 1px rgba(80, 48, 16, .3); }
 .foldmap::after { content: ''; position: absolute; left: 25%; right: 25%; top: 2%; bottom: -1%; box-shadow: 0 24px 50px rgba(0, 0, 0, .7); z-index: -1; transition: left 1s, right 1s; }
 .foldmap.open::after { left: 0; right: 0; }
-.packet-face { position: absolute; left: 25%; width: 50%; top: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; z-index: 3; transition: opacity .5s; padding: 0 10px; }
-.spell { width: 100%; height: calc(var(--W) * .2); }
-.presents { width: 100%; margin-top: 10px; }
-.hint { position: absolute; left: 0; right: 0; bottom: 16%; margin: 0; padding: 0 10px; font-family: var(--f-fell); font-style: italic; font-size: 15px; color: rgba(43, 29, 20, .42); transition: opacity .5s; }
-.ink-blot { position: absolute; left: 50%; top: 50%; width: 160px; height: 160px; margin: -80px; border-radius: 50%; opacity: 0; pointer-events: none;
+.packet-face { position: absolute; left: 25%; width: 50%; top: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; pointer-events: none; z-index: 3; transition: opacity .8s; }
+.cover-web, .inside-ink { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.inside-ink { z-index: 1; }
+.cover { position: relative; z-index: 1; width: 100%; padding: 16% 8px 0; display: flex; flex-direction: column; align-items: center; }
+.cover-line { width: 100%; display: flex; justify-content: center; min-height: 4px; }
+.inkpath { fill: none; stroke: #1B120B; stroke-linecap: round; stroke-linejoin: round; animation-name: inkDraw; animation-timing-function: cubic-bezier(.3, 0, .6, 1); animation-fill-mode: both; }
+@keyframes inkDraw { to { stroke-dashoffset: 0; } }
+.inkfade { opacity: 0; animation: inkAppear .9s ease-out both; }
+@keyframes inkAppear { to { opacity: 1; } }
+.wfoot { opacity: 0; animation: wfoot 2.8s linear forwards; }
+@keyframes wfoot { 0% { opacity: 0; } 6% { opacity: .9; } 100% { opacity: 0; } }
+.incant { margin: -2px 0 0; padding: 0 16px; text-align: center; transition: opacity .8s; }
+.incant-1 { display: block; font-family: var(--f-fell); font-style: italic; font-size: 18px; color: rgba(243, 233, 210, .78); }
+.incant-2 { display: block; margin-top: 5px; font-family: var(--f-sc); font-size: 13px; letter-spacing: .14em; color: rgba(243, 233, 210, .45); }
+.ink-blot { position: absolute; left: 50%; top: 80%; width: 160px; height: 160px; margin: -80px; border-radius: 50%; opacity: 0; pointer-events: none;
   background: radial-gradient(circle, rgba(43, 29, 20, .35) 0%, rgba(43, 29, 20, .12) 40%, rgba(43, 29, 20, 0) 70%); }
-.inside-title { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; z-index: 2; opacity: 0; color: #2B1D14; }
+.inside-title { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; z-index: 2; opacity: 0; color: #1B120B; }
+.it-card { padding: 18px 30px; background: radial-gradient(ellipse at center, rgba(239, 226, 196, .97) 52%, rgba(239, 226, 196, 0) 72%); }
 .inside-title .it-pre { font-family: var(--f-fell); font-style: italic; font-size: calc(var(--W) * .038); color: #5C4632; }
-.inside-title h2 { margin: 6px 0 4px; font-family: var(--f-sc); font-weight: 400; font-size: calc(var(--W) * .095); line-height: 1.05; letter-spacing: .06em;
+.inside-title h2 { margin: 0 0 2px; font-family: var(--f-script); font-weight: 400; font-size: calc(var(--W) * .15); line-height: 1.1; color: #1B120B; -webkit-text-fill-color: #1B120B;
   background: linear-gradient(180deg, #A9852B, #7A5A12 60%, #5A400C); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .inside-title .it-rule { width: 46%; height: 9px; margin: 2px 0; background: var(--underline-dark) center / 100% 100% no-repeat; opacity: .8; }
 .inside-title p { margin: 4px 0 0; font-family: var(--f-fell); font-style: italic; font-size: calc(var(--W) * .042); }
-.wand { position: relative; z-index: 4; width: 170px; height: 150px; display: grid; place-items: center; transition: opacity .6s; }
+.wand { position: relative; z-index: 4; width: 170px; height: 140px; display: grid; place-items: center; transition: opacity .6s; touch-action: none; cursor: grab; will-change: transform; }
+.wand.held { cursor: grabbing; }
+.fold-stage { cursor: pointer; }
 .wand svg { width: 170px; height: 150px; overflow: visible; }
 .wand-g { transform-origin: 150px 140px; transform-box: view-box; animation: hover 4s ease-in-out infinite; }
 @keyframes hover { 0%, 100% { transform: translate(0, 0) rotate(0); } 50% { transform: translate(0, -3px) rotate(-1deg); } }
-.wand.touch .wand-g { animation: touch .7s cubic-bezier(.3, .8, .3, 1) forwards; }
-@keyframes touch { 0% { transform: none; } 45% { transform: translate(-6px, -22px) rotate(-6deg); } 100% { transform: translate(-3px, -12px) rotate(-3deg); } }
+.wand.held .wand-g, .wand.touch .wand-g { animation: none; }
 .wand-tipglow { animation: lumos 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 @keyframes lumos { 0%, 100% { opacity: .45; transform: scale(.85); } 50% { opacity: .9; transform: scale(1.1); } }
 .wand.touch .wand-tipglow { animation: flare .9s ease-out forwards; }
@@ -956,20 +969,23 @@ img { display: block; }
       <div class="fpanel fp-centre"><div class="face front"></div></div>
       <div class="fpanel fp-left"><div class="face front"></div><div class="face back"></div></div>
       <div class="fpanel fp-right"><div class="face front"></div><div class="face back"></div></div>
+      <svg class="inside-ink" id="insideInk" aria-hidden="true"></svg>
       <div class="inside-title" id="insideTitle">
-        <div class="it-pre" id="itPre"></div>
-        <h2>Aparecium<br>Portus</h2>
-        <div class="it-rule"></div>
-        <p id="insideSub"></p>
+        <div class="it-card">
+          <div class="it-pre">The Map of</div>
+          <h2 id="itCity"></h2>
+          <div class="it-rule"></div>
+          <p id="insideSub"></p>
+        </div>
       </div>
     </div>
     <div class="packet-face" id="packetFace">
       <div class="ink-blot" id="inkBlot"></div>
-      <div class="spell" id="spell" aria-label="Aparecium"></div>
-      <div class="presents" id="presents"></div>
-      <p class="hint" id="hint">Touch your wand to the parchment</p>
+      <svg class="cover-web" id="coverWeb" aria-hidden="true"></svg>
+      <div class="cover" id="cover" aria-label="Aparecium Portus"></div>
     </div>
   </div>
+  <p class="incant" id="hint"><span class="incant-1">I solemnly swear that I am up to no good</span><span class="incant-2">Touch the wand to the parchment</span></p>
   <button class="wand" id="wand" type="button" aria-label="Touch your wand to the parchment to reveal the map">
     <svg viewBox="0 0 170 150" aria-hidden="true">
       <defs>
@@ -1154,21 +1170,6 @@ rootStyle.setProperty('--crest', svgUrl(CREST));
 rootStyle.setProperty('--deckle', svgUrl(deckle));
 rootStyle.setProperty('--underline', svgUrl(underline('#000')));
 rootStyle.setProperty('--underline-dark', svgUrl(underline('#5A400C')));
-const INSIDE = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 440'>
-<rect x='9' y='9' width='382' height='422' fill='none' stroke='#4A3020' stroke-width='1' opacity='.5'/><rect x='13' y='13' width='374' height='414' fill='none' stroke='#4A3020' stroke-width='.5' opacity='.45'/>
-<g fill='none' stroke='#4A3020' stroke-linecap='round'>
-<path d='M13 318 C 70 290, 115 352, 172 318 S 262 262, 302 298 S 372 338, 387 312' stroke-width='14' opacity='.08'/>
-<path d='M13 311 C 70 283, 115 345, 172 311 S 262 255, 302 291 S 372 331, 387 305' stroke-width='.9' opacity='.6'/>
-<path d='M13 325 C 70 297, 115 359, 172 325 S 262 269, 302 305 S 372 345, 387 319' stroke-width='.9' opacity='.6'/>
-<g stroke-width='.5' opacity='.35'><path d='M40 300 l6 10 M70 296 l6 10 M100 306 l6 10 M130 316 l6 10 M160 314 l6 10 M190 302 l6 10 M220 288 l6 10 M250 280 l6 10 M280 286 l6 10 M310 300 l6 10 M340 312 l6 10 M366 312 l6 10'/></g>
-<path d='M48 98 C 108 140, 150 100, 205 156 S 300 190, 340 140' stroke-dasharray='1.5 6' stroke-width='1.6' opacity='.5'/>
-<path d='M70 405 C 130 352, 210 394, 262 338' stroke-dasharray='1.5 6' stroke-width='1.6' opacity='.5'/>
-<g stroke-width='.6' opacity='.28'><path d='M40 60 H190 M40 72 H160 M220 214 H340 M220 226 H310 M60 210 H170 M60 222 H140 M230 380 H360 M230 392 H320'/></g>
-</g>
-<g transform='translate(328 80)' opacity='.6'><circle r='30' fill='none' stroke='#4A3020' stroke-width='.8'/><circle r='25' fill='none' stroke='#4A3020' stroke-width='.4'/><path d='M0 -38 L5 -5 L38 0 L5 5 L0 38 L-5 5 L-38 0 L-5 -5Z' fill='none' stroke='#4A3020' stroke-width='.8'/><path d='M0 -38 L5 -5 L0 0Z M38 0 L5 5 L0 0Z M0 38 L-5 5 L0 0Z M-38 0 L-5 -5 L0 0Z' fill='#4A3020' opacity='.55'/><path d='M-4 -46 v-7 l8 7 v-7' fill='none' stroke='#4A3020' stroke-width='.9'/></g>
-<g fill='#3A2416' opacity='.42'><path d='M96 255 c3-1 5 2 4 6 c-1 3-5 3-6 0 c-1-3 0-5 2-6z'/><path d='M110 244 c3-1 5 2 4 6 c-1 3-5 3-6 0 c-1-3 0-5 2-6z'/><path d='M118 262 c3-1 5 2 4 6 c-1 3-5 3-6 0 c-1-3 0-5 2-6z'/><path d='M132 250 c3-1 5 2 4 6 c-1 3-5 3-6 0 c-1-3 0-5 2-6z'/></g>
-</svg>`;
-rootStyle.setProperty('--inside-map', svgUrl(INSIDE));
 const SHOE = '<svg viewBox="0 0 7 14" aria-hidden="true"><path d="M3.6 0 C5.9 0 6.9 2.2 6.6 4.6 C6.3 6.6 5.6 7.6 5.5 8.4 L1.6 8.4 C1.5 7.6 .7 6.6 .4 4.6 C.1 2.2 1.3 0 3.6 0Z M1.7 9.6 H5.3 C5.5 11.9 4.9 14 3.5 14 C2.1 14 1.5 11.9 1.7 9.6Z" fill="currentColor"/></svg>';
 
 /* ═════════════════════════ Sound (synthesised, quiet) ═════════════════════════ */
@@ -1945,7 +1946,7 @@ async function setMode(m) {
 const ICON_CLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 const ICON_GLASS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12M6 21h12M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9s10 4 10 9"/></svg>';
 const elLayer = $('#cardLayer'), elCard = $('#card'), elPaper = $('#cardPaper'), elRod = $('#rodBottom'), elScroll = $('#cardScroll');
-function wikiExtract(item) { if (item.description || !item.wiki) return ''; const v = Wiki.cached(item.wiki); if (!v || !v.extract) return ''; return v.extract.split(/(?<=\.)\s+/).slice(0, 2).join(' '); }
+function wikiExtract(item) { if (item.description || !item.wiki) return ''; const v = Wiki.cached(item.wiki); if (!v || !v.extract) return ''; return (v.extract.match(/[^.!?]+[.!?]+/g) || [v.extract]).slice(0, 2).join(' ').trim(); }
 const Card = {
   item: null, open: false, anims: [],
   list(item) { if (!item || !item.day) return []; return item.kind === 'stop' ? item.day.stops : item.kind === 'food' ? item.day.food : []; },
@@ -2204,17 +2205,18 @@ function inkReveal(dur) {
   });
 }
 let introSkipped = false, introFinished = false;
+const INTRO_V = 4, introKey = () => zonedDate(nowMs()) + '|' + INTRO_V;
 async function finishIntro(fast) {
   if (introFinished) return; introFinished = true;
-  store.set('introDate', zonedDate(nowMs()));
+  store.set('introSeen', introKey());
   if (fast || RM) { app.style.zIndex = '200'; await new Promise(r => { app.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RM ? 400 : 350, easing: 'ease' }).onfinish = r; }); app.style.zIndex = ''; }
-  else { Sound.whoosh(); await inkReveal(1150); }
+  else { Sound.whoosh(); await inkReveal(1600); }
   intro.remove();
   onAppReady();
 }
 function presenterLines(s) {
   // Break at commas and before "&" so names stay together
-  const parts = String(s || '').split(/(?<=,)\s+|\s+(?=&)/).filter(Boolean), lines = []; let cur = '';
+  const parts = String(s || '').replace(/,\s+/g, ',\n').replace(/\s+&/g, '\n&').split('\n').filter(Boolean), lines = []; let cur = '';
   parts.forEach(w => { if ((cur + ' ' + w).trim().length > 24 && cur) { lines.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); });
   if (cur) lines.push(cur);
   return lines.slice(0, 3);
@@ -2222,51 +2224,227 @@ function presenterLines(s) {
 function setupIntroGeometry() {
   const W = Math.round(Math.min(innerWidth * .86, 400, (innerHeight * .58) / 1.1));
   intro.style.setProperty('--W', W + 'px');
-  $('#insideSub').textContent = `${T.city || ''} · ${DAYS.length ? fmtDate(DAYS[0].date, { day: 'numeric', month: 'short' }) + ' – ' + fmtDate(DAYS[DAYS.length - 1].date, { day: 'numeric', month: 'short', year: 'numeric' }) : ''}`;
-  $('#itPre').textContent = T.presentedBy ? 'are proud to present' : '';
+  $('#insideSub').textContent = DAYS.length ? fmtDate(DAYS[0].date, { day: 'numeric', month: 'long' }) + ' – ' + fmtDate(DAYS[DAYS.length - 1].date, { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+  $('#itCity').textContent = T.city || 'Our Trip';
 }
-async function fullIntro() {
+/* The wand: tap it, tap the parchment, or drag the wand onto the parchment */
+const WAND_TIP = [44.7 / 170, 5.3 / 150]; // tip position inside the wand's SVG viewBox
+let introStarted = false, wandOffset = { x: 0, y: 0 };
+function wandTip() { const r = $('#wand svg').getBoundingClientRect(); return { x: r.left + r.width * WAND_TIP[0], y: r.top + r.height * WAND_TIP[1] }; }
+function armWand() {
+  const w = $('#wand'), stage = $('#foldStage');
+  let drag = null;
+  w.addEventListener('pointerdown', e => {
+    if (introStarted || e.button > 0) return;
+    Sound.init();
+    drag = { x0: e.clientX - wandOffset.x, y0: e.clientY - wandOffset.y, sx: e.clientX, sy: e.clientY, moved: false };
+    try { w.setPointerCapture(e.pointerId); } catch (_) { /* not supported */ }
+    w.classList.add('held');
+  });
+  w.addEventListener('pointermove', e => {
+    if (!drag || introStarted) return;
+    if (!drag.moved && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) < 8) return;
+    drag.moved = true;
+    wandOffset = { x: e.clientX - drag.x0, y: e.clientY - drag.y0 };
+    w.style.transform = `translate(${wandOffset.x}px,${wandOffset.y}px)`;
+    const t = wandTip(), r = $('#packetFace').getBoundingClientRect();
+    if (t.x > r.left && t.x < r.right && t.y > r.top && t.y < r.bottom - 4) { drag = null; w.classList.remove('held'); touchParchment(t); }
+  });
+  const release = () => { if (!drag) return; drag = null; w.classList.remove('held'); if (!introStarted) glideWand(); };
+  w.addEventListener('pointerup', release);
+  w.addEventListener('pointercancel', release);
+  w.addEventListener('click', e => { if (e.detail === 0) glideWand(); }); // keyboard (Enter / Space)
+  stage.addEventListener('click', () => glideWand());
+}
+/* Carry the wand up until its tip rests on the parchment, then cast */
+async function glideWand() {
+  if (introStarted) return;
+  introStarted = true; Sound.init();
+  const w = $('#wand'), r = $('#packetFace').getBoundingClientRect(), t = wandTip();
+  const target = { x: r.left + r.width * .5, y: r.top + r.height * .8 };
+  const to = { x: wandOffset.x + target.x - t.x, y: wandOffset.y + target.y - t.y };
+  if (!RM) {
+    try { await w.animate([{ transform: `translate(${wandOffset.x}px,${wandOffset.y}px)` }, { transform: `translate(${to.x}px,${to.y}px)` }], { duration: 1100, easing: 'cubic-bezier(.35,.6,.2,1)', fill: 'forwards' }).finished; } catch (e) { /* cancelled */ }
+  }
+  wandOffset = to;
+  touchParchment(target);
+}
+function touchParchment(pt) {
+  introStarted = true;
+  fullIntro(pt).catch(() => finishIntro(true)); // never leave anyone stuck on the opening
+}
+/* Ink that spreads "like a spider's web" from a point: branching quill lines drawn in sequence */
+function inkNetwork(svg, o) {
+  const r = mulberry32(o.seed), segs = [];
+  const inB = (x, y) => x > 3 && y > 3 && x < o.w - 3 && y < o.h - 3;
+  const grow = (x, y, ang, depth, t) => {
+    if (segs.length >= o.max) return;
+    const n = 4 + (r() * 7 | 0), pts = [[x, y]]; let len = 0;
+    for (let i = 0; i < n; i++) {
+      ang += (r() - .5) * o.wiggle;
+      const st = o.step * (.6 + r() * .8), nx = x + Math.cos(ang) * st, ny = y + Math.sin(ang) * st;
+      if (!inB(nx, ny)) break;
+      x = nx; y = ny; pts.push([x, y]); len += st;
+    }
+    if (pts.length < 2) return;
+    const dur = len / o.speed;
+    segs.push({ pts, t, dur, w: Math.max(.35, o.width * (1 - depth * .17)) });
+    if (depth >= o.depth) return;
+    const kids = 1 + (r() * 2.4 | 0);
+    for (let k = 0; k < kids; k++) {
+      const idx = 1 + (r() * (pts.length - 1) | 0), [bx, by] = pts[idx];
+      const turn = o.grid ? (r() < .5 ? -1 : 1) * (Math.PI / 2 + (r() - .5) * .35) : (r() < .5 ? -1 : 1) * (.45 + r() * .9);
+      grow(bx, by, ang + turn, depth + 1, t + dur * idx / (pts.length - 1));
+    }
+  };
+  for (let i = 0; i < o.count; i++) grow(o.x, o.y, i / o.count * Math.PI * 2 + r() * .5, 0, (o.t0 || 0) + r() * 160);
+  const g = document.createElementNS(NS, 'g'); g.setAttribute('opacity', String(o.opacity || .8)); svg.appendChild(g);
+  let endT = 0;
+  const addPath = (d, w, t, dur) => {
+    const pth = document.createElementNS(NS, 'path'); pth.setAttribute('d', d); pth.setAttribute('class', 'inkpath'); pth.setAttribute('stroke-width', w.toFixed(2)); g.appendChild(pth);
+    if (o.instant) { pth.style.animation = 'none'; return; }
+    const L = pth.getTotalLength(); pth.style.strokeDasharray = `${L} ${L}`; pth.style.strokeDashoffset = String(L);
+    pth.style.animationDuration = `${Math.round(dur)}ms`; pth.style.animationDelay = `${Math.round(t)}ms`;
+    endT = Math.max(endT, t + dur);
+  };
+  segs.forEach(sg => addPath('M' + sg.pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L'), sg.w, sg.t, sg.dur));
+  // little buildings and rooms, inked as the lines reach them
+  for (let i = 0; i < (o.blocks || 0); i++) {
+    const sg = segs[(r() * segs.length) | 0]; if (!sg) break;
+    const k = (r() * sg.pts.length) | 0, [bx, by] = sg.pts[k], bw = 5 + r() * 9, bh = 4 + r() * 7, ox = (r() < .5 ? -1 : 1) * (4 + bw / 2), oy = (r() < .5 ? -1 : 1) * (4 + bh / 2);
+    const x0 = bx + ox - bw / 2, y0 = by + oy - bh / 2;
+    if (!inB(x0, y0) || !inB(x0 + bw, y0 + bh)) continue;
+    addPath(`M${x0.toFixed(1)} ${y0.toFixed(1)} h${bw.toFixed(1)} v${bh.toFixed(1)} h${(-bw).toFixed(1)} Z`, .55, sg.t + sg.dur * k / sg.pts.length + 120, 420);
+  }
+  o.segs = segs;
+  return endT;
+}
+function scratchFor(ms) { if (RM) return; const until = performance.now() + ms; const iv = setInterval(() => { if (performance.now() > until || introSkipped) { clearInterval(iv); return; } if (Math.random() < .7) Sound.scratch(); }, 150); }
+function wrapWords(str, max) { const out = []; let cur = ''; String(str || '').split(/\s+/).filter(Boolean).forEach(w => { if ((cur + ' ' + w).trim().length > max && cur) { out.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); }); if (cur) out.push(cur); return out; }
+function marauderNames() { return String(T.presentedBy || '').replace(/^\s*Messrs\.?\s*/i, '').split(/,|&|\band\b/).map(x => x.trim()).filter(Boolean).slice(0, 4); }
+/* The trip's places, sketched where they really are */
+function inkPlaces(svg, w, h, cx, cy, speed) {
+  const seen = new Set(), pts = [];
+  DAYS.forEach(d => d.stops.forEach(s => { if (!seen.has(s.name)) { seen.add(s.name); pts.push(s); } }));
+  if (!pts.length) return;
+  const mid = { lat: pts.map(p => p.lat).sort((a, b) => a - b)[pts.length >> 1], lng: pts.map(p => p.lng).sort((a, b) => a - b)[pts.length >> 1] };
+  const near = pts.filter(p => haversine(p, mid) < 12).slice(0, 12);
+  const k = Math.cos(mid.lat * Math.PI / 180);
+  const xs = near.map(p => p.lng * k), ys = near.map(p => -p.lat);
+  const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+  const pad = .17, sc = Math.min(w * (1 - pad * 2) / Math.max(1e-6, maxX - minX), h * (1 - pad * 2) / Math.max(1e-6, maxY - minY));
+  const offX = (w - (maxX - minX) * sc) / 2, offY = (h - (maxY - minY) * sc) / 2;
+  const fs = Math.max(8, w * .026);
+  const g = document.createElementNS(NS, 'g'); svg.appendChild(g);
+  const boxes = [], hit = b => boxes.some(o => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y);
+  near.forEach(p => {
+    const x = offX + (p.lng * k - minX) * sc, y = offY + (-p.lat - minY) * sc, delay = Math.hypot(x - cx, y - cy) / speed + 200;
+    const name = p.name.replace(/,.*$/, ''), tw = name.length * fs * .44;
+    let label = '';
+    for (const left of x > w * .6 ? [true, false] : [false, true]) {
+      const b = { x: left ? x - 7 - tw : x + 7, y: y - fs * .7, w: tw, h: fs * 1.25 };
+      if (b.x < 4 || b.x + b.w > w - 4 || hit(b)) continue;
+      boxes.push(b);
+      label = `<text x="${(x + (left ? -7 : 7)).toFixed(1)}" y="${(y + fs * .35).toFixed(1)}" text-anchor="${left ? 'end' : 'start'}" style="font:italic ${fs.toFixed(1)}px 'IM Fell English';fill:#1B120B">${esc(name)}</text>`;
+      break;
+    }
+    boxes.push({ x: x - 5, y: y - 5, w: 10, h: 10 });
+    g.insertAdjacentHTML('beforeend', `<g class="inkfade" style="animation-delay:${Math.round(delay)}ms"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.2" fill="#1B120B"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.4" fill="none" stroke="#1B120B" stroke-width=".6"/>${label}</g>`);
+  });
+}
+/* Marauder's-Map footprints wandering about, each with a name banner */
+function inkWalkers(svg, w, h, names, segs) {
+  if (RM || !names.length) return;
+  const r = mulberry32(99), shoe = 'M3.6 0 C5.9 0 6.9 2.2 6.6 4.6 C6.3 6.6 5.6 7.6 5.5 8.4 L1.6 8.4 C1.5 7.6 .7 6.6 .4 4.6 C.1 2.2 1.3 0 3.6 0Z M1.7 9.6 H5.3 C5.5 11.9 4.9 14 3.5 14 C2.1 14 1.5 11.9 1.7 9.6Z';
+  const fs = Math.max(8, w * .027);
+  const starts = [[.28, .3], [.72, .28], [.3, .74], [.7, .72]];
+  names.forEach((name, i) => {
+    let x = w * starts[i % 4][0], y = h * starts[i % 4][1], ang = r() * Math.PI * 2, n = 0;
+    const label = document.createElementNS(NS, 'g'); label.setAttribute('class', 'inkfade');
+    const tw = name.length * fs * .5 + 14;
+    label.innerHTML = `<path d="M${-tw / 2} ${-fs * .75} H${tw / 2} L${tw / 2 - 4} 0 L${tw / 2} ${fs * .75} H${-tw / 2} L${-tw / 2 + 4} 0 Z" fill="#EFE2C4" stroke="#1B120B" stroke-width=".6"/><text text-anchor="middle" y="${fs * .33}" style="font:italic ${fs.toFixed(1)}px 'IM Fell English';fill:#1B120B">${esc(name)}</text>`;
+    svg.appendChild(label);
+    const step = () => {
+      if (!document.getElementById('intro')) { clearInterval(iv); return; }
+      ang += (r() - .5) * .7;
+      let nx = x + Math.cos(ang) * 10, ny = y + Math.sin(ang) * 10;
+      const mx = Math.max(20, tw / 2 + 6); if (nx < mx || nx > w - mx || ny < 20 || ny > h - 34) { ang += Math.PI * (.6 + r() * .5); nx = x; ny = y; }
+      x = nx; y = ny;
+      const side = n++ % 2 ? 1 : -1, px = x + Math.cos(ang + Math.PI / 2) * 3 * side, py = y + Math.sin(ang + Math.PI / 2) * 3 * side;
+      const f = document.createElementNS(NS, 'path'); f.setAttribute('d', shoe); f.setAttribute('fill', '#1B120B'); f.setAttribute('class', 'wfoot');
+      f.setAttribute('transform', `translate(${px.toFixed(1)} ${py.toFixed(1)}) rotate(${(ang * 180 / Math.PI + 90).toFixed(0)}) scale(${side > 0 ? -.72 : .72} .72) translate(-3.5 -7)`);
+      svg.insertBefore(f, label); setTimeout(() => f.remove(), 2900);
+      label.setAttribute('transform', `translate(${x.toFixed(1)} ${(y + 16).toFixed(1)})`);
+    };
+    const iv = setInterval(step, 420 + i * 30); setTimeout(step, 10);
+  });
+}
+async function fullIntro(pt) {
   const wand = $('#wand'); if (introSkipped) return;
   wand.disabled = true; Sound.init(); Sound.chime();
   wand.classList.add('touch');
-  const tip = wand.getBoundingClientRect();
-  setTimeout(() => dust(tip.left + tip.width * .28, tip.top + tip.height * .05, 10, 40, { rise: 16 }), 250);
+  dust(pt.x, pt.y, 12, 44, { rise: 14 });
   $('#hint').style.opacity = '0';
   if (RM) { finishIntro(true); return; }
-  const blot = $('#inkBlot'); blot.animate([{ opacity: 0, transform: 'scale(.2)' }, { opacity: 1, transform: 'scale(1)', offset: .4 }, { opacity: 0, transform: 'scale(1.3)' }], { duration: 1600, easing: 'ease-out' });
+  const pf = $('#packetFace'), pr = pf.getBoundingClientRect(), lx = pt.x - pr.left, ly = pt.y - pr.top;
+  const blot = $('#inkBlot'); blot.style.left = lx + 'px'; blot.style.top = ly + 'px';
+  blot.animate([{ opacity: 0, transform: 'scale(.2)' }, { opacity: 1, transform: 'scale(1)', offset: .4 }, { opacity: .25, transform: 'scale(1.2)' }], { duration: 2200, easing: 'ease-out', fill: 'forwards' });
   await fontsReady(['40px "Pinyon Script"', 'italic 16px "IM Fell English"']);
-  await wait(250); if (introSkipped) return;
-  const d1 = inkWrite($('#spell'), 'Aparecium', { size: 64, per: 120, strokeDur: 700, gold: true, sound: true });
-  const lines = presenterLines(T.presentedBy);
-  let d2 = 0;
-  if (lines.length) {
-    const host = $('#presents'), W = parseFloat(intro.style.getPropertyValue('--W')) || 320, fs = Math.round(W * .043);
-    host.innerHTML = lines.map(() => '<div></div>').join('') + '<div style="margin-top:4px"></div>';
-    const rows = host.children;
-    lines.forEach((ln, i) => { d2 = Math.max(d2, inkWrite(rows[i], ln, { size: fs, font: 'IM Fell English', italic: true, per: 26, strokeDur: 360, delay: d1 - 200 + i * 560, fill: '#3A2416', fixed: true })); });
-    d2 = Math.max(d2, inkWrite(rows[lines.length], 'are proud to present', { size: fs * .85, font: 'IM Fell English', italic: true, per: 22, strokeDur: 320, delay: d1 - 200 + lines.length * 560, fill: '#6A5038', fixed: true }));
-  }
-  await wait(Math.max(d1, d2) + 1500); if (introSkipped) return;
-  wand.style.opacity = '0';
-  $('#packetFace').style.opacity = '0';
-  await wait(350); if (introSkipped) return;
+  if (introSkipped) return;
+  // 1 — thin ink lines spread like a spider's web from where the wand touched
+  const web = $('#coverWeb'); web.setAttribute('viewBox', `0 0 ${pr.width} ${pr.height}`);
+  const webEnd = inkNetwork(web, { x: lx, y: ly, w: pr.width, h: pr.height, seed: 7, count: 11, depth: 3, step: 9, wiggle: .6, speed: .06, width: .7, max: 150, t0: 200, opacity: .62 });
+  scratchFor(webEnd);
+  // 2 — then words blossom across the parchment
+  await wait(1800); if (introSkipped) return;
+  web.animate([{ opacity: 1 }, { opacity: .35 }], { duration: 2500, delay: 600, fill: 'forwards', easing: 'ease' });
+  const W = parseFloat(intro.style.getPropertyValue('--W')) || 320, fs = Math.round(W * .041), cover = $('#cover');
+  const rows = [];
+  marauderNames().length && presenterLines(T.presentedBy).forEach(t => rows.push({ t, size: fs }));
+  wrapWords(T.presentedTagline, 24).forEach((t, i) => rows.push({ t, size: fs * .82, gap: i === 0 ? 6 : 0 }));
+  if (rows.length) rows.push({ t: 'are proud to present', size: fs * .82, gap: 6 });
+  rows.push({ t: 'Aparecium', size: W * .12, script: true, gap: 10 }, { t: 'Portus', size: W * .12, script: true });
+  cover.innerHTML = rows.map(r => `<div class="cover-line" style="margin-top:${r.gap || 0}px"></div>`).join('');
+  let t = 0, end = 0;
+  rows.forEach((r, i) => {
+    end = Math.max(end, inkWrite(cover.children[i], r.t, r.script
+      ? { size: r.size, per: 150, strokeDur: 950, delay: t, fill: '#1B120B', fixed: true, sound: true }
+      : { size: r.size, font: 'IM Fell English', italic: true, per: 30, strokeDur: 420, delay: t, fill: '#1B120B', fixed: true }));
+    t += r.script ? 1100 : 700;
+  });
+  await wait(end + 1500); if (introSkipped) return;
+  // 3 — the map unfolds, one panel and then the other
+  pf.style.opacity = '0'; wand.style.opacity = '0';
+  await wait(800); if (introSkipped) return;
   const fm = $('#foldMap');
-  $('.fp-left', fm).style.transitionDelay = '0ms'; $('.fp-right', fm).style.transitionDelay = '320ms';
-  Sound.rustle(1.2, .11);
+  $('.fp-left', fm).style.transitionDelay = '0ms'; $('.fp-right', fm).style.transitionDelay = '750ms';
+  Sound.rustle(1.4, .11); setTimeout(() => Sound.rustle(1.3, .09), 750);
   fm.classList.add('open');
-  await wait(1350); if (introSkipped) return;
-  const it = $('#insideTitle');
-  it.animate([{ opacity: 0, transform: 'scale(.96)' }, { opacity: 1, transform: 'none' }], { duration: 900, easing: 'ease-out', fill: 'forwards' });
-  await wait(1300); if (introSkipped) return;
+  await wait(2400); if (introSkipped) return;
+  // 4 — ink fans into every corner: streets, buildings, our places, and footsteps
+  const ink = $('#insideInk'), fr = fm.getBoundingClientRect(), cx = fr.width / 2, cy = fr.height * .5;
+  ink.setAttribute('viewBox', `0 0 ${fr.width} ${fr.height}`);
+  const net = { x: cx, y: cy, w: fr.width, h: fr.height, seed: 21, count: 8, depth: 4, step: 15, wiggle: .2, grid: true, speed: .11, width: .8, max: 300, blocks: 70, opacity: .66 };
+  const netEnd = inkNetwork(ink, net);
+  inkPlaces(ink, fr.width, fr.height, cx, cy, net.speed);
+  scratchFor(netEnd * .8);
+  setTimeout(() => inkWalkers(ink, fr.width, fr.height, marauderNames(), net.segs), 1400);
+  await wait(Math.min(netEnd, 3200)); if (introSkipped) return;
+  $('#insideTitle').animate([{ opacity: 0, transform: 'scale(.97)' }, { opacity: 1, transform: 'none' }], { duration: 1200, easing: 'ease-out', fill: 'forwards' });
+  await wait(2800); if (introSkipped) return;
   finishIntro(false);
 }
 async function quickIntro() {
   $('#wand').style.display = 'none'; $('#packetFace').style.display = 'none';
   const fm = $('#foldMap'); $$('.fpanel', fm).forEach(p => { p.style.transition = 'none'; }); fm.classList.add('open');
+  $('#hint').style.display = 'none';
+  const ink = $('#insideInk'), fr = fm.getBoundingClientRect();
+  ink.setAttribute('viewBox', `0 0 ${fr.width} ${fr.height}`);
+  inkNetwork(ink, { x: fr.width / 2, y: fr.height / 2, w: fr.width, h: fr.height, seed: 21, count: 8, depth: 4, step: 15, wiggle: .2, grid: true, speed: 1, width: .95, max: 300, blocks: 70, opacity: .72, instant: true });
   $('#insideTitle').style.opacity = '1';
-  await wait(RM ? 200 : 300);
+  await wait(RM ? 200 : 700);
   if (introSkipped) return;
-  if (RM) finishIntro(true); else { introFinished = true; store.set('introDate', zonedDate(nowMs())); await inkReveal(750); intro.remove(); onAppReady(); }
+  if (RM) finishIntro(true); else { introFinished = true; store.set('introSeen', introKey()); await inkReveal(900); intro.remove(); onAppReady(); }
 }
 function startIntro() {
   setupIntroGeometry();
@@ -2274,8 +2452,8 @@ function startIntro() {
   $('#skipIntro').addEventListener('click', () => { introSkipped = true; finishIntro(true); });
   const mode = params.get('intro');
   if (mode === 'skip') { introSkipped = true; intro.remove(); introFinished = true; onAppReady(); return; }
-  const full = mode === 'full' || (mode !== 'quick' && store.get('introDate', '') !== zonedDate(nowMs()));
-  if (full) $('#wand').addEventListener('click', fullIntro, { once: true }); else quickIntro();
+  const full = mode === 'full' || (mode !== 'quick' && store.get('introSeen', '') !== introKey());
+  if (full) armWand(); else quickIntro();
 }
 
 /* ═════════════════════════ Boot ═════════════════════════ */
