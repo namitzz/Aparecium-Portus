@@ -20,7 +20,7 @@ Everything about the trip lives in the `TRIP_DATA` object at the very top of `in
 - To get `lat`/`lng`, long-press a spot in Google Maps and copy the two numbers.
 - `wiki` is the place's English Wikipedia article name (the part after `/wiki/` in its address). The app then fetches a real photo, and a short description if you leave `description` empty.
 - `photo` is your own image URL and takes priority over `wiki`. With neither, an illuminated initial is shown instead.
-- `trip.presentedBy` is the line written in ink on the folded map ("Messrs Moony, Wormtail, Padfoot & Prongs… are proud to present"). Put your group's names in it.
+- `trip.marauders` is the group. Each person's `alias` is inked on the folded map's cover, Marauder-style ("Messrs Nimbus, Mandrake, Elderwand, Lumos & Snitch… are proud to present"). Their real `name` walks around the map on footprints.
 - A stop's optional `travel` field overrides the travel note shown before it. Walks under 2.5 km are worked out along real streets, so the route on the map and the "14 min walk" note are both real.
 - A restaurant's `days` lists the day numbers it belongs to.
 - `trip.travelThere` and `trip.travelHome` become the vintage train tickets on the first and last days.
@@ -52,6 +52,7 @@ Everything above is cached on the phone after the first load, and the app still 
 - Map tiles come from CARTO (Voyager in light mode, Dark Matter in dark mode) with a sepia filter and parchment texture. They are free for light non-commercial use.
 - The full wand-and-unfolding intro plays on the first open each day. Later opens use a 1-second version.
 - "Portus" opens Apple Maps on iPhone and Google Maps on Android. It picks walking directions when the previous stop is close by and public transport otherwise.
-- "Mischief Managed" plays by itself when the day's last stop ends, then the map opens on the next day. You can also trigger it with the seal at the end of each day's timeline.
+- "Mischief Managed" plays by itself when the day's last stop ends. The day's map turns to ink, the ink draws back into the parchment until it's blank, then the map folds shut and opens on the next day. You can also trigger it with the seal at the end of each day's timeline.
+- **Samsung Internet's dark mode** recolours websites, and sites can't opt out. The opening and Mischief Managed are painted as pixels, so they keep their colours. For the rest of the app to show its own colours, turn on Samsung Internet → Settings → Labs → "Use website dark theme".
 - The manifest uses `"display": "fullscreen"`, which hides the Android status bar. Change it to `"standalone"` if you'd rather keep the phone's clock visible.
 - With "Reduce motion" turned on in the phone's settings, every animation becomes a simple fade.

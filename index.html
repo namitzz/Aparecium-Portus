@@ -38,8 +38,15 @@ const TRIP_DATA = {
     originCity: "Birmingham",
     timeZone: "Europe/London",               // all times below are in this zone
 
-    // Written in ink on the folded map before it opens. Put your group's names here.
-    presentedBy: "Messrs Moony, Wormtail, Padfoot & Prongs",
+    // The group. "alias" is a Marauder-style nickname inked on the map's cover
+    // ("Messrs Nimbus, Mandrake, ..."); "name" walks around the map on footprints.
+    marauders: [
+      { name: "Namit",  alias: "Nimbus" },
+      { name: "Marie",  alias: "Mandrake" },
+      { name: "Elly",   alias: "Elderwand" },
+      { name: "Lia",    alias: "Lumos" },
+      { name: "Sophia", alias: "Snitch" }
+    ],
     presentedTagline: "Purveyors of Aids to Magical Mischief-Makers",   // second line on the cover ("" to hide)
 
     // Optional: the journey there, shown as a train ticket at the top of Day 1
@@ -773,13 +780,10 @@ img { display: block; }
 
 /* ── Mischief Managed ──────────────────────────────────────────────────── */
 .mischief { position: absolute; left: 0; right: 0; top: calc(var(--header-h) - 2px); bottom: 0; z-index: 30; perspective: 1600px; pointer-events: auto; }
-.mm-panels { position: absolute; inset: 0; display: flex; }
-.mm-panel { position: relative; flex: 1 1 0; height: 100%; background-color: var(--paper); background-image: linear-gradient(90deg, rgba(90, 60, 30, .12), transparent 18%, transparent 82%, rgba(90, 60, 30, .16)), var(--stains-strong), var(--fibres); background-size: auto, 600px 600px, 200px 200px; }
-.mm-panel.c { background-position: 0 0, -217px -133px, -61px -97px; }
-.mm-panel.r { background-position: 0 0, -431px -311px, -137px -23px; }
+.mm-ink { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; opacity: 0; }
+.mm-panels { position: absolute; inset: 0; display: flex; opacity: 0; }
+.mm-panel { position: relative; display: block; flex: 1 1 0; width: 33.34%; height: 100%; }
 .mm-panel.l { transform-origin: 100% 50%; } .mm-panel.r { transform-origin: 0 50%; }
-.mm-text { position: absolute; left: 6%; right: 6%; top: 34%; height: 90px; pointer-events: none; display: flex; justify-content: center; }
-.mm-sub { position: absolute; left: 0; right: 0; top: calc(34% + 104px); text-align: center; font-family: var(--f-fell); font-style: italic; font-size: 18px; color: var(--text-soft); opacity: 0; pointer-events: none; }
 
 /* ── Ink writing ───────────────────────────────────────────────────────── */
 .inksvg { display: block; overflow: visible; max-width: 100%; height: 100%; }
@@ -813,58 +817,33 @@ img { display: block; }
 .intro-particles { position: absolute; inset: 0; pointer-events: none; }
 .skip { position: absolute; z-index: 5; top: calc(var(--safe-t) + 8px); right: calc(var(--safe-r) + 10px); min-width: 64px; min-height: 44px; padding: 0 14px;
   font-family: var(--f-sc); letter-spacing: .1em; font-size: 15px; color: rgba(243, 233, 210, .55); }
-.fold-stage { position: relative; width: var(--W, 320px); height: calc(var(--W, 320px) * 1.1); }
+.fold-stage { position: relative; width: var(--W, 320px); height: calc(var(--W, 320px) * 1.1); transform: rotate(-1.2deg); cursor: pointer; }
+.stage-shadow { position: absolute; left: 21%; right: 21%; top: 5%; bottom: -5%; border-radius: 50%; pointer-events: none; background: radial-gradient(ellipse at center, rgba(0, 0, 0, .8) 0%, rgba(0, 0, 0, .45) 45%, rgba(0, 0, 0, 0) 72%); transition: left 1.6s ease, right 1.6s ease; }
+.fold-stage.open .stage-shadow { left: -8%; right: -8%; }
 .foldmap { position: absolute; inset: 0; perspective: 1500px; }
 .fpanel { position: absolute; top: 0; bottom: 0; transform-style: preserve-3d; transition: transform 1.5s cubic-bezier(.5, .05, .25, 1); }
 .fp-left { left: 0; width: 25%; transform-origin: 100% 50%; transform: rotateY(179.4deg); }
 .fp-centre { left: 25%; width: 50%; }
 .fp-right { left: 75%; width: 25%; transform-origin: 0 50%; transform: rotateY(-179deg); }
-.fp-right .back { background-position: 0 0, -283px -167px, -71px -131px; }
 .foldmap.open .fp-left, .foldmap.open .fp-right { transform: rotateY(0deg); }
-.face { position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden; background-color: #EFE2C4; }
-.face.front { background-image: var(--stains-strong), var(--fibres); background-size: 600px 600px, 200px 200px; }
-.fp-left .front { background-position: 0 0, 0 0; box-shadow: inset -22px 0 26px -18px rgba(80, 48, 16, .5), inset 0 0 30px rgba(110, 70, 25, .3); }
-.fp-centre .front { background-position: -173px -59px, -41px -13px; box-shadow: inset 22px 0 26px -18px rgba(80, 48, 16, .45), inset -22px 0 26px -18px rgba(80, 48, 16, .45), inset 0 0 30px rgba(110, 70, 25, .25); }
-.fp-right .front { background-position: -389px -241px, -113px -71px; box-shadow: inset 22px 0 26px -18px rgba(80, 48, 16, .5), inset 0 0 30px rgba(110, 70, 25, .3); }
-.face.back { transform: rotateY(180deg); background-image: linear-gradient(90deg, rgba(80, 48, 16, .2), transparent 30%, rgba(255, 250, 235, .15) 60%, rgba(80, 48, 16, .15)), var(--stains-strong), var(--fibres);
-  background-size: auto, 600px 600px, 200px 200px; box-shadow: inset 0 0 28px rgba(110, 70, 25, .35), inset 0 0 0 1px rgba(80, 48, 16, .3); }
-.foldmap::after { content: ''; position: absolute; left: 25%; right: 25%; top: 2%; bottom: -1%; box-shadow: 0 24px 50px rgba(0, 0, 0, .7); z-index: -1; transition: left 1s, right 1s; }
-.foldmap.open::after { left: 0; right: 0; }
-.packet-face { position: absolute; left: 25%; width: 50%; top: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; pointer-events: none; z-index: 3; transition: opacity .8s; }
-.cover-web, .inside-ink { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-.inside-ink { z-index: 1; }
-.cover { position: relative; z-index: 1; width: 100%; padding: 16% 8px 0; display: flex; flex-direction: column; align-items: center; }
-.cover-line { width: 100%; display: flex; justify-content: center; min-height: 4px; }
-.inkpath { fill: none; stroke: #1B120B; stroke-linecap: round; stroke-linejoin: round; animation-name: inkDraw; animation-timing-function: cubic-bezier(.3, 0, .6, 1); animation-fill-mode: both; }
-@keyframes inkDraw { to { stroke-dashoffset: 0; } }
-.inkfade { opacity: 0; animation: inkAppear .9s ease-out both; }
-@keyframes inkAppear { to { opacity: 1; } }
-.wfoot { opacity: 0; animation: wfoot 2.8s linear forwards; }
-@keyframes wfoot { 0% { opacity: 0; } 6% { opacity: .9; } 100% { opacity: 0; } }
+.face { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.face.back { transform: rotateY(180deg); }
+.ink-canvas { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+#insideInk { z-index: 2; opacity: 0; }
+.packet-face { position: absolute; left: 25%; width: 50%; top: 0; bottom: 0; z-index: 3; pointer-events: none; transition: opacity .8s; }
 .incant { margin: -2px 0 0; padding: 0 16px; text-align: center; transition: opacity .8s; }
 .incant-1 { display: block; font-family: var(--f-fell); font-style: italic; font-size: 18px; color: rgba(243, 233, 210, .78); }
 .incant-2 { display: block; margin-top: 5px; font-family: var(--f-sc); font-size: 13px; letter-spacing: .14em; color: rgba(243, 233, 210, .45); }
-.ink-blot { position: absolute; left: 50%; top: 80%; width: 160px; height: 160px; margin: -80px; border-radius: 50%; opacity: 0; pointer-events: none;
-  background: radial-gradient(circle, rgba(43, 29, 20, .35) 0%, rgba(43, 29, 20, .12) 40%, rgba(43, 29, 20, 0) 70%); }
-.inside-title { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; z-index: 2; opacity: 0; color: #1B120B; }
-.it-card { padding: 18px 30px; background: radial-gradient(ellipse at center, rgba(239, 226, 196, .97) 52%, rgba(239, 226, 196, 0) 72%); }
-.inside-title .it-pre { font-family: var(--f-fell); font-style: italic; font-size: calc(var(--W) * .038); color: #5C4632; }
-.inside-title h2 { margin: 0 0 2px; font-family: var(--f-script); font-weight: 400; font-size: calc(var(--W) * .15); line-height: 1.1; color: #1B120B; -webkit-text-fill-color: #1B120B;
-  background: linear-gradient(180deg, #A9852B, #7A5A12 60%, #5A400C); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.inside-title .it-rule { width: 46%; height: 9px; margin: 2px 0; background: var(--underline-dark) center / 100% 100% no-repeat; opacity: .8; }
-.inside-title p { margin: 4px 0 0; font-family: var(--f-fell); font-style: italic; font-size: calc(var(--W) * .042); }
 .wand { position: relative; z-index: 4; width: 170px; height: 140px; display: grid; place-items: center; transition: opacity .6s; touch-action: none; cursor: grab; will-change: transform; }
 .wand.held { cursor: grabbing; }
-.fold-stage { cursor: pointer; }
-.wand svg { width: 170px; height: 150px; overflow: visible; }
-.wand-g { transform-origin: 150px 140px; transform-box: view-box; animation: hover 4s ease-in-out infinite; }
+.wand-art { position: relative; display: block; width: 170px; height: 150px; transform-origin: 150px 140px; animation: hover 4s ease-in-out infinite; }
 @keyframes hover { 0%, 100% { transform: translate(0, 0) rotate(0); } 50% { transform: translate(0, -3px) rotate(-1deg); } }
-.wand.held .wand-g, .wand.touch .wand-g { animation: none; }
-.wand-tipglow { animation: lumos 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.wand-img { display: block; width: 170px; height: 150px; }
+.wand-glow { position: absolute; left: 14px; top: -25px; width: 60px; height: 60px; pointer-events: none; animation: lumos 2.6s ease-in-out infinite; }
 @keyframes lumos { 0%, 100% { opacity: .45; transform: scale(.85); } 50% { opacity: .9; transform: scale(1.1); } }
-.wand.touch .wand-tipglow { animation: flare .9s ease-out forwards; }
-@keyframes flare { 0% { opacity: .6; transform: scale(1); } 30% { opacity: 1; transform: scale(2.4); } 100% { opacity: .5; transform: scale(1); } }
-.wand-label { position: absolute; bottom: -4px; left: 0; right: 0; text-align: center; font-family: var(--f-fell); font-style: italic; font-size: 14px; color: rgba(243, 233, 210, .5); }
+.wand.held .wand-art, .wand.touch .wand-art { animation: none; }
+.wand.touch .wand-glow { animation: flare .9s ease-out forwards; }
+@keyframes flare { 0% { opacity: .6; transform: scale(1); } 30% { opacity: 1; transform: scale(2.2); } 100% { opacity: .5; transform: scale(1); } }
 
 /* ── Reduced motion: simple fades only ─────────────────────────────────── */
 .rm .mote, .rm .hparticles, .rm .intro-particles { display: none; }
@@ -874,7 +853,7 @@ img { display: block; }
 .rm .mk.bounce { animation: none !important; }
 .rm .mk.is-hl .mk-halo { animation: none; opacity: .8; }
 .rm .step { animation: none; opacity: .55; }
-.rm .star, .rm .wand-tipglow, .rm .wand-g, .rm .me-feet i, .rm .me-glow { animation: none; }
+.rm .star, .rm .wand-glow, .rm .wand-art, .rm .me-feet i, .rm .me-glow { animation: none; }
 .rm .countdown.soon .cd-txt b { animation: none; color: var(--text); background: none; }
 .rm .ink-l { animation: fadeFill .4s ease both !important; stroke-dashoffset: 0 !important; }
 .rm .fpanel, .rm .mode-thumb, .rm .tab::after { transition-duration: .01s; }
@@ -957,9 +936,8 @@ img { display: block; }
   </div>
 
   <div class="mischief" id="mischief" hidden aria-live="polite">
-    <div class="mm-panels"><div class="mm-panel l"></div><div class="mm-panel c"></div><div class="mm-panel r"></div></div>
-    <div class="mm-text" id="mmText" aria-label="Mischief Managed"></div>
-    <div class="mm-sub" id="mmSub"></div>
+    <canvas class="mm-ink" id="mmInk" aria-label="Mischief Managed"></canvas>
+    <div class="mm-panels" id="mmPanels"><canvas class="mm-panel l"></canvas><canvas class="mm-panel c"></canvas><canvas class="mm-panel r"></canvas></div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -969,52 +947,18 @@ img { display: block; }
   <div class="intro-particles" id="introParticles"></div>
   <button class="skip" id="skipIntro" type="button">Skip</button>
   <div class="fold-stage" id="foldStage">
+    <div class="stage-shadow"></div>
     <div class="foldmap" id="foldMap">
-      <div class="fpanel fp-centre"><div class="face front"></div></div>
-      <div class="fpanel fp-left"><div class="face front"></div><div class="face back"></div></div>
-      <div class="fpanel fp-right"><div class="face front"></div><div class="face back"></div></div>
-      <svg class="inside-ink" id="insideInk" aria-hidden="true"></svg>
-      <div class="inside-title" id="insideTitle">
-        <div class="it-card">
-          <div class="it-pre">The Map of</div>
-          <h2 id="itCity"></h2>
-          <div class="it-rule"></div>
-          <p id="insideSub"></p>
-        </div>
-      </div>
+      <div class="fpanel fp-centre"><canvas class="face front"></canvas></div>
+      <div class="fpanel fp-left"><canvas class="face front"></canvas><canvas class="face back"></canvas></div>
+      <div class="fpanel fp-right"><canvas class="face front"></canvas><canvas class="face back"></canvas></div>
+      <canvas class="ink-canvas" id="insideInk" aria-label="The map of the trip"></canvas>
     </div>
-    <div class="packet-face" id="packetFace">
-      <div class="ink-blot" id="inkBlot"></div>
-      <svg class="cover-web" id="coverWeb" aria-hidden="true"></svg>
-      <div class="cover" id="cover" aria-label="Aparecium Portus"></div>
-    </div>
+    <div class="packet-face" id="packetFace"><canvas class="ink-canvas" id="coverInk" aria-label="Aparecium Portus"></canvas></div>
   </div>
   <p class="incant" id="hint"><span class="incant-1">I solemnly swear that I am up to no good</span><span class="incant-2">Touch the wand to the parchment</span></p>
   <button class="wand" id="wand" type="button" aria-label="Touch your wand to the parchment to reveal the map">
-    <svg viewBox="0 0 170 150" aria-hidden="true">
-      <defs>
-        <linearGradient id="wWood" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#140A05"/><stop offset=".32" stop-color="#5E3F25"/><stop offset=".48" stop-color="#92704C"/><stop offset=".62" stop-color="#4E331D"/><stop offset="1" stop-color="#120804"/>
-        </linearGradient>
-        <linearGradient id="wHandle" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#0E0703"/><stop offset=".35" stop-color="#3E2614"/><stop offset=".5" stop-color="#6E4E30"/><stop offset=".68" stop-color="#2E1B0E"/><stop offset="1" stop-color="#0A0502"/>
-        </linearGradient>
-        <radialGradient id="wTip"><stop offset="0" stop-color="#FFF9E6"/><stop offset=".25" stop-color="#FFE3A0" stop-opacity=".9"/><stop offset="1" stop-color="#FFC060" stop-opacity="0"/></radialGradient>
-      </defs>
-      <g class="wand-g">
-        <g transform="translate(150 140) rotate(-128)">
-          <circle class="wand-tipglow" cx="172" cy="0" r="16" fill="url(#wTip)"/>
-          <ellipse cx="-3" cy="0" rx="5" ry="6.2" fill="url(#wHandle)" stroke="#0A0502" stroke-width=".6"/>
-          <path d="M0 -5.6 C 8 -6.6, 14 -4.4, 20 -5.2 S 32 -6.2, 38 -4.8 S 46 -4.4, 50 -4.4 L 50 4.4 C 46 4.4, 42 5.2, 38 4.8 S 26 6.2, 20 5.2 S 8 6.6, 0 5.6 Z" fill="url(#wHandle)" stroke="#0A0502" stroke-width=".5"/>
-          <path d="M10 -5.9 Q 11.5 0 10 5.9 M20 -5.3 Q 21.5 0 20 5.3 M30 -5.6 Q 31.5 0 30 5.6" stroke="#8A6A48" stroke-width=".7" fill="none" opacity=".55"/>
-          <path d="M50 -4.6 L 54 -4.2 L 54 4.2 L 50 4.6 Z" fill="#2A1A0C"/>
-          <path d="M54 -3.7 C 90 -2.8, 130 -1.9, 170 -1.0 Q 173 0 170 1.0 C 130 1.9, 90 2.8, 54 3.7 Z" fill="url(#wWood)"/>
-          <path d="M58 -1.6 C 100 -1.1, 140 -.6, 166 -.3" stroke="rgba(255, 228, 185, .28)" stroke-width=".7" fill="none"/>
-          <path d="M70 1.8 C 90 1.4, 110 1.2, 128 0.8 M96 -2.2 C 112 -1.8, 130 -1.4, 148 -1" stroke="rgba(10, 5, 2, .45)" stroke-width=".4" fill="none"/>
-          <circle cx="171" cy="0" r="1.5" fill="#FFF6DA"/>
-        </g>
-      </g>
-    </svg>
+    <span class="wand-art"><canvas class="wand-img" id="wandImg"></canvas><canvas class="wand-glow" id="wandGlow"></canvas></span>
     <span class="sr">Touch your wand</span>
   </button>
 </div>
@@ -1841,7 +1785,7 @@ function removeRoutes(animate) {
 }
 let walkerTimer = 0;
 function clearSteps() { if (typeof stepTimer === 'number') clearTimeout(stepTimer); stepTimer = null; clearInterval(walkerTimer); layers.steps.splice(0).forEach(m => m.remove()); }
-function walkerName() { const n = marauderNames(); return n.length > 1 ? `${n[0]} & co.` : (n[0] || 'Mischief-makers'); }
+function walkerName(i) { const n = marauderNames(); return n.length ? n[i % n.length] : 'Mischief-makers'; }
 function buildStepsSoon() { if (stepTimer === 'on') buildSteps(); }
 function footSegment(day) {
   const n = day.stops.length; if (n < 2) return -1;
@@ -1877,12 +1821,13 @@ function buildSteps() {
   stepTimer = 'on';
   // the walkers' name scroll leads the footprints along, like the Marauder's Map
   if (!RM && heads.length > 2) {
-    const wk = L.marker(heads[0], { pane: 'steps', interactive: false, keyboard: false, icon: L.divIcon({ className: 'walker-wrap step-wrap', iconSize: [0, 0], html: `<span class="walker-dot"></span><span class="walker">${esc(walkerName())}</span>` }) }).addTo(map);
+    const wk = L.marker(heads[0], { pane: 'steps', interactive: false, keyboard: false, icon: L.divIcon({ className: 'walker-wrap step-wrap', iconSize: [0, 0], html: `<span class="walker-dot"></span><span class="walker">${esc(walkerName(0))}</span>` }) }).addTo(map);
     layers.steps.push(wk);
     const t0 = performance.now();
     walkerTimer = setInterval(() => {
-      const k2 = Math.floor(((performance.now() - t0) % cycle) / stepMs), el = wk.getElement();
+      const e = performance.now() - t0, k2 = Math.floor((e % cycle) / stepMs), el = wk.getElement();
       if (!el) return;
+      const lab = el.querySelector('.walker'), nm = walkerName(Math.floor(e / cycle)); if (lab && lab.textContent !== nm) lab.textContent = nm;
       if (k2 < heads.length) { wk.setLatLng(heads[k2]); el.style.opacity = '1'; } else el.style.opacity = '0';
     }, stepMs);
   }
@@ -2139,50 +2084,79 @@ if (navigator.permissions && navigator.permissions.query) navigator.permissions.
 let toastTimer = 0;
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3600); }
 
-/* ═════════════════════════ Mischief Managed ═════════════════════════ */
+/* ═════════════════════════ Mischief Managed ═════════════════════════
+   As in the book: the map becomes ink, then the ink draws back into the parchment and leaves it blank.
+   Then it folds shut and opens again on the next day. */
 let mmBusy = false;
 async function playMischief() {
   if (mmBusy || !state.introDone) return;
   mmBusy = true;
-  const day = curDay(), last = day.index >= DAYS.length - 1, nextIdx = last ? day.index : day.index + 1;
-  store.set('mm.' + day.date, true);
-  Card.close(true); Sheet.set('peek');
-  const mm = $('#mischief'), panels = $$('.mm-panel', mm), txt = $('#mmText'), sub = $('#mmSub'), [pl, , pr] = panels;
-  panels.forEach(p => { p.style.transform = ''; p.style.opacity = '0'; });
-  txt.innerHTML = ''; sub.style.opacity = '0';
-  sub.textContent = last ? 'Until the next adventure.' : `Day ${ROMAN[nextIdx + 1] || nextIdx + 1} awaits.`;
-  mm.hidden = false;
-  const fade = (el, a, b, d, delay = 0) => el.animate([{ opacity: a }, { opacity: b }], { duration: d, delay, fill: 'forwards', easing: 'ease' });
-  panels.forEach(p => fade(p, 0, 1, RM ? 300 : 1100));
-  await wait(RM ? 300 : 700);
-  await fontsReady(['40px "Pinyon Script"']);
-  const dur = inkWrite(txt, 'Mischief Managed', { size: 60, per: RM ? 0 : 80, strokeDur: 700, fill: mqDark.matches ? '#EFDDB2' : '#2B1D14', sound: true });
-  await wait(RM ? 500 : dur + 300);
-  fade(sub, 0, 1, 600);
-  await wait(RM ? 900 : 1500);
-  fade(txt, 1, 0, 400); fade(sub, 1, 0, 400);
-  await wait(400);
-  const ease = 'cubic-bezier(.55,.05,.3,1)';
-  if (!RM) {
-    Sound.rustle(1.1, .1);
-    pl.animate([{ transform: 'rotateY(0)' }, { transform: 'rotateY(179.5deg)' }], { duration: 850, easing: ease, fill: 'forwards' });
-    pr.animate([{ transform: 'rotateY(0)' }, { transform: 'rotateY(-179deg)' }], { duration: 850, delay: 250, easing: ease, fill: 'forwards' });
-    await wait(1200);
-  }
-  if (nextIdx !== state.day) await selectDay(nextIdx, { anim: false }); else { removeMarkers(layers.stops, false); removeMarkers(layers.food, false); removeRoutes(false); fitTo(visiblePoints(), false); }
-  await wait(RM ? 100 : 400);
-  if (!RM) {
-    Sound.rustle(1, .09);
-    pr.animate([{ transform: 'rotateY(-179deg)' }, { transform: 'rotateY(0)' }], { duration: 850, easing: ease, fill: 'forwards' });
-    pl.animate([{ transform: 'rotateY(179.5deg)' }, { transform: 'rotateY(0)' }], { duration: 850, delay: 250, easing: ease, fill: 'forwards' });
-    await wait(1150);
-  }
-  panels.forEach(p => fade(p, 1, 0, 700));
-  await wait(500);
-  syncLayers(true, false);
-  await wait(300);
-  mm.hidden = true; [...panels, txt, sub].forEach(p => p.getAnimations().forEach(a => a.cancel()));
-  mmBusy = false;
+  try {
+    const day = curDay(), last = day.index >= DAYS.length - 1, nextIdx = last ? day.index : day.index + 1;
+    store.set('mm.' + day.date, true);
+    Card.close(true); Sheet.set('peek');
+    const mm = $('#mischief'); mm.hidden = false;
+    const rect = mm.getBoundingClientRect(), w = Math.round(rect.width), h = Math.round(rect.height);
+    const base = paintParchment(w, h, { seed: 77 + day.num, edges: [0, 0, 0, 0], creases: [w / 3, w * 2 / 3], hcreases: [h / 2] });
+    const disp = $('#mmInk'), g = makeCanvas(w, h, disp)[1];
+    // the day as an ink drawing: streets, our route and our stops where they are on screen
+    const ox = w / 2, oy = h * .42;
+    const segs = genNetwork({ x: ox, y: oy, w, h, seed: 300 + day.num, count: 11, depth: 5, step: 24, wiggle: .16, grid: true, speed: 1, width: .75, max: 320, blocks: 90, join: 18, margin: 2, alpha: .5 });
+    const places = [];
+    if (map) {
+      const off = map.getContainer().getBoundingClientRect(), at = ll => { const c = map.latLngToContainerPoint(ll); return [c.x + off.left - rect.left, c.y + off.top - rect.top]; };
+      routeSegs.forEach(pts => segs.push({ pts: pts.map(at), w: 2.2, a: .9 }));
+      day.stops.forEach(s => { const [x, y] = at([s.lat, s.lng]); if (x > 10 && x < w - 10 && y > 10 && y < h - 10) places.push({ x, y, name: s.name.replace(/,.*$/, ''), fs: 13, label: true, left: x > w * .6 }); });
+    }
+    segs.forEach(prepSeg);
+    let maxD = 1;
+    segs.forEach(s => { s.d = Math.max(...s.pts.map(p => Math.hypot(p[0] - ox, p[1] - oy))); maxD = Math.max(maxD, s.d); });
+    segs.forEach(s => { s.et = (1 - s.d / maxD) * 1600; s.ed = 700; });
+    places.forEach(L => { L.et = (1 - Math.hypot(L.x - ox, L.y - oy) / maxD) * 1600; });
+    await fontsReady(['40px "Pinyon Script"', 'italic 16px "IM Fell English"']);
+    const big = Math.round(Math.min(w * .13, 64));
+    const words = { img: textImage('Mischief Managed', `${big}px "Pinyon Script"`, big), cx: w / 2, y: oy + big * .35 };
+    const sub = { img: textImage(last ? 'Until the next adventure.' : `Day ${ROMAN[nextIdx + 1] || nextIdx + 1} awaits.`, `italic 17px "IM Fell English"`, 17), cx: w / 2, y: oy + big * .35 + 34 };
+    const draw = t => {
+      g.clearRect(0, 0, w, h); g.drawImage(base, 0, 0, w, h);
+      segs.forEach(s => drawSeg(g, s, t < 0 ? 1 : 1 - clamp((t - s.et) / s.ed, 0, 1)));
+      places.forEach(L => drawPlace(g, L, t < 0 ? 1 : 1 - clamp((t - L.et) / 450, 0, 1)));
+      if (t > 300) { const fade = 1 - clamp((t - 3300) / 900, 0, 1); drawWriting(g, words, (t - 300) / 1700, fade); drawWriting(g, sub, (t - 1900) / 900, fade); }
+    };
+    draw(-1);
+    const fade = (el, a, b, d) => el.animate([{ opacity: a }, { opacity: b }], { duration: d, fill: 'forwards', easing: 'ease' });
+    fade(disp, 0, 1, RM ? 300 : 1000); Sound.chime(true);
+    await wait(RM ? 400 : 1400);
+    if (RM) { draw(5000); await wait(600); }
+    else {
+      scratchFor(2000);
+      await new Promise(res => { const t0 = performance.now(); const loop = () => { const t = performance.now() - t0; draw(t); if (t < 4300) requestAnimationFrame(loop); else res(); }; loop(); });
+    }
+    // the blank parchment folds shut, and opens again on the next day
+    const pc = $('#mmPanels'), panels = $$('.mm-panel', pc), [pl, , pr] = panels, pw = w / 3;
+    panels.forEach((el, i) => { el.style.transform = ''; const pg = makeCanvas(pw, h, el)[1]; pg.drawImage(base, i * pw * DPR, 0, pw * DPR, h * DPR, 0, 0, pw, h); });
+    pc.style.opacity = '1'; disp.getAnimations().forEach(a => a.cancel()); disp.style.opacity = '0';
+    const ease = 'cubic-bezier(.55,.05,.3,1)';
+    if (!RM) {
+      Sound.rustle(1.1, .1);
+      pl.animate([{ transform: 'rotateY(0)' }, { transform: 'rotateY(179.5deg)' }], { duration: 900, easing: ease, fill: 'forwards' });
+      pr.animate([{ transform: 'rotateY(0)' }, { transform: 'rotateY(-179deg)' }], { duration: 900, delay: 250, easing: ease, fill: 'forwards' });
+      await wait(1300);
+    }
+    if (nextIdx !== state.day) await selectDay(nextIdx, { anim: false }); else { removeMarkers(layers.stops, false); removeMarkers(layers.food, false); removeRoutes(false); fitTo(visiblePoints(), false); }
+    await wait(RM ? 100 : 400);
+    if (!RM) {
+      Sound.rustle(1, .09);
+      pr.animate([{ transform: 'rotateY(-179deg)' }, { transform: 'rotateY(0)' }], { duration: 900, easing: ease, fill: 'forwards' });
+      pl.animate([{ transform: 'rotateY(179.5deg)' }, { transform: 'rotateY(0)' }], { duration: 900, delay: 250, easing: ease, fill: 'forwards' });
+      await wait(1250);
+    }
+    const out = fade(pc, 1, 0, 700);
+    await wait(450);
+    syncLayers(true, false);
+    await new Promise(r => { out.onfinish = r; setTimeout(r, 800); });
+    mm.hidden = true; panels.forEach(p => p.getAnimations().forEach(a => a.cancel())); pc.getAnimations().forEach(a => a.cancel()); pc.style.opacity = '0';
+  } finally { mmBusy = false; }
 }
 
 /* ═════════════════════════ Live clock ═════════════════════════ */
@@ -2224,32 +2198,350 @@ function inkReveal(dur) {
   });
 }
 let introSkipped = false, introFinished = false;
-const INTRO_V = 5, introKey = () => zonedDate(nowMs()) + '|' + INTRO_V;
+const INTRO_V = 6, introKey = () => zonedDate(nowMs()) + '|' + INTRO_V;
 async function finishIntro(fast) {
   if (introFinished) return; introFinished = true;
   store.set('introSeen', introKey());
   if (fast || RM) { app.style.zIndex = '200'; await new Promise(r => { app.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RM ? 400 : 350, easing: 'ease' }).onfinish = r; }); app.style.zIndex = ''; }
   else { Sound.whoosh(); await inkReveal(1600); }
-  intro.remove();
+  intro.remove(); introScenes.forEach(sc => sc.stop());
   onAppReady();
 }
-function presenterLines(s) {
-  // Break at commas and before "&" so names stay together
-  const parts = String(s || '').replace(/,\s+/g, ',\n').replace(/\s+&/g, '\n&').split('\n').filter(Boolean), lines = []; let cur = '';
-  parts.forEach(w => { if ((cur + ' ' + w).trim().length > 24 && cur) { lines.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); });
-  if (cur) lines.push(cur);
-  return lines.slice(0, 3);
+/* ═════════════════════════ Parchment and ink, painted as pixels ═════════════════════════
+   The opening and "Mischief Managed" are painted on canvas rather than built from page colours,
+   so browsers that force their own dark mode (Samsung Internet, some Android settings) can't
+   turn the parchment brown and the black ink white. */
+const DPR = Math.min(2, window.devicePixelRatio || 1);
+const INK = '20,12,6';
+function makeCanvas(w, h, el) {
+  const c = el || document.createElement('canvas');
+  c.width = Math.max(1, Math.round(w * DPR)); c.height = Math.max(1, Math.round(h * DPR));
+  const g = c.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0);
+  return [c, g];
+}
+let grainTile = null;
+function grain(g) {
+  if (!grainTile) {
+    grainTile = document.createElement('canvas'); grainTile.width = grainTile.height = 96;
+    const gg = grainTile.getContext('2d'), im = gg.createImageData(96, 96), r = mulberry32(17);
+    for (let i = 0; i < im.data.length; i += 4) { const v = r(); im.data[i] = 90; im.data[i + 1] = 58; im.data[i + 2] = 22; im.data[i + 3] = v < .5 ? Math.round(r() * 26) : 0; }
+    gg.putImageData(im, 0, 0);
+  }
+  return g.createPattern(grainTile, 'repeat');
+}
+/* An outline whose chosen edges (top, right, bottom, left) are torn */
+function tornOutline(w, h, edges, seed) {
+  const r = mulberry32(seed), ph = [r() * 6, r() * 6, r() * 6, r() * 6];
+  const tear = (u, k) => 1 + 2.4 * (.5 + .5 * Math.sin(u * .043 + ph[k])) + 1.8 * (.5 + .5 * Math.sin(u * .21 + ph[k] * 2)) + r() * 1.7;
+  const pts = [], torn = [], st = 4;
+  const run = (k, n, f) => { const seg = []; for (let i = 0; i <= n; i++) { const p = f(i / n); pts.push(p); if (edges[k]) seg.push(p); } if (edges[k]) torn.push(seg); };
+  run(0, Math.ceil(w / st), t => [t * w, edges[0] ? tear(t * w, 0) : 0]);
+  run(1, Math.ceil(h / st), t => [w - (edges[1] ? tear(t * h, 1) : 0), t * h]);
+  run(2, Math.ceil(w / st), t => [w - t * w, h - (edges[2] ? tear(t * w, 2) : 0)]);
+  run(3, Math.ceil(h / st), t => [edges[3] ? tear(t * h, 3) : 0, h - t * h]);
+  return { pts, torn };
+}
+function paintParchment(w, h, o = {}) {
+  const [c, g] = makeCanvas(w, h), r = mulberry32(o.seed || 1), edges = o.edges || [1, 1, 1, 1];
+  const ol = tornOutline(w, h, edges, (o.seed || 1) * 7 + 3);
+  const line = pts => { g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); };
+  g.save(); line(ol.pts); g.closePath(); g.clip();
+  const tone = o.back ? ['#EBDDB8', '#DECA9C', '#C2A26A'] : ['#F6EBCE', '#EAD8B1', '#CDAE76'];
+  const grd = g.createRadialGradient(w * .5, h * .42, 10, w * .5, h * .5, Math.hypot(w, h) * .62);
+  grd.addColorStop(0, tone[0]); grd.addColorStop(.62, tone[1]); grd.addColorStop(1, tone[2]);
+  g.fillStyle = grd; g.fillRect(0, 0, w, h);
+  const blot = (x, y, rad, rgb, a) => { const rg = g.createRadialGradient(x, y, 0, x, y, rad); rg.addColorStop(0, `rgba(${rgb},${a})`); rg.addColorStop(1, `rgba(${rgb},0)`); g.fillStyle = rg; g.fillRect(x - rad, y - rad, rad * 2, rad * 2); };
+  const area = Math.max(.4, w * h / 40000);
+  for (let i = 0; i < 24 * area; i++) blot(r() * w, r() * h, 25 + r() * 90, '125,82,32', (.03 + r() * .05).toFixed(3));
+  for (let i = 0; i < 12 * area; i++) blot(r() * w, r() * h, 20 + r() * 70, '255,250,232', (.05 + r() * .08).toFixed(3));
+  for (let i = 0; i < Math.max(1, Math.round(.5 * area)); i++) {
+    const x = r() * w, y = r() * h, rx = 12 + r() * 24;
+    g.strokeStyle = `rgba(120,76,28,${(.04 + r() * .05).toFixed(3)})`; g.lineWidth = .6 + r() * 1.2;
+    g.beginPath(); g.ellipse(x, y, rx, rx * (.8 + r() * .3), r() * 3, 0, 6.283); g.stroke(); blot(x, y, rx, '140,95,40', .05);
+  }
+  g.lineCap = 'round';
+  for (let i = 0; i < 80 * area; i++) {
+    const x = r() * w, y = r() * h, a = r() * Math.PI, l = 4 + r() * 20;
+    g.strokeStyle = `rgba(95,62,25,${(.04 + r() * .08).toFixed(3)})`; g.lineWidth = .3 + r() * .5;
+    g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + Math.cos(a) * l * .5 + r() * 3, y + Math.sin(a) * l * .5 + r() * 3, x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
+  }
+  g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = grain(g); g.fillRect(0, 0, c.width, c.height); g.restore();
+  (o.creases || []).forEach(x => { const lg = g.createLinearGradient(x - 16, 0, x + 16, 0); lg.addColorStop(0, 'rgba(90,55,18,0)'); lg.addColorStop(.44, 'rgba(90,55,18,.15)'); lg.addColorStop(.5, 'rgba(70,40,12,.3)'); lg.addColorStop(.55, 'rgba(255,248,228,.25)'); lg.addColorStop(1, 'rgba(255,248,228,0)'); g.fillStyle = lg; g.fillRect(x - 16, 0, 32, h); });
+  (o.hcreases || []).forEach(y => { const lg = g.createLinearGradient(0, y - 10, 0, y + 10); lg.addColorStop(0, 'rgba(90,55,18,0)'); lg.addColorStop(.48, 'rgba(80,48,14,.14)'); lg.addColorStop(.54, 'rgba(255,248,228,.18)'); lg.addColorStop(1, 'rgba(255,248,228,0)'); g.fillStyle = lg; g.fillRect(0, y - 10, w, 20); });
+  // aged, darkened torn edges
+  g.lineJoin = 'round';
+  ol.torn.forEach(seg => { g.save(); g.shadowColor = 'rgba(92,52,14,.6)'; g.shadowBlur = 18 * DPR; g.strokeStyle = 'rgba(92,52,14,.4)'; g.lineWidth = 6; line(seg); g.stroke(); g.restore(); });
+  g.restore();
+  g.strokeStyle = 'rgba(80,45,12,.6)'; g.lineWidth = .7; ol.torn.forEach(seg => { line(seg); g.stroke(); });
+  return c;
+}
+
+/* Ink: segments that draw themselves, wet blots, handwriting and labels, settling into a cache */
+function prepSeg(s) { s.cum = [0]; for (let i = 1; i < s.pts.length; i++) s.cum.push(s.cum[i - 1] + Math.hypot(s.pts[i][0] - s.pts[i - 1][0], s.pts[i][1] - s.pts[i - 1][1])); s.len = s.cum[s.cum.length - 1] || 1; return s; }
+function drawSeg(g, s, p) {
+  if (p <= 0) return;
+  const L = s.len * Math.min(1, p); let hx = s.pts[0][0], hy = s.pts[0][1];
+  g.beginPath(); g.moveTo(hx, hy);
+  for (let i = 1; i < s.pts.length; i++) {
+    if (s.cum[i] <= L) { hx = s.pts[i][0]; hy = s.pts[i][1]; g.lineTo(hx, hy); continue; }
+    const f = (L - s.cum[i - 1]) / Math.max(1e-6, s.cum[i] - s.cum[i - 1]);
+    hx = s.pts[i - 1][0] + (s.pts[i][0] - s.pts[i - 1][0]) * f; hy = s.pts[i - 1][1] + (s.pts[i][1] - s.pts[i - 1][1]) * f; g.lineTo(hx, hy); break;
+  }
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  g.strokeStyle = `rgba(${INK},${((s.a || .82) * .13).toFixed(3)})`; g.lineWidth = s.w * 3.6; g.stroke();   // wet bleed into the paper
+  g.strokeStyle = `rgba(${INK},${s.a || .82})`; g.lineWidth = s.w; g.stroke();
+  if (p < 1) { g.fillStyle = `rgba(${INK},.85)`; g.beginPath(); g.arc(hx, hy, s.w * 1.3, 0, 6.283); g.fill(); } // the bead of wet ink at the tip
+}
+function blotShape(seed) { const r = mulberry32(seed); return { k: Array.from({ length: 28 }, () => .78 + r() * .44), drops: Array.from({ length: 9 }, () => ({ a: r() * 6.283, d: 1.15 + r() * .9, s: .06 + r() * .14, at: .3 + r() * .6 })) }; }
+function drawBlot(g, b, p) {
+  if (p <= 0) return;
+  const e = 1 - Math.pow(1 - Math.min(1, p), 3), R = b.R * e, sh = b.shape || (b.shape = blotShape(b.seed));
+  const rg = g.createRadialGradient(b.x, b.y, 0, b.x, b.y, R * 1.25);
+  rg.addColorStop(0, `rgba(${INK},.9)`); rg.addColorStop(.55, `rgba(${INK},.78)`); rg.addColorStop(.8, `rgba(${INK},.35)`); rg.addColorStop(1, `rgba(${INK},0)`);
+  g.fillStyle = rg; g.beginPath();
+  sh.k.forEach((k, i) => { const a = i / sh.k.length * 6.283, x = b.x + Math.cos(a) * R * k, y = b.y + Math.sin(a) * R * k; i ? g.lineTo(x, y) : g.moveTo(x, y); });
+  g.closePath(); g.fill();
+  sh.drops.forEach(d => { if (e < d.at) return; g.fillStyle = `rgba(${INK},.75)`; g.beginPath(); g.arc(b.x + Math.cos(d.a) * R * d.d, b.y + Math.sin(d.a) * R * d.d, R * d.s, 0, 6.283); g.fill(); });
+}
+function textImage(text, font, size) {
+  const probe = document.createElement('canvas').getContext('2d'); probe.font = font;
+  const tw = Math.ceil(probe.measureText(text).width), pad = Math.ceil(size * .55), w = tw + pad * 2, h = Math.ceil(size * 1.7);
+  const [c, g] = makeCanvas(w, h); g.font = font; g.textBaseline = 'alphabetic';
+  g.shadowColor = `rgba(${INK},.35)`; g.shadowBlur = 1.4 * DPR; g.fillStyle = `rgba(${INK},.92)`; g.fillText(text, pad, size * 1.15);
+  return { c, w, h, pad, tw, base: size * 1.15 };
+}
+function drawWriting(g, x, p, alpha = 1) {
+  if (p <= 0) return;
+  const im = x.img, left = x.cx - im.tw / 2 - im.pad, top = x.y - im.base, reveal = im.pad + im.tw * Math.min(1, p) + (p >= 1 ? im.pad : 0);
+  g.save(); g.globalAlpha = alpha; g.beginPath(); g.rect(left, top, reveal, im.h); g.clip(); g.drawImage(im.c, left, top, im.w, im.h); g.restore();
+  if (p < 1) { g.fillStyle = `rgba(${INK},.8)`; g.beginPath(); g.arc(left + reveal, x.y - im.base * .3, 1.4, 0, 6.283); g.fill(); }
+}
+function drawPlace(g, L, alpha) {
+  if (alpha <= 0) return;
+  g.save(); g.globalAlpha = Math.min(1, alpha);
+  g.fillStyle = '#EFE2C4'; g.beginPath(); g.arc(L.x, L.y, 6, 0, 6.283); g.fill();
+  g.fillStyle = `rgb(${INK})`; g.beginPath(); g.arc(L.x, L.y, 2.2, 0, 6.283); g.fill();
+  g.strokeStyle = `rgb(${INK})`; g.lineWidth = .6; g.beginPath(); g.arc(L.x, L.y, 4.4, 0, 6.283); g.stroke();
+  if (L.label) {
+    g.font = `italic ${L.fs}px "IM Fell English"`; g.textAlign = L.left ? 'right' : 'left'; g.textBaseline = 'middle';
+    const tx = L.x + (L.left ? -8 : 8);
+    g.lineJoin = 'round'; g.strokeStyle = '#EFE2C4'; g.lineWidth = 3.4; g.strokeText(L.name, tx, L.y + .5);
+    g.fillStyle = `rgb(${INK})`; g.fillText(L.name, tx, L.y + .5);
+  }
+  g.restore();
+}
+const SHOE_PATH = new Path2D('M3.6 0 C5.9 0 6.9 2.2 6.6 4.6 C6.3 6.6 5.6 7.6 5.5 8.4 L1.6 8.4 C1.5 7.6 .7 6.6 .4 4.6 C.1 2.2 1.3 0 3.6 0Z M1.7 9.6 H5.3 C5.5 11.9 4.9 14 3.5 14 C2.1 14 1.5 11.9 1.7 9.6Z');
+function drawBanner(g, x, y, name, fs) {
+  g.save(); g.font = `italic ${fs}px "IM Fell English"`;
+  const tw = g.measureText(name).width + 18, hh = fs * .78;
+  g.beginPath(); g.moveTo(x - tw / 2, y - hh); g.lineTo(x + tw / 2, y - hh); g.lineTo(x + tw / 2 - 4, y); g.lineTo(x + tw / 2, y + hh); g.lineTo(x - tw / 2, y + hh); g.lineTo(x - tw / 2 + 4, y); g.closePath();
+  g.fillStyle = '#EFE2C4'; g.fill(); g.strokeStyle = `rgba(${INK},.9)`; g.lineWidth = .7; g.stroke();
+  g.fillStyle = `rgb(${INK})`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(name, x, y + 1);
+  g.restore(); return tw;
+}
+class InkCanvas {
+  constructor(el, base, w, h) {
+    this.el = el; this.w = w; this.h = h; this.base = base;
+    this.g = makeCanvas(w, h, el)[1];
+    [this.cache, this.cg] = makeCanvas(w, h); this.cg.drawImage(base, 0, 0, w, h);
+    this.segs = []; this.blots = []; this.writes = []; this.places = []; this.walk = null; this.title = null; this.soft = null;
+    this.t0 = performance.now(); this.raf = 0; this.alive = false; this.iv = 0;
+    this.render();
+  }
+  now() { return performance.now() - this.t0; }
+  start() { this.alive = true; const loop = () => { if (!this.alive) return; this.render(); this.raf = requestAnimationFrame(loop); }; loop(); }
+  stop() { this.alive = false; cancelAnimationFrame(this.raf); clearInterval(this.iv); }
+  add(segs) { segs.forEach(s => this.segs.push(prepSeg(s))); }
+  write(text, font, size, cx, y, t, dur) { this.writes.push({ img: textImage(text, font, size), cx, y, t, dur }); }
+  soften(total, dur) { this.soft = { a: 1 - Math.pow(1 - total, 16 / dur), until: this.now() + dur }; }
+  render() {
+    const t = this.now(), g = this.g, cg = this.cg, ease = p => 1 - Math.pow(1 - clamp(p, 0, 1), 2);
+    if (this.soft) { if (t < this.soft.until) { cg.save(); cg.globalAlpha = this.soft.a; cg.drawImage(this.base, 0, 0, this.w, this.h); cg.restore(); } else this.soft = null; }
+    this.segs = this.segs.filter(s => { if (t >= s.t + s.dur) { drawSeg(cg, s, 1); return false; } return true; });
+    this.blots = this.blots.filter(b => { if (t >= b.t + b.dur) { drawBlot(cg, b, 1); return false; } return true; });
+    this.writes = this.writes.filter(x => { if (t >= x.t + x.dur) { drawWriting(cg, x, 1); return false; } return true; });
+    this.places = this.places.filter(L => { if (t >= L.t + 700) { drawPlace(cg, L, 1); return false; } return true; });
+    g.clearRect(0, 0, this.w, this.h); g.drawImage(this.cache, 0, 0, this.w, this.h);
+    this.blots.forEach(b => drawBlot(g, b, (t - b.t) / b.dur));
+    this.segs.forEach(s => { if (t > s.t) drawSeg(g, s, ease((t - s.t) / s.dur)); });
+    this.writes.forEach(x => drawWriting(g, x, (t - x.t) / x.dur));
+    this.places.forEach(L => drawPlace(g, L, (t - L.t) / 700));
+    if (this.walk) this.drawWalkers(g, t);
+    if (this.title) this.drawTitle(g, clamp((t - this.title.t) / this.title.dur, 0, 1));
+  }
+  /* People as ink dots leaving footprints, with name scrolls, wandering about the map */
+  walkers(names) {
+    if (RM || !names.length) return;
+    const r = mulberry32(99), starts = [[.28, .3], [.72, .26], [.3, .74], [.7, .7], [.5, .5], [.2, .52]], w = this.w, h = this.h;
+    this.walkFs = Math.max(8, w * .025);
+    this.walk = names.map((name, i) => ({ name, x: w * starts[i % 6][0], y: h * starts[i % 6][1], ang: r() * 6.283, n: 0, prints: [], born: this.now() + i * 260 }));
+    const step = () => {
+      const t = this.now();
+      this.walk.forEach(p => {
+        if (t < p.born) return;
+        p.ang += (r() - .5) * .7;
+        let nx = p.x + Math.cos(p.ang) * 10, ny = p.y + Math.sin(p.ang) * 10;
+        if (nx < 40 || nx > w - 40 || ny < 22 || ny > h - 36) { p.ang += Math.PI * (.6 + r() * .5); nx = p.x; ny = p.y; }
+        p.x = nx; p.y = ny;
+        const side = p.n++ % 2 ? 1 : -1;
+        p.prints.push({ x: p.x + Math.cos(p.ang + Math.PI / 2) * 3 * side, y: p.y + Math.sin(p.ang + Math.PI / 2) * 3 * side, a: p.ang, side, t });
+        if (p.prints.length > 9) p.prints.shift();
+      });
+    };
+    step(); this.iv = setInterval(step, 420);
+  }
+  drawWalkers(g, t) {
+    this.walk.forEach(p => {
+      if (t < p.born) return;
+      p.prints.forEach(f => {
+        const a = 1 - (t - f.t) / 2800; if (a <= 0) return;
+        g.save(); g.globalAlpha = a * .9; g.translate(f.x, f.y); g.rotate(f.a + Math.PI / 2); g.scale(f.side > 0 ? -.72 : .72, .72); g.translate(-3.5, -7);
+        g.fillStyle = `rgb(${INK})`; g.fill(SHOE_PATH); g.restore();
+      });
+      const fade = clamp((t - p.born) / 800, 0, 1);
+      g.save(); g.globalAlpha = fade;
+      g.fillStyle = `rgb(${INK})`; g.beginPath(); g.arc(p.x, p.y, 2.3, 0, 6.283); g.fill();
+      drawBanner(g, p.x, p.y + 15, p.name, this.walkFs);
+      g.restore();
+    });
+  }
+  drawTitle(g, a) {
+    if (a <= 0) return;
+    const { w, h } = this, T2 = this.title, cx = w / 2, cy = h * .5;
+    g.save(); g.globalAlpha = a;
+    const rg = g.createRadialGradient(cx, cy, 0, cx, cy, w * .42); rg.addColorStop(0, 'rgba(239,226,196,.97)'); rg.addColorStop(.62, 'rgba(239,226,196,.9)'); rg.addColorStop(1, 'rgba(239,226,196,0)');
+    g.fillStyle = rg; g.fillRect(0, 0, w, h);
+    g.fillStyle = `rgb(${INK})`; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    g.font = `italic ${Math.round(w * .045)}px "IM Fell English"`; g.fillText('The Map of', cx, cy - w * .11);
+    let fs = Math.round(w * .15); g.font = `${fs}px "Pinyon Script"`; while (g.measureText(T2.city).width > w * .8 && fs > 20) { fs -= 2; g.font = `${fs}px "Pinyon Script"`; }
+    g.fillText(T2.city, cx, cy + w * .03);
+    g.strokeStyle = `rgba(${INK},.75)`; g.lineWidth = 1.1; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(cx - w * .2, cy + w * .065); g.bezierCurveTo(cx - w * .08, cy + w * .045, cx + w * .02, cy + w * .085, cx + w * .2, cy + w * .06); g.stroke();
+    g.font = `italic ${Math.round(w * .04)}px "IM Fell English"`; g.fillText(T2.dates, cx, cy + w * .13);
+    g.restore();
+  }
+}
+/* Ink that spreads "like a spider's web" from a point: branching lines that criss-cross and join up */
+function genNetwork(o) {
+  const r = mulberry32(o.seed), segs = [], m = o.margin || 10;
+  const inB = (x, y) => x > m && y > m && x < o.w - m && y < o.h - m;
+  const grow = (x, y, ang, depth, t) => {
+    if (segs.length >= o.max) return;
+    const n = 4 + (r() * 7 | 0), pts = [[x, y]]; let len = 0;
+    for (let i = 0; i < n; i++) {
+      ang += (r() - .5) * o.wiggle;
+      const st = o.step * (.6 + r() * .8), nx = x + Math.cos(ang) * st, ny = y + Math.sin(ang) * st;
+      if (!inB(nx, ny)) break;
+      x = nx; y = ny; pts.push([x, y]); len += st;
+    }
+    if (pts.length < 2) return;
+    const dur = len / o.speed;
+    segs.push({ pts, t, dur, w: Math.max(.35, o.width * (1 - depth * .16)), a: o.alpha || .82 });
+    if (depth >= o.depth) return;
+    const kids = 1 + (r() * 2.4 | 0);
+    for (let k = 0; k < kids; k++) {
+      const idx = 1 + (r() * (pts.length - 1) | 0), [bx, by] = pts[idx];
+      const turn = o.grid ? (r() < .5 ? -1 : 1) * (Math.PI / 2 + (r() - .5) * .35) : (r() < .5 ? -1 : 1) * (.45 + r() * .9);
+      grow(bx, by, ang + turn, depth + 1, t + dur * idx / (pts.length - 1));
+    }
+  };
+  for (let i = 0; i < o.count; i++) { let a = i / o.count * Math.PI * 2 + r() * .5; if (o.upward && Math.sin(a) > 0 && r() < o.upward) a = -a; grow(o.x, o.y, a, 0, (o.t0 || 0) + r() * 160); }
+  const extra = [], at = (sg, i) => sg.t + sg.dur * i / (sg.pts.length - 1);
+  if (o.join) {
+    segs.forEach((a, ai) => {
+      if (extra.length > segs.length * .9) return;
+      const e = a.pts[a.pts.length - 1]; let best = null, bd = o.join;
+      segs.forEach((b, bi) => { if (bi === ai) return; b.pts.forEach((p, i) => { const d = Math.hypot(p[0] - e[0], p[1] - e[1]); if (d > 3 && d < bd) { bd = d; best = { p, t: at(b, i) }; } }); });
+      if (best) extra.push({ pts: [e, best.p], t: Math.max(a.t + a.dur, best.t), dur: bd / o.speed, w: Math.max(.35, a.w * .8), a: a.a });
+    });
+  }
+  for (let i = 0; i < (o.blocks || 0); i++) {
+    const sg = segs[(r() * segs.length) | 0]; if (!sg) break;
+    const k = (r() * sg.pts.length) | 0, [bx, by] = sg.pts[k], bw = 5 + r() * 9, bh = 4 + r() * 7;
+    const x0 = bx + (r() < .5 ? -1 : 1) * (4 + bw / 2) - bw / 2, y0 = by + (r() < .5 ? -1 : 1) * (4 + bh / 2) - bh / 2;
+    if (!inB(x0, y0) || !inB(x0 + bw, y0 + bh)) continue;
+    extra.push({ pts: [[x0, y0], [x0 + bw, y0], [x0 + bw, y0 + bh], [x0, y0 + bh], [x0, y0]], t: at(sg, k) + 120, dur: 420, w: .55, a: (o.alpha || .82) * .9 });
+  }
+  return segs.concat(extra);
+}
+function scratchFor(ms) { if (RM) return; const until = performance.now() + ms; const iv = setInterval(() => { if (performance.now() > until || introSkipped) { clearInterval(iv); return; } if (Math.random() < .7) Sound.scratch(); }, 150); }
+function wrapCanvas(text, font, maxW) {
+  const g = document.createElement('canvas').getContext('2d'); g.font = font;
+  const out = []; let cur = '';
+  String(text || '').split(/\s+/).filter(Boolean).forEach(wd => { const tryS = cur ? cur + ' ' + wd : wd; if (g.measureText(tryS).width > maxW && cur) { out.push(cur); cur = wd; } else cur = tryS; });
+  if (cur) out.push(cur);
+  return out;
+}
+/* The group: nicknames on the cover (like Moony, Wormtail, Padfoot & Prongs), real names on the footprints */
+function marauders() {
+  if (Array.isArray(T.marauders) && T.marauders.length) return T.marauders.map(m => typeof m === 'string' ? { name: m, alias: m } : { name: m.name || m.alias || '', alias: m.alias || m.name || '' }).filter(m => m.name);
+  return String(T.presentedBy || '').replace(/^\s*Messrs\.?\s*/i, '').split(/,|&|\band\b/).map(x => x.trim()).filter(Boolean).map(n => ({ name: n, alias: n }));
+}
+function marauderNames() { return marauders().map(m => m.name); }
+function coverNames() { const a = marauders().map(m => m.alias); if (!a.length) return ''; return 'Messrs ' + (a.length > 1 ? a.slice(0, -1).join(', ') + ' & ' + a[a.length - 1] : a[0]); }
+/* The trip's places, inked where they really are */
+function placeLabels(w, h, cx, cy, speed) {
+  const seen = new Set(), pts = [];
+  DAYS.forEach(d => d.stops.forEach(s => { if (!seen.has(s.name)) { seen.add(s.name); pts.push(s); } }));
+  if (!pts.length) return [];
+  const mid = { lat: pts.map(p => p.lat).sort((a, b) => a - b)[pts.length >> 1], lng: pts.map(p => p.lng).sort((a, b) => a - b)[pts.length >> 1] };
+  const near = pts.filter(p => haversine(p, mid) < 12).slice(0, 12), k = Math.cos(mid.lat * Math.PI / 180);
+  const xs = near.map(p => p.lng * k), ys = near.map(p => -p.lat);
+  const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+  const pad = .17, sc = Math.min(w * (1 - pad * 2) / Math.max(1e-6, maxX - minX), h * (1 - pad * 2) / Math.max(1e-6, maxY - minY));
+  const offX = (w - (maxX - minX) * sc) / 2, offY = (h - (maxY - minY) * sc) / 2, fs = Math.max(8, w * .026);
+  const probe = document.createElement('canvas').getContext('2d'); probe.font = `italic ${fs}px "IM Fell English"`;
+  const boxes = [], hit = b => boxes.some(o => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y), out = [];
+  near.forEach(p => {
+    const x = offX + (p.lng * k - minX) * sc, y = offY + (-p.lat - minY) * sc, name = p.name.replace(/,.*$/, ''), tw = probe.measureText(name).width;
+    const L = { x, y, name, fs, t: Math.hypot(x - cx, y - cy) / speed + 200, label: false, left: false };
+    for (const left of x > w * .6 ? [true, false] : [false, true]) {
+      const b = { x: left ? x - 8 - tw : x + 8, y: y - fs * .7, w: tw, h: fs * 1.3 };
+      if (b.x < 4 || b.x + b.w > w - 4 || hit(b)) continue;
+      boxes.push(b); L.label = true; L.left = left; break;
+    }
+    boxes.push({ x: x - 6, y: y - 6, w: 12, h: 12 }); out.push(L);
+  });
+  return out;
+}
+function tripDates() { return DAYS.length ? fmtDate(DAYS[0].date, { day: 'numeric', month: 'long' }) + ' – ' + fmtDate(DAYS[DAYS.length - 1].date, { day: 'numeric', month: 'long', year: 'numeric' }) : ''; }
+function insideNet(W, H, x, y) { return { x, y, w: W, h: H, seed: 21, count: 9, depth: 5, step: 21, wiggle: .16, grid: true, speed: .12, width: .75, max: 260, blocks: 70, join: 18, upward: .6, margin: 10, alpha: .6 }; }
+
+/* Geometry, textures and the wand */
+let IG = null;
+const introScenes = [];
+const WAND_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 150"><defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#140A05"/><stop offset=".32" stop-color="#5E3F25"/><stop offset=".48" stop-color="#92704C"/><stop offset=".62" stop-color="#4E331D"/><stop offset="1" stop-color="#120804"/></linearGradient><linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E0703"/><stop offset=".35" stop-color="#3E2614"/><stop offset=".5" stop-color="#6E4E30"/><stop offset=".68" stop-color="#2E1B0E"/><stop offset="1" stop-color="#0A0502"/></linearGradient></defs><g transform="translate(150 140) rotate(-128)"><ellipse cx="-3" cy="0" rx="5" ry="6.2" fill="url(#b)" stroke="#0A0502" stroke-width=".6"/><path d="M0 -5.6 C 8 -6.6, 14 -4.4, 20 -5.2 S 32 -6.2, 38 -4.8 S 46 -4.4, 50 -4.4 L 50 4.4 C 46 4.4, 42 5.2, 38 4.8 S 26 6.2, 20 5.2 S 8 6.6, 0 5.6 Z" fill="url(#b)" stroke="#0A0502" stroke-width=".5"/><path d="M10 -5.9 Q 11.5 0 10 5.9 M20 -5.3 Q 21.5 0 20 5.3 M30 -5.6 Q 31.5 0 30 5.6" stroke="#8A6A48" stroke-width=".7" fill="none" opacity=".55"/><path d="M50 -4.6 L 54 -4.2 L 54 4.2 L 50 4.6 Z" fill="#2A1A0C"/><path d="M54 -3.7 C 90 -2.8, 130 -1.9, 170 -1.0 Q 173 0 170 1.0 C 130 1.9, 90 2.8, 54 3.7 Z" fill="url(#a)"/><path d="M58 -1.6 C 100 -1.1, 140 -.6, 166 -.3" stroke="rgba(255,228,185,.28)" stroke-width=".7" fill="none"/><path d="M70 1.8 C 90 1.4, 110 1.2, 128 .8 M96 -2.2 C 112 -1.8, 130 -1.4, 148 -1" stroke="rgba(10,5,2,.45)" stroke-width=".4" fill="none"/><circle cx="171" cy="0" r="1.5" fill="#FFF6DA"/></g></svg>`;
+const WAND_TIP = [44.4 / 170, 4.7 / 150]; // where the tip sits in the wand picture
+function paintWand() {
+  const im = new Image();
+  im.onload = () => { const [, g] = makeCanvas(170, 150, $('#wandImg')); g.drawImage(im, 0, 0, 170, 150); };
+  im.src = 'data:image/svg+xml,' + encodeURIComponent(WAND_SVG);
+  const [, gg] = makeCanvas(60, 60, $('#wandGlow'));
+  const rg = gg.createRadialGradient(30, 30, 0, 30, 30, 30); rg.addColorStop(0, 'rgba(255,249,230,1)'); rg.addColorStop(.22, 'rgba(255,227,160,.85)'); rg.addColorStop(1, 'rgba(255,192,96,0)');
+  gg.fillStyle = rg; gg.fillRect(0, 0, 60, 60);
 }
 function setupIntroGeometry() {
-  const W = Math.round(Math.min(innerWidth * .86, 400, (innerHeight * .58) / 1.1));
+  const W = Math.round(Math.min(innerWidth * .84, 400, (innerHeight * .58) / 1.1)), H = Math.round(W * 1.1);
   intro.style.setProperty('--W', W + 'px');
-  $('#insideSub').textContent = DAYS.length ? fmtDate(DAYS[0].date, { day: 'numeric', month: 'long' }) + ' – ' + fmtDate(DAYS[DAYS.length - 1].date, { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-  $('#itCity').textContent = T.city || 'Our Trip';
+  const seed = 1031, inside = paintParchment(W, H, { seed, creases: [W * .25, W * .75], hcreases: [H * .5] });
+  const backL = paintParchment(W / 4, H, { seed: seed + 1, back: true, edges: [1, 0, 1, 0], creases: [], hcreases: [H * .5] });
+  const backR = paintParchment(W / 4, H, { seed: seed + 2, back: true, edges: [1, 0, 1, 0], creases: [], hcreases: [H * .5] });
+  const slice = (el, x0, w) => { const [, g] = makeCanvas(w, H, el); g.drawImage(inside, x0 * DPR, 0, w * DPR, H * DPR, 0, 0, w, H); };
+  slice($('.fp-left .front'), 0, W / 4); slice($('.fp-centre .front'), W / 4, W / 2); slice($('.fp-right .front'), W * .75, W / 4);
+  const put = (el, src) => { const [, g] = makeCanvas(W / 4, H, el); g.drawImage(src, 0, 0, W / 4, H); };
+  put($('.fp-left .back'), backL); put($('.fp-right .back'), backR);
+  const [cover, cg] = makeCanvas(W / 2, H); cg.drawImage(backL, 0, 0, W / 4, H); cg.drawImage(backR, W / 4, 0, W / 4, H);
+  // where the two flaps meet: a soft shadow and a hairline
+  const sg = cg.createLinearGradient(W / 4 - 7, 0, W / 4 + 7, 0); sg.addColorStop(0, 'rgba(70,40,12,0)'); sg.addColorStop(.5, 'rgba(70,40,12,.22)'); sg.addColorStop(1, 'rgba(70,40,12,0)');
+  cg.fillStyle = sg; cg.fillRect(W / 4 - 7, 4, 14, H - 8); cg.fillStyle = 'rgba(60,34,10,.5)'; cg.fillRect(W / 4 - .4, 4, .8, H - 8);
+  IG = { W, H, inside, cover };
+  makeCanvas(W / 2, H, $('#coverInk'))[1].drawImage(cover, 0, 0, W / 2, H);
+  paintWand();
 }
+
 /* The wand: tap it, tap the parchment, or drag the wand onto the parchment */
-const WAND_TIP = [44.7 / 170, 5.3 / 150]; // tip position inside the wand's SVG viewBox
 let introStarted = false, wandOffset = { x: 0, y: 0 };
-function wandTip() { const r = $('#wand svg').getBoundingClientRect(); return { x: r.left + r.width * WAND_TIP[0], y: r.top + r.height * WAND_TIP[1] }; }
+function wandTip() { const r = $('#wandImg').getBoundingClientRect(); return { x: r.left + r.width * WAND_TIP[0], y: r.top + r.height * WAND_TIP[1] }; }
 function armWand() {
   const w = $('#wand'), stage = $('#foldStage');
   let drag = null;
@@ -2267,7 +2559,7 @@ function armWand() {
     wandOffset = { x: e.clientX - drag.x0, y: e.clientY - drag.y0 };
     w.style.transform = `translate(${wandOffset.x}px,${wandOffset.y}px)`;
     const t = wandTip(), r = $('#packetFace').getBoundingClientRect();
-    if (t.x > r.left && t.x < r.right && t.y > r.top && t.y < r.bottom - 4) { drag = null; w.classList.remove('held'); touchParchment(t); }
+    if (t.x > r.left + 6 && t.x < r.right - 6 && t.y > r.top + 6 && t.y < r.bottom - 8) { drag = null; w.classList.remove('held'); touchParchment(t); }
   });
   const release = () => { if (!drag) return; drag = null; w.classList.remove('held'); if (!introStarted) glideWand(); };
   w.addEventListener('pointerup', release);
@@ -2282,9 +2574,7 @@ async function glideWand() {
   const w = $('#wand'), r = $('#packetFace').getBoundingClientRect(), t = wandTip();
   const target = { x: r.left + r.width * .5, y: r.top + r.height * .8 };
   const to = { x: wandOffset.x + target.x - t.x, y: wandOffset.y + target.y - t.y };
-  if (!RM) {
-    try { await w.animate([{ transform: `translate(${wandOffset.x}px,${wandOffset.y}px)` }, { transform: `translate(${to.x}px,${to.y}px)` }], { duration: 1100, easing: 'cubic-bezier(.35,.6,.2,1)', fill: 'forwards' }).finished; } catch (e) { /* cancelled */ }
-  }
+  if (!RM) { try { await w.animate([{ transform: `translate(${wandOffset.x}px,${wandOffset.y}px)` }, { transform: `translate(${to.x}px,${to.y}px)` }], { duration: 1100, easing: 'cubic-bezier(.35,.6,.2,1)', fill: 'forwards' }).finished; } catch (e) { /* cancelled */ } }
   wandOffset = to;
   touchParchment(target);
 }
@@ -2292,194 +2582,73 @@ function touchParchment(pt) {
   introStarted = true;
   fullIntro(pt).catch(() => finishIntro(true)); // never leave anyone stuck on the opening
 }
-/* Ink that spreads "like a spider's web" from a point: branching quill lines drawn in sequence */
-function inkNetwork(svg, o) {
-  const r = mulberry32(o.seed), segs = [];
-  const inB = (x, y) => x > 3 && y > 3 && x < o.w - 3 && y < o.h - 3;
-  const grow = (x, y, ang, depth, t) => {
-    if (segs.length >= o.max) return;
-    const n = 4 + (r() * 7 | 0), pts = [[x, y]]; let len = 0;
-    for (let i = 0; i < n; i++) {
-      ang += (r() - .5) * o.wiggle;
-      const st = o.step * (.6 + r() * .8), nx = x + Math.cos(ang) * st, ny = y + Math.sin(ang) * st;
-      if (!inB(nx, ny)) break;
-      x = nx; y = ny; pts.push([x, y]); len += st;
-    }
-    if (pts.length < 2) return;
-    const dur = len / o.speed;
-    segs.push({ pts, t, dur, w: Math.max(.35, o.width * (1 - depth * .17)) });
-    if (depth >= o.depth) return;
-    const kids = 1 + (r() * 2.4 | 0);
-    for (let k = 0; k < kids; k++) {
-      const idx = 1 + (r() * (pts.length - 1) | 0), [bx, by] = pts[idx];
-      const turn = o.grid ? (r() < .5 ? -1 : 1) * (Math.PI / 2 + (r() - .5) * .35) : (r() < .5 ? -1 : 1) * (.45 + r() * .9);
-      grow(bx, by, ang + turn, depth + 1, t + dur * idx / (pts.length - 1));
-    }
-  };
-  for (let i = 0; i < o.count; i++) { let a = i / o.count * Math.PI * 2 + r() * .5; if (o.upward && Math.sin(a) > 0 && r() < o.upward) a = -a; grow(o.x, o.y, a, 0, (o.t0 || 0) + r() * 160); }
-  const g = document.createElementNS(NS, 'g'); g.setAttribute('opacity', String(o.opacity || .8)); svg.appendChild(g);
-  let endT = 0;
-  const addPath = (d, w, t, dur) => {
-    const pth = document.createElementNS(NS, 'path'); pth.setAttribute('d', d); pth.setAttribute('class', 'inkpath'); pth.setAttribute('stroke-width', w.toFixed(2)); g.appendChild(pth);
-    if (o.instant) { pth.style.animation = 'none'; return; }
-    const L = pth.getTotalLength(); pth.style.strokeDasharray = `${L} ${L}`; pth.style.strokeDashoffset = String(L);
-    pth.style.animationDuration = `${Math.round(dur)}ms`; pth.style.animationDelay = `${Math.round(t)}ms`;
-    endT = Math.max(endT, t + dur);
-  };
-  segs.forEach(sg => addPath('M' + sg.pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L'), sg.w, sg.t, sg.dur));
-  // little buildings and rooms, inked as the lines reach them
-  for (let i = 0; i < (o.blocks || 0); i++) {
-    const sg = segs[(r() * segs.length) | 0]; if (!sg) break;
-    const k = (r() * sg.pts.length) | 0, [bx, by] = sg.pts[k], bw = 5 + r() * 9, bh = 4 + r() * 7, ox = (r() < .5 ? -1 : 1) * (4 + bw / 2), oy = (r() < .5 ? -1 : 1) * (4 + bh / 2);
-    const x0 = bx + ox - bw / 2, y0 = by + oy - bh / 2;
-    if (!inB(x0, y0) || !inB(x0 + bw, y0 + bh)) continue;
-    addPath(`M${x0.toFixed(1)} ${y0.toFixed(1)} h${bw.toFixed(1)} v${bh.toFixed(1)} h${(-bw).toFixed(1)} Z`, .55, sg.t + sg.dur * k / sg.pts.length + 120, 420);
-  }
-  // lines reaching for their neighbours and joining up into a web
-  if (o.join) {
-    const at = (sg, i) => sg.t + sg.dur * i / (sg.pts.length - 1);
-    let joins = 0;
-    segs.forEach((a, ai) => {
-      if (joins > segs.length * .9) return;
-      const e = a.pts[a.pts.length - 1];
-      let best = null, bd = o.join;
-      segs.forEach((b, bi) => { if (bi === ai) return; b.pts.forEach((p, i) => { const d = Math.hypot(p[0] - e[0], p[1] - e[1]); if (d > 3 && d < bd) { bd = d; best = { p, t: at(b, i) }; } }); });
-      if (!best) return;
-      joins++;
-      addPath(`M${e[0].toFixed(1)} ${e[1].toFixed(1)} L${best.p[0].toFixed(1)} ${best.p[1].toFixed(1)}`, Math.max(.35, a.w * .8), Math.max(a.t + a.dur, best.t), bd / o.speed);
-    });
-  }
-  o.segs = segs;
-  return endT;
-}
-function scratchFor(ms) { if (RM) return; const until = performance.now() + ms; const iv = setInterval(() => { if (performance.now() > until || introSkipped) { clearInterval(iv); return; } if (Math.random() < .7) Sound.scratch(); }, 150); }
-function wrapWords(str, max) { const out = []; let cur = ''; String(str || '').split(/\s+/).filter(Boolean).forEach(w => { if ((cur + ' ' + w).trim().length > max && cur) { out.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); }); if (cur) out.push(cur); return out; }
-function marauderNames() { return String(T.presentedBy || '').replace(/^\s*Messrs\.?\s*/i, '').split(/,|&|\band\b/).map(x => x.trim()).filter(Boolean).slice(0, 4); }
-/* The trip's places, sketched where they really are */
-function inkPlaces(svg, w, h, cx, cy, speed) {
-  const seen = new Set(), pts = [];
-  DAYS.forEach(d => d.stops.forEach(s => { if (!seen.has(s.name)) { seen.add(s.name); pts.push(s); } }));
-  if (!pts.length) return;
-  const mid = { lat: pts.map(p => p.lat).sort((a, b) => a - b)[pts.length >> 1], lng: pts.map(p => p.lng).sort((a, b) => a - b)[pts.length >> 1] };
-  const near = pts.filter(p => haversine(p, mid) < 12).slice(0, 12);
-  const k = Math.cos(mid.lat * Math.PI / 180);
-  const xs = near.map(p => p.lng * k), ys = near.map(p => -p.lat);
-  const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
-  const pad = .17, sc = Math.min(w * (1 - pad * 2) / Math.max(1e-6, maxX - minX), h * (1 - pad * 2) / Math.max(1e-6, maxY - minY));
-  const offX = (w - (maxX - minX) * sc) / 2, offY = (h - (maxY - minY) * sc) / 2;
-  const fs = Math.max(8, w * .026);
-  const g = document.createElementNS(NS, 'g'); svg.appendChild(g);
-  const boxes = [], hit = b => boxes.some(o => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y);
-  near.forEach(p => {
-    const x = offX + (p.lng * k - minX) * sc, y = offY + (-p.lat - minY) * sc, delay = Math.hypot(x - cx, y - cy) / speed + 200;
-    const name = p.name.replace(/,.*$/, ''), tw = name.length * fs * .44;
-    let label = '';
-    for (const left of x > w * .6 ? [true, false] : [false, true]) {
-      const b = { x: left ? x - 7 - tw : x + 7, y: y - fs * .7, w: tw, h: fs * 1.25 };
-      if (b.x < 4 || b.x + b.w > w - 4 || hit(b)) continue;
-      boxes.push(b);
-      label = `<text x="${(x + (left ? -7 : 7)).toFixed(1)}" y="${(y + fs * .35).toFixed(1)}" text-anchor="${left ? 'end' : 'start'}" style="font:italic ${fs.toFixed(1)}px 'IM Fell English';fill:#1B120B;stroke:#EFE2C4;stroke-width:3.2px;paint-order:stroke;stroke-linejoin:round">${esc(name)}</text>`;
-      break;
-    }
-    boxes.push({ x: x - 5, y: y - 5, w: 10, h: 10 });
-    g.insertAdjacentHTML('beforeend', `<g class="inkfade" style="animation-delay:${Math.round(delay)}ms"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.2" fill="#1B120B"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.4" fill="none" stroke="#1B120B" stroke-width=".6"/>${label}</g>`);
-    g.lastElementChild.querySelector('circle').insertAdjacentHTML('beforebegin', `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="#EFE2C4"/>`);
-  });
-}
-/* Marauder's-Map footprints wandering about, each with a name banner */
-function inkWalkers(svg, w, h, names, segs) {
-  if (RM || !names.length) return;
-  const r = mulberry32(99), shoe = 'M3.6 0 C5.9 0 6.9 2.2 6.6 4.6 C6.3 6.6 5.6 7.6 5.5 8.4 L1.6 8.4 C1.5 7.6 .7 6.6 .4 4.6 C.1 2.2 1.3 0 3.6 0Z M1.7 9.6 H5.3 C5.5 11.9 4.9 14 3.5 14 C2.1 14 1.5 11.9 1.7 9.6Z';
-  const fs = Math.max(8, w * .025);
-  const starts = [[.28, .3], [.72, .28], [.3, .74], [.7, .72]];
-  names.forEach((name, i) => {
-    let x = w * starts[i % 4][0], y = h * starts[i % 4][1], ang = r() * Math.PI * 2, n = 0;
-    const label = document.createElementNS(NS, 'g'); label.setAttribute('class', 'inkfade');
-    const tw = name.length * fs * .5 + 14;
-    label.innerHTML = `<path d="M${-tw / 2} ${-fs * .75} H${tw / 2} L${tw / 2 - 4} 0 L${tw / 2} ${fs * .75} H${-tw / 2} L${-tw / 2 + 4} 0 Z" fill="#EFE2C4" stroke="#1B120B" stroke-width=".6"/><text text-anchor="middle" y="${fs * .33}" style="font:italic ${fs.toFixed(1)}px 'IM Fell English';fill:#1B120B">${esc(name)}</text><circle cy="-16" r="2.3" fill="#1B120B"/>`;
-    svg.appendChild(label);
-    const step = () => {
-      if (!document.getElementById('intro')) { clearInterval(iv); return; }
-      ang += (r() - .5) * .7;
-      let nx = x + Math.cos(ang) * 10, ny = y + Math.sin(ang) * 10;
-      const mx = Math.max(20, tw / 2 + 6); if (nx < mx || nx > w - mx || ny < 20 || ny > h - 34) { ang += Math.PI * (.6 + r() * .5); nx = x; ny = y; }
-      x = nx; y = ny;
-      const side = n++ % 2 ? 1 : -1, px = x + Math.cos(ang + Math.PI / 2) * 3 * side, py = y + Math.sin(ang + Math.PI / 2) * 3 * side;
-      const f = document.createElementNS(NS, 'path'); f.setAttribute('d', shoe); f.setAttribute('fill', '#1B120B'); f.setAttribute('class', 'wfoot');
-      f.setAttribute('transform', `translate(${px.toFixed(1)} ${py.toFixed(1)}) rotate(${(ang * 180 / Math.PI + 90).toFixed(0)}) scale(${side > 0 ? -.72 : .72} .72) translate(-3.5 -7)`);
-      svg.insertBefore(f, label); setTimeout(() => f.remove(), 2900);
-      label.setAttribute('transform', `translate(${x.toFixed(1)} ${(y + 16).toFixed(1)})`);
-    };
-    const iv = setInterval(step, 420 + i * 30); setTimeout(step, 10);
-  });
-}
 async function fullIntro(pt) {
   const wand = $('#wand'); if (introSkipped) return;
   wand.disabled = true; Sound.init(); Sound.chime();
   wand.classList.add('touch');
-  dust(pt.x, pt.y, 12, 44, { rise: 14 });
+  dust(pt.x, pt.y, 8, 30, { rise: 10 });
   $('#hint').style.opacity = '0';
   if (RM) { finishIntro(true); return; }
-  const pf = $('#packetFace'), pr = pf.getBoundingClientRect(), lx = pt.x - pr.left, ly = pt.y - pr.top;
-  const blot = $('#inkBlot'); blot.style.left = lx + 'px'; blot.style.top = ly + 'px';
-  blot.animate([{ opacity: 0, transform: 'scale(.2)' }, { opacity: 1, transform: 'scale(1)', offset: .4 }, { opacity: .25, transform: 'scale(1.2)' }], { duration: 2200, easing: 'ease-out', fill: 'forwards' });
+  const { W, H } = IG, pr = $('#packetFace').getBoundingClientRect();
+  const lx = clamp((pt.x - pr.left) / pr.width * (W / 2), 14, W / 2 - 14), ly = clamp((pt.y - pr.top) / pr.height * H, 14, H - 14);
   await fontsReady(['40px "Pinyon Script"', 'italic 16px "IM Fell English"']);
   if (introSkipped) return;
-  // 1 — thin ink lines spread like a spider's web from where the wand touched
-  const web = $('#coverWeb'); web.setAttribute('viewBox', `0 0 ${pr.width} ${pr.height}`);
-  const webEnd = inkNetwork(web, { x: lx, y: ly, w: pr.width, h: pr.height, seed: 7, count: 12, depth: 4, step: 10, wiggle: .55, speed: .055, width: .75, max: 260, t0: 200, opacity: .7, join: 16 });
-  scratchFor(webEnd);
-  // 2 — then words blossom across the parchment
-  await wait(2600); if (introSkipped) return;
-  web.animate([{ opacity: 1 }, { opacity: .4 }], { duration: 2500, delay: 400, fill: 'forwards', easing: 'ease' });
-  const W = parseFloat(intro.style.getPropertyValue('--W')) || 320, fs = Math.round(W * .041), cover = $('#cover');
-  const rows = [];
-  marauderNames().length && presenterLines(T.presentedBy).forEach(t => rows.push({ t, size: fs }));
-  wrapWords(T.presentedTagline, 24).forEach((t, i) => rows.push({ t, size: fs * .82, gap: i === 0 ? 6 : 0 }));
-  if (rows.length) rows.push({ t: 'are proud to present', size: fs * .82, gap: 6 });
-  rows.push({ t: 'Aparecium', size: W * .12, script: true, gap: 10 }, { t: 'Portus', size: W * .12, script: true });
-  cover.innerHTML = rows.map(r => `<div class="cover-line" style="margin-top:${r.gap || 0}px"></div>`).join('');
-  let t = 0, end = 0;
-  rows.forEach((r, i) => {
-    end = Math.max(end, inkWrite(cover.children[i], r.t, r.script
-      ? { size: r.size, per: 150, strokeDur: 950, delay: t, fill: '#1B120B', fixed: true, sound: true }
-      : { size: r.size, font: 'IM Fell English', italic: true, per: 30, strokeDur: 420, delay: t, fill: '#1B120B', fixed: true }));
-    t += r.script ? 1100 : 700;
-  });
-  await wait(end + 1500); if (introSkipped) return;
+  // 1 — wet black ink blooms from the wand's tip, then runs out in fine lines that criss-cross and join, like a spider's web
+  const cover = new InkCanvas($('#coverInk'), IG.cover, W / 2, H); introScenes.push(cover); cover.start();
+  cover.blots.push({ x: lx, y: ly, t: 0, dur: 1100, R: W * .045, seed: 5 });
+  cover.add(genNetwork({ x: lx, y: ly, w: W / 2, h: H, seed: 7, count: 13, depth: 4, step: 10, wiggle: .5, speed: .05, width: .75, max: 170, t0: 350, join: 14, margin: 12, alpha: .8 }));
+  scratchFor(3200);
+  await wait(3000); if (introSkipped) return;
+  // 2 — the web settles into the paper and the words blossom
+  cover.soften(.72, 1800);
+  const fs = Math.round(W * .041), maxW = W / 2 * .84, fell = s => `italic ${s}px "IM Fell English"`, pin = s => `${s}px "Pinyon Script"`;
+  const rows = []; let y = H * .1;
+  const add = (text, size, font, gap, script) => { y += gap || 0; wrapCanvas(text, font(size), maxW).forEach(tx => { y += size * (script ? 1.05 : 1.28); rows.push({ tx, size, font: font(size), y, script }); }); };
+  const names = coverNames();
+  if (names) add(names, fs, fell);
+  if (T.presentedTagline) add(T.presentedTagline, Math.round(fs * .82), fell, 6);
+  if (names || T.presentedTagline) add('are proud to present', Math.round(fs * .82), fell, 6);
+  add('Aparecium', Math.round(W * .12), pin, 12, true); add('Portus', Math.round(W * .12), pin, 0, true);
+  let t = cover.now() + 300;
+  rows.forEach(rw => { const dur = rw.script ? 1500 : Math.max(500, rw.tx.length * 40); cover.write(rw.tx, rw.font, rw.size, W / 4, rw.y, t, dur); t += dur * (rw.script ? .85 : .7); });
+  scratchFor(t - cover.now());
+  await wait(t - cover.now() + 1900); if (introSkipped) return;
   // 3 — the map unfolds, one panel and then the other
-  pf.style.opacity = '0'; wand.style.opacity = '0';
+  $('#packetFace').style.opacity = '0'; wand.style.opacity = '0';
   await wait(800); if (introSkipped) return;
+  cover.stop();
   const fm = $('#foldMap');
   $('.fp-left', fm).style.transitionDelay = '0ms'; $('.fp-right', fm).style.transitionDelay = '750ms';
   Sound.rustle(1.4, .11); setTimeout(() => Sound.rustle(1.3, .09), 750);
-  fm.classList.add('open');
+  fm.classList.add('open'); $('#foldStage').classList.add('open');
   await wait(2400); if (introSkipped) return;
-  // 4 — ink fans into every corner: streets, buildings, our places, and footsteps
-  const ink = $('#insideInk'), fr = fm.getBoundingClientRect();
-  const cx = fr.width * .25 + lx * (fr.width * .5 / pr.width), cy = ly * (fr.height / pr.height); // where the wand touched
-  ink.setAttribute('viewBox', `0 0 ${fr.width} ${fr.height}`);
-  const net = { x: cx, y: cy, w: fr.width, h: fr.height, seed: 21, count: 9, depth: 5, step: 21, wiggle: .16, grid: true, speed: .12, width: .75, max: 260, blocks: 70, opacity: .5, join: 18, upward: .6 };
-  const netEnd = inkNetwork(ink, net);
-  inkPlaces(ink, fr.width, fr.height, cx, cy, net.speed);
+  // 4 — ink carries on from where the wand touched: streets, buildings, our places, and footsteps
+  const inside = new InkCanvas($('#insideInk'), IG.inside, W, H); introScenes.push(inside);
+  $('#insideInk').style.opacity = '1'; inside.start();
+  const cx = W * .25 + lx, cy = ly, net = insideNet(W, H, cx, cy);
+  inside.blots.push({ x: cx, y: cy, t: 0, dur: 800, R: W * .028, seed: 9 });
+  const segs = genNetwork(net); inside.add(segs);
+  inside.places.push(...placeLabels(W, H, cx, cy, net.speed));
+  const netEnd = Math.max(...segs.map(s => s.t + s.dur));
   scratchFor(netEnd * .8);
-  setTimeout(() => inkWalkers(ink, fr.width, fr.height, marauderNames(), net.segs), 1400);
+  setTimeout(() => inside.walkers(marauderNames()), 1400);
   await wait(Math.min(netEnd, 3800)); if (introSkipped) return;
-  $('#insideTitle').animate([{ opacity: 0, transform: 'scale(.97)' }, { opacity: 1, transform: 'none' }], { duration: 1200, easing: 'ease-out', fill: 'forwards' });
-  await wait(2800); if (introSkipped) return;
+  inside.title = { t: inside.now(), dur: 1200, city: T.city || 'Our Trip', dates: tripDates() };
+  await wait(3000); if (introSkipped) return;
   finishIntro(false);
 }
 async function quickIntro() {
-  $('#wand').style.display = 'none'; $('#packetFace').style.display = 'none';
-  const fm = $('#foldMap'); $$('.fpanel', fm).forEach(p => { p.style.transition = 'none'; }); fm.classList.add('open');
-  $('#hint').style.display = 'none';
-  const ink = $('#insideInk'), fr = fm.getBoundingClientRect();
-  ink.setAttribute('viewBox', `0 0 ${fr.width} ${fr.height}`);
-  inkNetwork(ink, { x: fr.width / 2, y: fr.height / 2, w: fr.width, h: fr.height, seed: 21, count: 8, depth: 4, step: 15, wiggle: .2, grid: true, speed: 1, width: .95, max: 300, blocks: 70, opacity: .72, instant: true });
-  $('#insideTitle').style.opacity = '1';
+  $('#wand').style.display = 'none'; $('#packetFace').style.display = 'none'; $('#hint').style.display = 'none';
+  const fm = $('#foldMap'); $$('.fpanel', fm).forEach(p => { p.style.transition = 'none'; }); fm.classList.add('open'); $('#foldStage').classList.add('open');
+  const { W, H } = IG, inside = new InkCanvas($('#insideInk'), IG.inside, W, H);
+  $('#insideInk').style.opacity = '1';
+  const segs = genNetwork(insideNet(W, H, W / 2, H * .62)); segs.forEach(s => { s.t = -1e7; }); inside.add(segs);
+  placeLabels(W, H, 0, 0, 1).forEach(L => { L.t = -1e7; inside.places.push(L); });
+  inside.title = { t: -1e7, dur: 1, city: T.city || 'Our Trip', dates: tripDates() };
+  inside.render();
   await wait(RM ? 200 : 700);
   if (introSkipped) return;
-  if (RM) finishIntro(true); else { introFinished = true; store.set('introSeen', introKey()); await inkReveal(900); intro.remove(); onAppReady(); }
+  if (RM) finishIntro(true); else { introFinished = true; store.set('introSeen', introKey()); await inkReveal(900); intro.remove(); introScenes.forEach(sc => sc.stop()); onAppReady(); }
 }
 function startIntro() {
   setupIntroGeometry();
