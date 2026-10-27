@@ -2628,7 +2628,7 @@ function startIntro() {
   $('#skipIntro').addEventListener('click', () => { introSkipped = true; finishIntro(true); });
   const mode = params.get('intro');
   if (mode === 'skip') { introSkipped = true; intro.remove(); introFinished = true; onAppReady(); return; }
-  const full = mode === 'full' || (mode !== 'quick' && store.get('introSeen', '') !== introKey());
+  const full = mode !== 'quick'; // the full opening plays every time; Skip is always in the corner
   if (full) armWand(); else quickIntro();
 }
 

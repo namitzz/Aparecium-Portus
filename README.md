@@ -50,7 +50,7 @@ Everything above is cached on the phone after the first load, and the app still 
 ## Notes
 
 - Map tiles come from CARTO (Voyager in light mode, Dark Matter in dark mode) with a sepia filter and parchment texture. They are free for light non-commercial use.
-- The full wand-and-unfolding intro plays on the first open each day. Later opens use a 1-second version.
+- The full wand-and-unfolding opening plays every time the app opens. Tap **Skip** in the top corner to go straight to the map.
 - "Portus" opens Apple Maps on iPhone and Google Maps on Android. It picks walking directions when the previous stop is close by and public transport otherwise.
 - "Mischief Managed" plays by itself when the day's last stop ends. The day's map turns to ink, the ink draws back into the parchment until it's blank, then the map folds shut and opens on the next day. You can also trigger it with the seal at the end of each day's timeline.
 - The app always uses the light parchment look, whatever the phone's dark-mode setting. Samsung Internet's own dark mode can still recolour websites; if it does, turn on Samsung Internet → Settings → Labs → "Use website dark theme".
