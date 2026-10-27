@@ -373,7 +373,7 @@ const TRIP_DATA = {
 <title>Aparecium Portus</title>
 <meta name="description" content="An enchanted map that guides us through the trip, day by day.">
 <meta name="theme-color" content="#120D0A">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="only light">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -436,26 +436,6 @@ const TRIP_DATA = {
   --accent: #6B1E2A;
   transition: --accent 1s ease;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #2A1D14;
-    --paper-2: #21160F;
-    --text: #EFDDB2;
-    --text-soft: #C7B184;
-    --rule: rgba(226, 194, 106, .2);
-    --rule-strong: rgba(226, 194, 106, .45);
-    --gold-ink: #E2C26A;
-    --accent-ink: color-mix(in srgb, var(--accent) 35%, #EFDDB2);
-    --step-ink: rgba(239, 214, 150, .85);
-    --route: color-mix(in srgb, var(--accent) 25%, #E2C26A);
-    --tile-filter: grayscale(1) contrast(1.15) brightness(1.3);
-    --map-bg: #1A1410;
-    --tex-tint: #C9A468;
-    --shadow: 0 8px 26px rgba(0, 0, 0, .55);
-    --label-bg: rgba(42, 29, 20, .92);
-  }
-}
-
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; overflow: hidden; overscroll-behavior: none; background: var(--night); }
 body {
@@ -518,7 +498,6 @@ img { display: block; }
   margin: 0; font-family: var(--f-sc); font-weight: 400; font-size: 23px; line-height: 1.15; letter-spacing: .09em; white-space: nowrap;
   background: linear-gradient(180deg, #C9A541 0%, #9C7A1E 55%, #6E5212 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-@media (prefers-color-scheme: dark) { .brand { background-image: linear-gradient(180deg, #F2D987, #C9A227 60%, #9C7A1E); } }
 .snd { position: absolute; right: -6px; top: 50%; width: 44px; height: 44px; margin-top: -22px; display: grid; place-items: center; color: var(--gold-ink); opacity: .85; }
 .snd svg { width: 20px; height: 20px; }
 .daytitle { position: relative; margin-top: 1px; text-align: center; font-family: var(--f-fell); font-style: italic; font-size: 17px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -653,19 +632,15 @@ img { display: block; }
 .food-meta { font-size: 15px; color: var(--text-soft); }
 .food-note { font-family: var(--f-fell); font-style: italic; font-size: 16px; line-height: 1.25; }
 .chip { display: inline-block; padding: 0 6px; border: 1px solid #A86A2C; border-radius: 3px; font-size: 13px; color: #A86A2C; vertical-align: 1px; }
-@media (prefers-color-scheme: dark) { .chip { color: #E0A863; border-color: #E0A863; } }
 .empty-note { font-style: italic; color: var(--text-soft); text-align: center; padding: 10px; }
 .sheet-attrib { margin-top: 26px; font-size: 13px; color: var(--text-soft); text-align: center; font-style: italic; }
 
 /* ── Illuminated initial (when there's no photo) ──────────────────────── */
 .mono { display: flex; align-items: center; justify-content: center; font-family: var(--f-sc); color: #6B1E2A; line-height: 1; overflow: hidden;
   background: radial-gradient(circle at 50% 40%, #F5ECD6, #E2CFA4 80%); text-shadow: 0 1px 0 rgba(255, 255, 255, .5); }
-@media (prefers-color-scheme: dark) { .mono { background: radial-gradient(circle at 50% 40%, #3D2B1D, #22170F 80%); color: #E2C26A; text-shadow: none; } }
 .tl-node .mono, .food-item .mono { font-size: 24px; }
 .mk .mono { font-size: 21px; }
 .card-photo .mono { font-size: 96px; background: radial-gradient(ellipse at 50% 45%, #F5ECD6, #DCC697 85%); }
-@media (prefers-color-scheme: dark) { .card-photo .mono { background: radial-gradient(ellipse at 50% 45%, #3D2B1D, #1E140D 85%); } }
-
 /* ── Map markers ───────────────────────────────────────────────────────── */
 .mk-wrap { background: none; border: 0; }
 .mk { position: relative; width: 100%; height: 100%; animation: inkIn .7s cubic-bezier(.25, .8, .3, 1) both; animation-delay: var(--delay, 0ms); }
@@ -695,7 +670,6 @@ img { display: block; }
 .mk-food .mk-fork { position: absolute; z-index: 2; right: -6px; bottom: -5px; width: 19px; height: 19px; border-radius: 50%; display: grid; place-items: center; background: #F3E9D2; border: 1.2px solid #A86A2C; color: #8A4E18; }
 .mk-food .mk-fork svg { width: 11px; height: 11px; }
 .mk-food .mk-label { color: #8A4E18; }
-@media (prefers-color-scheme: dark) { .mk-food .mk-label { color: #E0A863; } }
 .mk-home .crest { position: absolute; inset: 0; background: var(--crest) center/contain no-repeat; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .4)); }
 .mk-home::after { display: none; }
 .mk.materialise { animation: inkIn .8s ease-out both; animation-delay: var(--delay, 0ms); }
@@ -736,7 +710,6 @@ img { display: block; }
   bottom: calc(10px + var(--safe-b)); max-height: calc(100% - var(--header-h) - 150px - var(--safe-b)); will-change: transform; }
 .rod { position: relative; z-index: 2; flex: 0 0 auto; height: 13px; margin: 0 -5px; border-radius: 7px;
   background: linear-gradient(180deg, #F4E8C8 0%, #D8C08A 45%, #9E8250 100%); box-shadow: 0 2px 5px rgba(0, 0, 0, .3); }
-@media (prefers-color-scheme: dark) { .rod { background: linear-gradient(180deg, #5A4330, #3A2A1C 50%, #1C130D); } }
 .card-paper { position: relative; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin: -7px 0; padding: 7px 0;
   box-shadow: 0 12px 32px rgba(0, 0, 0, .4), inset 0 0 40px rgba(110, 72, 30, .18); }
 .card-paper::before { content: ''; position: absolute; inset: 12px 7px 7px; border: 1px solid var(--rule); pointer-events: none; z-index: 1; }
@@ -769,7 +742,6 @@ img { display: block; }
 .portus-btn { position: relative; overflow: hidden; min-height: 50px; border-radius: 4px; display: flex; align-items: center; justify-content: center; gap: 10px;
   background: #2B1D14; color: #E8CC7A; border: 1px solid #8A6A1C; box-shadow: inset 0 0 0 3px #2B1D14, inset 0 0 0 4px rgba(226, 194, 106, .35), 0 3px 10px rgba(0, 0, 0, .3);
   font-family: var(--f-sc); font-size: 19px; letter-spacing: .14em; }
-@media (prefers-color-scheme: dark) { .portus-btn { background: #5A1621; box-shadow: inset 0 0 0 3px #5A1621, inset 0 0 0 4px rgba(226, 194, 106, .35), 0 3px 10px rgba(0, 0, 0, .4); } }
 .portus-btn small { font-family: var(--f-fell); font-style: italic; font-size: 14px; letter-spacing: 0; opacity: .8; }
 .portus-btn svg { width: 20px; height: 20px; }
 
@@ -979,7 +951,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const params = new URLSearchParams(location.search);
 const mqRM = matchMedia('(prefers-reduced-motion: reduce)');
-const mqDark = matchMedia('(prefers-color-scheme: dark)');
+const mqDark = { matches: false }; // always the light parchment look, whatever the phone's setting
 let RM = mqRM.matches;
 const applyRM = () => { RM = mqRM.matches; document.documentElement.classList.toggle('rm', RM); };
 applyRM();

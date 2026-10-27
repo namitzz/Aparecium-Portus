@@ -53,6 +53,6 @@ Everything above is cached on the phone after the first load, and the app still 
 - The full wand-and-unfolding intro plays on the first open each day. Later opens use a 1-second version.
 - "Portus" opens Apple Maps on iPhone and Google Maps on Android. It picks walking directions when the previous stop is close by and public transport otherwise.
 - "Mischief Managed" plays by itself when the day's last stop ends. The day's map turns to ink, the ink draws back into the parchment until it's blank, then the map folds shut and opens on the next day. You can also trigger it with the seal at the end of each day's timeline.
-- **Samsung Internet's dark mode** recolours websites, and sites can't opt out. The opening and Mischief Managed are painted as pixels, so they keep their colours. For the rest of the app to show its own colours, turn on Samsung Internet → Settings → Labs → "Use website dark theme".
+- The app always uses the light parchment look, whatever the phone's dark-mode setting. Samsung Internet's own dark mode can still recolour websites; if it does, turn on Samsung Internet → Settings → Labs → "Use website dark theme".
 - The manifest uses `"display": "fullscreen"`, which hides the Android status bar. Change it to `"standalone"` if you'd rather keep the phone's clock visible.
 - With "Reduce motion" turned on in the phone's settings, every animation becomes a simple fade.
