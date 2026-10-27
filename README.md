@@ -43,7 +43,7 @@ Location, compass and offline mode need HTTPS, so host it anywhere that serves s
 - **Photos and descriptions:** Wikipedia, for any place with a `wiki` article name.
 - **Weather:** Open-Meteo. Each day shows its forecast once it's within 16 days.
 - **Running late:** a button on each day's timeline shifts the rest of that day's stops by 10–60 minutes. The countdown and highlights follow the new times.
-- **Sound:** quiet synthesised sound (quill scratch, parchment rustle, wand chime, Portkey whoosh). The speaker icon in the header mutes it, and the choice is remembered.
+- **Sound:** synthesised in the browser: a celesta-style bell melody (original, in E minor) and low strings when the wand touches the parchment, quill scratches as the ink writes, parchment rustling as the map unfolds, a sparkle for spells, a page turn between days, a Portkey pull with an apparition crack, and a falling phrase for "Mischief Managed". The speaker icon in the header mutes it, and the choice is remembered.
 
 Everything above is cached on the phone after the first load, and the app still works if any of these services is unreachable.
 
