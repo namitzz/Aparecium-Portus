@@ -700,6 +700,10 @@ img { display: block; }
 .route-fade { transition: opacity .4s ease !important; opacity: 0 !important; }
 
 .step-wrap { background: none; border: 0; }
+.walker { position: absolute; left: 0; top: 0; transform: translate(-50%, 9px); white-space: nowrap; font-family: var(--f-fell); font-style: italic; font-size: 12.5px; line-height: 1; color: var(--text); padding: 3px 11px 2px; background: var(--label-bg); border-top: 1px solid var(--rule-strong); border-bottom: 1px solid var(--rule-strong); clip-path: polygon(0 0, 100% 0, calc(100% - 5px) 50%, 100% 100%, 0 100%, 5px 50%); transition: opacity .4s; }
+.walker::before { content: ''; }
+.walker-dot { position: absolute; left: -3px; top: -3px; width: 6px; height: 6px; border-radius: 50%; background: var(--step-ink); }
+.rm .walker-wrap { display: none; }
 .step { position: absolute; left: -3.5px; top: -7px; width: 7px; height: 14px; opacity: 0; color: var(--step-ink); animation: stepFade var(--cycle, 4s) linear infinite; animation-delay: var(--d, 0ms); }
 .step svg { display: block; width: 7px; height: 14px; }
 @keyframes stepFade { 0% { opacity: 0; } 3% { opacity: .95; } 30% { opacity: 0; } 100% { opacity: 0; } }
@@ -1835,7 +1839,9 @@ function removeRoutes(animate) {
   layers.routes.splice(0).forEach(l => { const el = l.getElement(); if (!animate || !el) { l.remove(); return; } el.classList.add('route-fade'); setTimeout(() => l.remove(), 420); });
   routeSegs = []; segLines = [];
 }
-function clearSteps() { if (typeof stepTimer === 'number') clearTimeout(stepTimer); stepTimer = null; layers.steps.splice(0).forEach(m => m.remove()); }
+let walkerTimer = 0;
+function clearSteps() { if (typeof stepTimer === 'number') clearTimeout(stepTimer); stepTimer = null; clearInterval(walkerTimer); layers.steps.splice(0).forEach(m => m.remove()); }
+function walkerName() { const n = marauderNames(); return n.length > 1 ? `${n[0]} & co.` : (n[0] || 'Mischief-makers'); }
 function buildStepsSoon() { if (stepTimer === 'on') buildSteps(); }
 function footSegment(day) {
   const n = day.stops.length; if (n < 2) return -1;
@@ -1845,6 +1851,7 @@ function footSegment(day) {
 }
 /* Marauder's-Map footprints walking from the current stop to the next, on a loop */
 function buildSteps() {
+  clearInterval(walkerTimer);
   layers.steps.splice(0).forEach(m => m.remove());
   const day = curDay(); if (!map || !day || !showsStops(state.mode) || !routeSegs.length) return;
   computeStates(day);
@@ -1855,6 +1862,7 @@ function buildSteps() {
   const spacing = Math.max(13, (total - trim * 2) / 56), count = Math.floor((total - trim * 2) / spacing);
   const stepMs = 260, cycle = Math.max(3600, count * stepMs + 1800);
   let dist = trim, acc = 0, i = 1, k = 0;
+  const heads = [];
   while (k < count && i < pts.length) {
     const a = pts[i - 1], b = pts[i], l = a.distanceTo(b);
     if (acc + l < dist) { acc += l; i++; continue; }
@@ -1864,9 +1872,20 @@ function buildSteps() {
     const deg = ang * 180 / Math.PI + 90;
     const m = L.marker(map.layerPointToLatLng([px, py]), { pane: 'steps', interactive: false, keyboard: false,
       icon: L.divIcon({ className: 'step-wrap', iconSize: [0, 0], html: `<i class="step" style="transform:rotate(${deg.toFixed(1)}deg)${side > 0 ? ' scaleX(-1)' : ''};--d:${k * stepMs}ms;--cycle:${cycle}ms">${SHOE}</i>` }) }).addTo(map);
-    layers.steps.push(m); dist += spacing; k++;
+    layers.steps.push(m); heads.push(map.layerPointToLatLng([x, y])); dist += spacing; k++;
   }
   stepTimer = 'on';
+  // the walkers' name scroll leads the footprints along, like the Marauder's Map
+  if (!RM && heads.length > 2) {
+    const wk = L.marker(heads[0], { pane: 'steps', interactive: false, keyboard: false, icon: L.divIcon({ className: 'walker-wrap step-wrap', iconSize: [0, 0], html: `<span class="walker-dot"></span><span class="walker">${esc(walkerName())}</span>` }) }).addTo(map);
+    layers.steps.push(wk);
+    const t0 = performance.now();
+    walkerTimer = setInterval(() => {
+      const k2 = Math.floor(((performance.now() - t0) % cycle) / stepMs), el = wk.getElement();
+      if (!el) return;
+      if (k2 < heads.length) { wk.setLatLng(heads[k2]); el.style.opacity = '1'; } else el.style.opacity = '0';
+    }, stepMs);
+  }
 }
 function dustAt(latlng, gather) {
   if (RM || !map) return;
@@ -2205,7 +2224,7 @@ function inkReveal(dur) {
   });
 }
 let introSkipped = false, introFinished = false;
-const INTRO_V = 4, introKey = () => zonedDate(nowMs()) + '|' + INTRO_V;
+const INTRO_V = 5, introKey = () => zonedDate(nowMs()) + '|' + INTRO_V;
 async function finishIntro(fast) {
   if (introFinished) return; introFinished = true;
   store.set('introSeen', introKey());
@@ -2297,7 +2316,7 @@ function inkNetwork(svg, o) {
       grow(bx, by, ang + turn, depth + 1, t + dur * idx / (pts.length - 1));
     }
   };
-  for (let i = 0; i < o.count; i++) grow(o.x, o.y, i / o.count * Math.PI * 2 + r() * .5, 0, (o.t0 || 0) + r() * 160);
+  for (let i = 0; i < o.count; i++) { let a = i / o.count * Math.PI * 2 + r() * .5; if (o.upward && Math.sin(a) > 0 && r() < o.upward) a = -a; grow(o.x, o.y, a, 0, (o.t0 || 0) + r() * 160); }
   const g = document.createElementNS(NS, 'g'); g.setAttribute('opacity', String(o.opacity || .8)); svg.appendChild(g);
   let endT = 0;
   const addPath = (d, w, t, dur) => {
@@ -2315,6 +2334,20 @@ function inkNetwork(svg, o) {
     const x0 = bx + ox - bw / 2, y0 = by + oy - bh / 2;
     if (!inB(x0, y0) || !inB(x0 + bw, y0 + bh)) continue;
     addPath(`M${x0.toFixed(1)} ${y0.toFixed(1)} h${bw.toFixed(1)} v${bh.toFixed(1)} h${(-bw).toFixed(1)} Z`, .55, sg.t + sg.dur * k / sg.pts.length + 120, 420);
+  }
+  // lines reaching for their neighbours and joining up into a web
+  if (o.join) {
+    const at = (sg, i) => sg.t + sg.dur * i / (sg.pts.length - 1);
+    let joins = 0;
+    segs.forEach((a, ai) => {
+      if (joins > segs.length * .9) return;
+      const e = a.pts[a.pts.length - 1];
+      let best = null, bd = o.join;
+      segs.forEach((b, bi) => { if (bi === ai) return; b.pts.forEach((p, i) => { const d = Math.hypot(p[0] - e[0], p[1] - e[1]); if (d > 3 && d < bd) { bd = d; best = { p, t: at(b, i) }; } }); });
+      if (!best) return;
+      joins++;
+      addPath(`M${e[0].toFixed(1)} ${e[1].toFixed(1)} L${best.p[0].toFixed(1)} ${best.p[1].toFixed(1)}`, Math.max(.35, a.w * .8), Math.max(a.t + a.dur, best.t), bd / o.speed);
+    });
   }
   o.segs = segs;
   return endT;
@@ -2345,24 +2378,25 @@ function inkPlaces(svg, w, h, cx, cy, speed) {
       const b = { x: left ? x - 7 - tw : x + 7, y: y - fs * .7, w: tw, h: fs * 1.25 };
       if (b.x < 4 || b.x + b.w > w - 4 || hit(b)) continue;
       boxes.push(b);
-      label = `<text x="${(x + (left ? -7 : 7)).toFixed(1)}" y="${(y + fs * .35).toFixed(1)}" text-anchor="${left ? 'end' : 'start'}" style="font:italic ${fs.toFixed(1)}px 'IM Fell English';fill:#1B120B">${esc(name)}</text>`;
+      label = `<text x="${(x + (left ? -7 : 7)).toFixed(1)}" y="${(y + fs * .35).toFixed(1)}" text-anchor="${left ? 'end' : 'start'}" style="font:italic ${fs.toFixed(1)}px 'IM Fell English';fill:#1B120B;stroke:#EFE2C4;stroke-width:3.2px;paint-order:stroke;stroke-linejoin:round">${esc(name)}</text>`;
       break;
     }
     boxes.push({ x: x - 5, y: y - 5, w: 10, h: 10 });
     g.insertAdjacentHTML('beforeend', `<g class="inkfade" style="animation-delay:${Math.round(delay)}ms"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.2" fill="#1B120B"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.4" fill="none" stroke="#1B120B" stroke-width=".6"/>${label}</g>`);
+    g.lastElementChild.querySelector('circle').insertAdjacentHTML('beforebegin', `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="#EFE2C4"/>`);
   });
 }
 /* Marauder's-Map footprints wandering about, each with a name banner */
 function inkWalkers(svg, w, h, names, segs) {
   if (RM || !names.length) return;
   const r = mulberry32(99), shoe = 'M3.6 0 C5.9 0 6.9 2.2 6.6 4.6 C6.3 6.6 5.6 7.6 5.5 8.4 L1.6 8.4 C1.5 7.6 .7 6.6 .4 4.6 C.1 2.2 1.3 0 3.6 0Z M1.7 9.6 H5.3 C5.5 11.9 4.9 14 3.5 14 C2.1 14 1.5 11.9 1.7 9.6Z';
-  const fs = Math.max(8, w * .027);
+  const fs = Math.max(8, w * .025);
   const starts = [[.28, .3], [.72, .28], [.3, .74], [.7, .72]];
   names.forEach((name, i) => {
     let x = w * starts[i % 4][0], y = h * starts[i % 4][1], ang = r() * Math.PI * 2, n = 0;
     const label = document.createElementNS(NS, 'g'); label.setAttribute('class', 'inkfade');
     const tw = name.length * fs * .5 + 14;
-    label.innerHTML = `<path d="M${-tw / 2} ${-fs * .75} H${tw / 2} L${tw / 2 - 4} 0 L${tw / 2} ${fs * .75} H${-tw / 2} L${-tw / 2 + 4} 0 Z" fill="#EFE2C4" stroke="#1B120B" stroke-width=".6"/><text text-anchor="middle" y="${fs * .33}" style="font:italic ${fs.toFixed(1)}px 'IM Fell English';fill:#1B120B">${esc(name)}</text>`;
+    label.innerHTML = `<path d="M${-tw / 2} ${-fs * .75} H${tw / 2} L${tw / 2 - 4} 0 L${tw / 2} ${fs * .75} H${-tw / 2} L${-tw / 2 + 4} 0 Z" fill="#EFE2C4" stroke="#1B120B" stroke-width=".6"/><text text-anchor="middle" y="${fs * .33}" style="font:italic ${fs.toFixed(1)}px 'IM Fell English';fill:#1B120B">${esc(name)}</text><circle cy="-16" r="2.3" fill="#1B120B"/>`;
     svg.appendChild(label);
     const step = () => {
       if (!document.getElementById('intro')) { clearInterval(iv); return; }
@@ -2393,11 +2427,11 @@ async function fullIntro(pt) {
   if (introSkipped) return;
   // 1 — thin ink lines spread like a spider's web from where the wand touched
   const web = $('#coverWeb'); web.setAttribute('viewBox', `0 0 ${pr.width} ${pr.height}`);
-  const webEnd = inkNetwork(web, { x: lx, y: ly, w: pr.width, h: pr.height, seed: 7, count: 11, depth: 3, step: 9, wiggle: .6, speed: .06, width: .7, max: 150, t0: 200, opacity: .62 });
+  const webEnd = inkNetwork(web, { x: lx, y: ly, w: pr.width, h: pr.height, seed: 7, count: 12, depth: 4, step: 10, wiggle: .55, speed: .055, width: .75, max: 260, t0: 200, opacity: .7, join: 16 });
   scratchFor(webEnd);
   // 2 — then words blossom across the parchment
-  await wait(1800); if (introSkipped) return;
-  web.animate([{ opacity: 1 }, { opacity: .35 }], { duration: 2500, delay: 600, fill: 'forwards', easing: 'ease' });
+  await wait(2600); if (introSkipped) return;
+  web.animate([{ opacity: 1 }, { opacity: .4 }], { duration: 2500, delay: 400, fill: 'forwards', easing: 'ease' });
   const W = parseFloat(intro.style.getPropertyValue('--W')) || 320, fs = Math.round(W * .041), cover = $('#cover');
   const rows = [];
   marauderNames().length && presenterLines(T.presentedBy).forEach(t => rows.push({ t, size: fs }));
@@ -2422,14 +2456,15 @@ async function fullIntro(pt) {
   fm.classList.add('open');
   await wait(2400); if (introSkipped) return;
   // 4 — ink fans into every corner: streets, buildings, our places, and footsteps
-  const ink = $('#insideInk'), fr = fm.getBoundingClientRect(), cx = fr.width / 2, cy = fr.height * .5;
+  const ink = $('#insideInk'), fr = fm.getBoundingClientRect();
+  const cx = fr.width * .25 + lx * (fr.width * .5 / pr.width), cy = ly * (fr.height / pr.height); // where the wand touched
   ink.setAttribute('viewBox', `0 0 ${fr.width} ${fr.height}`);
-  const net = { x: cx, y: cy, w: fr.width, h: fr.height, seed: 21, count: 8, depth: 4, step: 15, wiggle: .2, grid: true, speed: .11, width: .8, max: 300, blocks: 70, opacity: .66 };
+  const net = { x: cx, y: cy, w: fr.width, h: fr.height, seed: 21, count: 9, depth: 5, step: 21, wiggle: .16, grid: true, speed: .12, width: .75, max: 260, blocks: 70, opacity: .5, join: 18, upward: .6 };
   const netEnd = inkNetwork(ink, net);
   inkPlaces(ink, fr.width, fr.height, cx, cy, net.speed);
   scratchFor(netEnd * .8);
   setTimeout(() => inkWalkers(ink, fr.width, fr.height, marauderNames(), net.segs), 1400);
-  await wait(Math.min(netEnd, 3200)); if (introSkipped) return;
+  await wait(Math.min(netEnd, 3800)); if (introSkipped) return;
   $('#insideTitle').animate([{ opacity: 0, transform: 'scale(.97)' }, { opacity: 1, transform: 'none' }], { duration: 1200, easing: 'ease-out', fill: 'forwards' });
   await wait(2800); if (introSkipped) return;
   finishIntro(false);
