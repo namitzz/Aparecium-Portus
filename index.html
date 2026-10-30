@@ -25,7 +25,7 @@
      in the timeline, e.g. "Tube, Victoria line, 12 min". Walks under
      2.5 km are worked out automatically along real streets.
 
-   ⚠  EVERYTHING BELOW IS PLACEHOLDER DATA. Replace it with the real plan.
+   ⚠  Day 1 is the real plan. Days 2–4 are still PLACEHOLDER data.
    ========================================================================== */
 const TRIP_DATA = {
 
@@ -50,14 +50,14 @@ const TRIP_DATA = {
     presentedTagline: "Purveyors of Aids to Magical Mischief-Makers",   // second line on the cover ("" to hide)
 
     // Optional: the journey there, shown as a train ticket at the top of Day 1
-    travelThere: {                           // PLACEHOLDER times
+    travelThere: {
       mode: "Train",
       from: "Birmingham New Street",
       to: "London Euston",
-      depart: "08:03",
-      arrive: "09:27",
-      operator: "Avanti West Coast",
-      note: "Coach C · seats 41–44"
+      depart: "10:06",
+      arrive: "12:17",
+      operator: "",
+      note: ""
     },
     // Optional: the journey home, shown at the end of the last day
     travelHome: {                            // PLACEHOLDER times
@@ -72,82 +72,102 @@ const TRIP_DATA = {
   },
 
   /* ── Where we're staying ──────────────────────────────────────────────── */
-  homeBase: {                                // PLACEHOLDER hotel
-    name: "Our Hotel (placeholder)",
-    address: "Russell Square, London WC1B 5BE",
-    lat: 51.5218,
-    lng: -0.1260,
+  homeBase: {
+    name: "Our place, Doric Way",
+    address: "2 Doric Way, London NW1 1LX",
+    lat: 51.5290,
+    lng: -0.1318,
     photo: ""
   },
 
   /* ── The days, in order. Stops are listed in visit order. ─────────────── */
   days: [
-    // ── DAY 1 (PLACEHOLDER) ──
+    // ── DAY 1: SATURDAY 31 OCTOBER ──
     {
       date: "2026-10-31",
-      title: "Day 1: Arrival and the West End",
+      title: "Day 1: Arrival, the City and the West End",
       accentColour: "#6B1E2A",
       stops: [
         {
-          id: "kings-cross",
-          name: "Platform 9¾, King's Cross",
-          time: "10:00", duration: 45,
-          activity: "Trolley photo at the wall, then a browse of the shop",
-          description: "The famous half-vanished luggage trolley sits in the station concourse. Staff hand out house scarves for the photo, and the shop next door is packed with wands and robes.",
-          wiki: "King's_Cross_railway_station",
-          lat: 51.5321, lng: -0.1240,
-          bookingNote: "Free, but the queue can top an hour at weekends. Head straight here from Euston.",
-          link: "https://www.harrypotterplatform934.com/"
+          id: "drop-bags",
+          name: "Drop bags at Doric Way",
+          time: "12:25", duration: 15,
+          activity: "Walk over from Euston and drop the bags",
+          description: "Our place is a few minutes' walk from Euston station. Drop the bags and head straight back out for lunch.",
+          lat: 51.5290, lng: -0.1318,
+          travel: "Short walk from Euston station"
         },
         {
-          id: "british-museum",
-          name: "British Museum",
-          time: "11:15", duration: 120,
-          activity: "The Rosetta Stone, the mummies and the Lewis Chessmen",
-          description: "Two million years of human history under one glass roof. The Lewis Chessmen in Room 40 inspired the wizard chess set in the first film.",
-          wiki: "British_Museum",
-          lat: 51.5194, lng: -0.1270,
-          bookingNote: "Free. Book a timed entry slot online.",
-          link: "https://www.britishmuseum.org/"
+          id: "roti-king",
+          name: "Roti King",
+          time: "12:40", duration: 40,
+          activity: "Lunch: flaky roti canai and curry",
+          description: "A tiny basement Malaysian canteen famous for its roti canai with curry dipping sauce. It's cheap, fast and usually has a queue, which moves quickly.",
+          wiki: "Roti_King",
+          lat: 51.5293, lng: -0.1312,
+          bookingNote: "40 Doric Way, London NW1 1LH. 2 to 5 minutes' walk from our place. No bookings; join the queue.",
+          travel: "2 to 5 min walk"
+        },
+        {
+          id: "horizon-22",
+          name: "Horizon 22",
+          time: "14:30", duration: 50,
+          activity: "The London skyline from the 58th floor, and photos",
+          description: "Europe's highest free viewing gallery, at the top of 22 Bishopsgate. The views take in the Gherkin, Tower Bridge, St Paul's and right along the river.",
+          wiki: "22_Bishopsgate",
+          lat: 51.5146, lng: -0.0828,
+          bookingNote: "22 Bishopsgate, London EC2N 4BQ. Free, but tickets must be booked in advance. Bring ID for security.",
+          travel: "Public transport, about 25 to 35 min (leave around 13:20)",
+          link: "https://horizon22.co.uk/"
+        },
+        {
+          id: "uber-boat",
+          name: "Uber Boat from Tower Pier",
+          time: "15:40", duration: 60,
+          activity: "Up the Thames by river boat towards the West End",
+          description: "Thames Clippers boats leave Tower Millennium Pier every 20 minutes or so. Sit outside at the back for the views of Tower Bridge and the City as you pull away.",
+          wiki: "Tower_Millennium_Pier",
+          lat: 51.5070, lng: -0.0799,
+          bookingNote: "Time to confirm. Tap in with a contactless card or buy tickets in the Uber app.",
+          travel: "About 12 min walk to the pier"
         },
         {
           id: "covent-garden",
           name: "Covent Garden",
-          time: "14:00", duration: 75,
-          activity: "Street performers, the Apple Market and a wander",
-          description: "The old fruit and flower market is now a covered piazza of stalls, shops and buskers. On Halloween the performers usually dress for the occasion.",
+          time: "17:00", duration: 25,
+          activity: "The piazza, street performers and a coffee",
+          description: "The old market hall and piazza, busy with performers on a Saturday evening. This is the best patch on the route for coffee, so grab one here.",
           wiki: "Covent_Garden",
-          lat: 51.5117, lng: -0.1229
+          lat: 51.5117, lng: -0.1240,
+          travel: "From the boat, about 15 min walk"
         },
         {
-          id: "cecil-court",
-          name: "Cecil Court",
-          time: "15:30", duration: 30,
-          activity: "Browse the antique bookshops and map dealers",
-          description: "A narrow Victorian lane of old bookshops, said to be one of the inspirations for Diagon Alley. Look out for the antique maps and prints.",
-          wiki: "Cecil_Court",
-          lat: 51.5108, lng: -0.1275
+          id: "neals-yard",
+          name: "Neal's Yard",
+          time: "17:25", duration: 15,
+          activity: "The colourful little courtyard",
+          description: "A tiny, brightly painted courtyard tucked between Seven Dials and Covent Garden. Jacob the Angel, 26 Grains and Homeslice are all right here.",
+          wiki: "Neal's_Yard",
+          lat: 51.5145, lng: -0.1265
         },
         {
-          id: "minalima",
-          name: "House of MinaLima",
-          time: "16:15", duration: 45,
-          activity: "Free exhibition of the films' graphic props",
-          description: "The design studio behind the Marauder's Map, the Daily Prophet and the Hogwarts letters. Four floors of original artwork, free to wander.",
-          wiki: "MinaLima",
-          lat: 51.5144, lng: -0.1354,
-          link: "https://minalima.com/"
+          id: "leicester-square",
+          name: "Leicester Square and dinner",
+          time: "17:40", duration: 110,
+          activity: "Dinner and something sweet before the show",
+          description: "Pick a dinner spot from the Food list and save room for doughnuts or pastries. The Palace Theatre is a few minutes' walk up Charing Cross Road.",
+          wiki: "Leicester_Square",
+          lat: 51.5103, lng: -0.1301
         },
         {
           id: "palace-theatre",
-          name: "Cursed Child, Palace Theatre",
-          time: "19:00", duration: 210,
-          activity: "Harry Potter and the Cursed Child, on Halloween night",
-          description: "The stage play picks up nineteen years after the final book. The stage effects are best enjoyed knowing as little as possible beforehand.",
+          name: "Palace Theatre: the show",
+          time: "19:30", duration: 180,
+          activity: "The show (to confirm)",
+          description: "The Palace Theatre on Cambridge Circus, home of Harry Potter and the Cursed Child.",
           wiki: "Palace_Theatre,_London",
           lat: 51.5133, lng: -0.1295,
-          bookingNote: "Tickets needed. Arrive 30 minutes early for bag checks.",
-          link: "https://www.harrypottertheplay.com/"
+          bookingNote: "Show and start time to confirm. Arrive 30 minutes early for bag checks."
         }
       ]
     },
@@ -336,13 +356,29 @@ const TRIP_DATA = {
 
   /* ── Places to eat. "days" lists the day numbers each belongs to. ─────── */
   restaurants: [
-    // Day 1 (PLACEHOLDER)
-    { id: "dishoom-cg", name: "Dishoom Covent Garden", cuisine: "Bombay café", priceLevel: "££", wiki: "Dishoom",
-      photo: "", lat: 51.5124, lng: -0.1269, note: "Try the black daal and the chai", days: [1], bookingTime: "13:15" },
-    { id: "kanada-ya", name: "Kanada-Ya", cuisine: "Japanese ramen", priceLevel: "££",
-      photo: "", lat: 51.5153, lng: -0.1278, note: "Try the tonkotsu ramen", days: [1] },
-    { id: "bao-soho", name: "Bao Soho", cuisine: "Taiwanese", priceLevel: "££",
-      photo: "", lat: 51.5131, lng: -0.1365, note: "Pre-theatre: try the classic bao", days: [1], bookingTime: "17:30" },
+    // Day 1: Saturday 31 October. "type" is "coffee", "sweet" or "food"; "area" groups them along the route.
+    { id: "rosslyn", name: "Rosslyn Coffee, Tower 42", type: "coffee", area: "Bishopsgate", cuisine: "Speciality coffee", priceLevel: "£",
+      photo: "", lat: 51.5151, lng: -0.0843, note: "Excellent speciality coffee, two minutes from Horizon 22", days: [1] },
+    { id: "qima", name: "Qima Café", type: "coffee", area: "Covent Garden", cuisine: "Yemeni coffee and pâtisserie", priceLevel: "££",
+      photo: "", lat: 51.5110, lng: -0.1265, note: "An interesting coffee experience. 21-22 New Row", days: [1] },
+    { id: "kiss-the-hippo", name: "Kiss the Hippo", type: "coffee", area: "Covent Garden", cuisine: "Speciality coffee", priceLevel: "£",
+      photo: "", lat: 51.5111, lng: -0.1262, note: "Great coffee. 24 New Row", days: [1] },
+    { id: "monmouth", name: "Monmouth Coffee", type: "coffee", area: "Covent Garden", cuisine: "Classic London coffee", priceLevel: "£", wiki: "Monmouth_Coffee_Company",
+      photo: "", lat: 51.5142, lng: -0.1268, note: "Classic London coffee. 27 Monmouth Street", days: [1] },
+    { id: "jacob-the-angel", name: "Jacob the Angel", type: "sweet", area: "Neal's Yard", cuisine: "Coffee and desserts", priceLevel: "£",
+      photo: "", lat: 51.5147, lng: -0.1262, note: "Try the coconut cream pie. 16a Neal's Yard", days: [1] },
+    { id: "26-grains", name: "26 Grains", type: "food", area: "Neal's Yard", cuisine: "Brunch and bowls", priceLevel: "££",
+      photo: "", lat: 51.5144, lng: -0.1266, note: "Cute café in Neal's Yard", days: [1] },
+    { id: "homeslice", name: "Homeslice", type: "food", area: "Neal's Yard", cuisine: "Pizza", priceLevel: "££",
+      photo: "", lat: 51.5146, lng: -0.1267, note: "Casual pizza, by the slice or the 20-inch pie", days: [1] },
+    { id: "arome", name: "Arôme Bakery", type: "sweet", area: "Covent Garden", cuisine: "French-Asian pastries", priceLevel: "£",
+      photo: "", lat: 51.5136, lng: -0.1262, note: "Try the honey butter toast. 9 Mercer Street", days: [1] },
+    { id: "donutelier", name: "Donutelier", type: "sweet", area: "Leicester Square", cuisine: "Fancy doughnuts", priceLevel: "£",
+      photo: "", lat: 51.5118, lng: -0.1292, note: "48-50 Charing Cross Road, on the way to the theatre", days: [1] },
+    { id: "bancone", name: "Bancone", type: "food", area: "Leicester Square", cuisine: "Fresh handmade pasta", priceLevel: "££",
+      photo: "", lat: 51.5096, lng: -0.1256, note: "Good pasta dinner before the show. 39 William IV Street", days: [1] },
+    { id: "mildreds", name: "Mildreds", type: "food", area: "Leicester Square", cuisine: "Vegetarian and vegan", priceLevel: "££",
+      photo: "", lat: 51.5112, lng: -0.1273, note: "Vegetarian-friendly dinner. 79 St Martin's Lane", days: [1] },
 
     // Day 2 (PLACEHOLDER)
     { id: "backlot-cafe", name: "The Backlot Café", cuisine: "Studio café", priceLevel: "£",
@@ -457,6 +493,9 @@ img { display: block; }
 #app { position: fixed; inset: 0; overflow: hidden; background: var(--paper); z-index: 1; }
 #map.leaflet-container, #map { position: absolute; inset: 0; z-index: 0; isolation: isolate; font-family: var(--f-body); background: var(--map-bg); }
 #map .leaflet-tile-pane { filter: var(--tile-filter); }
+#map.street .leaflet-tile-pane { filter: sepia(.28) saturate(.9) contrast(1.03) brightness(1.01); }
+#map.street .map-tex { opacity: .28; }
+#map.street .map-vignette { opacity: .5; }
 .map-tex {
   position: absolute; left: 0; top: 0; width: 5400px; height: 5400px; pointer-events: none; mix-blend-mode: multiply;
   background-color: var(--tex-tint);
@@ -545,10 +584,11 @@ img { display: block; }
 .floatbar.hide * { pointer-events: none !important; }
 .attrib { pointer-events: auto; font-size: 11px; line-height: 1.2; color: var(--text); opacity: .75; padding: 2px 6px; border-radius: 3px; background: var(--label-bg); margin-bottom: 4px; font-variant-numeric: normal; }
 .attrib a { text-decoration: none; }
-.fabs { display: flex; gap: 10px; pointer-events: auto; }
-.fab { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; color: var(--text); border: 1px solid var(--rule-strong);
+.fabs { display: flex; gap: 8px; pointer-events: auto; }
+.fab { position: relative; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: var(--text); border: 1px solid var(--rule-strong);
   box-shadow: 0 4px 12px rgba(30, 18, 8, .3), inset 0 0 0 3px var(--paper), inset 0 0 0 4px var(--rule); }
-.fab svg { width: 22px; height: 22px; }
+.fab svg { width: 21px; height: 21px; }
+.fab-dot { position: absolute; right: 2px; top: 2px; width: 9px; height: 9px; border-radius: 50%; background: #3E8E4E; box-shadow: 0 0 0 2px var(--paper); }
 .fab.is-on { color: var(--gold-ink); }
 
 /* ── Bottom sheet ──────────────────────────────────────────────────────── */
@@ -579,6 +619,10 @@ img { display: block; }
 .late-opts button[aria-pressed="true"] { background: var(--accent); color: #F3E9D2; border-color: var(--accent); }
 
 /* ── Timeline ──────────────────────────────────────────────────────────── */
+.food-area { margin: 14px 4px 6px; font-family: var(--f-fell); font-style: italic; font-size: 17px; color: var(--accent-ink); }
+.food-ic { display: inline-flex; vertical-align: -2px; margin-right: 4px; color: #8A4E18; }
+.food-ic svg { width: 15px; height: 15px; }
+.food-tip { margin: 12px 4px 0; font-style: italic; font-size: 15px; color: var(--text-soft); }
 .sec-title { display: flex; align-items: center; gap: 10px; margin: 20px 4px 10px; font-family: var(--f-sc); font-size: 16px; letter-spacing: .08em; color: var(--gold-ink); }
 .sec-title::before, .sec-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--rule-strong), transparent); }
 .tl { list-style: none; margin: 0; padding: 0; position: relative; }
@@ -764,6 +808,28 @@ img { display: block; }
 @keyframes inkStroke { to { stroke-dashoffset: 0; } }
 @keyframes inkFill { to { fill-opacity: 1; stroke-opacity: .25; } }
 
+/* ── The group ─────────────────────────────────────────────────────────── */
+.people { position: absolute; inset: 0; z-index: 46; display: grid; place-items: center; padding: 20px; background: rgba(18, 13, 10, .45); }
+.people-card { position: relative; width: min(100%, 380px); max-height: 86%; overflow-y: auto; padding: 24px 20px 18px; border-radius: 6px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .45), inset 0 0 0 1px var(--rule-strong), inset 0 0 0 5px var(--paper), inset 0 0 0 6px var(--rule); }
+.people-card .card-close { top: 10px; right: 10px; background: transparent; border-color: var(--rule-strong); color: var(--text); }
+.pp-kicker { font-family: var(--f-fell); font-style: italic; color: var(--text-soft); text-align: center; font-size: 15px; padding: 0 40px; }
+.pp-title { margin: 2px 0 6px; text-align: center; font-family: var(--f-script); font-weight: 400; font-size: 42px; line-height: 1.15; }
+.pp-text { text-align: center; font-size: 16px; line-height: 1.4; color: var(--text-soft); margin: 0 0 14px; }
+.pp-names { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pp-name { min-height: 58px; border: 1px solid var(--rule-strong); border-radius: 4px; font-family: var(--f-fell); font-size: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; }
+.pp-name small { font-size: 13px; font-style: italic; color: var(--text-soft); }
+.pp-btn { display: block; width: 100%; min-height: 48px; margin-top: 10px; border-radius: 4px; font-family: var(--f-sc); letter-spacing: .1em; font-size: 16px; border: 1px solid var(--rule-strong); }
+.pp-btn.primary { background: #2B1D14; color: #E8CC7A; border-color: #8A6A1C; }
+.pp-row { display: flex; align-items: center; gap: 10px; min-height: 54px; border-bottom: 1px solid var(--rule); }
+.pp-row b { font-family: var(--f-fell); font-size: 19px; font-weight: 400; min-width: 64px; }
+.pp-row span { flex: 1; font-size: 14px; color: var(--text-soft); font-style: italic; line-height: 1.25; }
+.pp-show { min-height: 40px; padding: 0 12px; border: 1px solid var(--rule-strong); border-radius: 4px; font-size: 14px; }
+.pp-note { font-size: 14px; line-height: 1.35; color: var(--text-soft); font-style: italic; margin: 12px 0 0; text-align: center; }
+.me-label small { display: block; margin-top: 2px; font: 11px/1 var(--f-body); opacity: .7; text-align: center; }
+.friend .me-label { font-weight: 600; }
+.friend.stale { opacity: .5; }
+
 /* ── Toast ─────────────────────────────────────────────────────────────── */
 .toast { position: absolute; z-index: 50; left: 50%; top: calc(var(--header-h) + 64px); max-width: min(90%, 380px); padding: 10px 16px; border-radius: 4px;
   background: #2B1D14; color: #F3E9D2; border: 1px solid #8A6A1C; font-size: 16px; text-align: center; box-shadow: var(--shadow); font-style: italic;
@@ -866,8 +932,15 @@ img { display: block; }
   </div>
 
   <div class="floatbar" id="floatbar">
-    <div class="attrib">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a></div>
+    <div class="attrib">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OSM</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a></div>
     <div class="fabs">
+      <button class="fab paper" id="fabStyle" type="button" aria-label="Switch to the parchment map" title="Switch to the parchment map">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg>
+      </button>
+      <button class="fab paper" id="fabPeople" type="button" aria-label="The group" title="The group">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.2 3c1.6 0 2.4 1.5 2.2 3.2-.2 1.4-.7 2-.8 2.6H5.8c-.1-.6-.6-1.2-.8-2.6C4.8 4.5 5.6 3 7.2 3zM5.9 9.7h2.6c.2 1.6-.2 3.1-1.3 3.1s-1.5-1.5-1.3-3.1zM16.8 9c1.6 0 2.4 1.5 2.2 3.2-.2 1.4-.7 2-.8 2.6h-2.8c-.1-.6-.6-1.2-.8-2.6-.2-1.7.6-3.2 2.2-3.2zm-1.3 6.7h2.6c.2 1.6-.2 3.1-1.3 3.1s-1.5-1.5-1.3-3.1z"/></svg>
+        <span class="fab-dot" id="peopleDot" hidden></span>
+      </button>
       <button class="fab paper" id="fabLocate" type="button" aria-label="Locate me" title="Locate me">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4"/></svg>
       </button>
@@ -910,6 +983,15 @@ img { display: block; }
   <div class="mischief" id="mischief" hidden aria-live="polite">
     <canvas class="mm-ink" id="mmInk" aria-label="Mischief Managed"></canvas>
     <div class="mm-panels" id="mmPanels"><canvas class="mm-panel l"></canvas><canvas class="mm-panel c"></canvas><canvas class="mm-panel r"></canvas></div>
+  </div>
+
+  <div class="people" id="people" hidden>
+    <div class="people-card paper" role="dialog" aria-labelledby="peopleTitle">
+      <button class="card-close" id="peopleClose" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
+      <div id="peopleBody"></div>
+    </div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1613,11 +1695,16 @@ function renderSheet() {
   }
   if (day.index === DAYS.length - 1 && J_HOME) h += ticketHTML(J_HOME, 'Return');
   if (showsFood(state.mode)) {
-    h += '<h3 class="sec-title">Where to Eat</h3>';
-    h += day.food.length ? '<div class="food-list">' + day.food.map(f => `<button class="food-item" type="button" data-key="${esc(f.key)}" aria-label="${esc(f.name)}, ${esc(f.cuisine || '')}, ${esc(f.priceLevel || '')}">
+    h += '<h3 class="sec-title">Food &amp; Coffee</h3>';
+    const item = f => `<button class="food-item" type="button" data-key="${esc(f.key)}" aria-label="${esc(f.name)}, ${esc(FOOD_TYPE[f.type] || '')}, ${esc(f.cuisine || '')}, ${esc(f.priceLevel || '')}">
       ${photo(f, 160)}<span><span class="food-name">${esc(f.name)}</span> ${f.bookingTime ? `<span class="chip">booked ${esc(f.bookingTime)}</span>` : ''}<br>
-      <span class="food-meta">${esc([f.cuisine, f.priceLevel].filter(Boolean).join(' · '))}</span><br><span class="food-note">${esc(f.note || '')}</span></span></button>`).join('') + '</div>'
-      : '<p class="empty-note">No restaurants listed for this day yet.</p>';
+      <span class="food-meta"><span class="food-ic">${foodIcon(f)}</span>${esc([FOOD_TYPE[f.type], f.cuisine, f.priceLevel].filter(Boolean).join(' · '))}</span><br><span class="food-note">${esc(f.note || '')}</span></span></button>`;
+    if (!day.food.length) h += '<p class="empty-note">No food or coffee listed for this day yet.</p>';
+    else {
+      const areas = []; day.food.forEach(f => { const a = f.area || ''; if (!areas.includes(a)) areas.push(a); });
+      areas.forEach(a => { if (a) h += `<div class="food-area">${esc(a)}</div>`; h += '<div class="food-list">' + day.food.filter(f => (f.area || '') === a).map(item).join('') + '</div>'; });
+      h += '<p class="food-tip">Pick one or two coffee stops, one sweet treat and dinner. No need to do them all.</p>';
+    }
   }
   h += '<p class="sheet-attrib">All times are UK time. Photos from Wikipedia where available.</p>';
   elBody.innerHTML = h;
@@ -1643,9 +1730,20 @@ elBody.addEventListener('click', e => {
 /* ═════════════════════════ Map ═════════════════════════ */
 let map = null, tiles = null, labels = null, texEl = null, texPos = null;
 const TILE_URLS = {
+  street: ['https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', null],
   light: ['https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png'],
   dark: ['https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', 'https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png']
 };
+/* "street": a clear, readable street map with every name on it. "parchment": the inked Marauder's look. */
+let mapStyle = store.get('mapStyle', 'street');
+function applyMapStyle() {
+  if (!map) return;
+  const st = mapStyle === 'parchment';
+  $('#map').classList.toggle('street', !st);
+  tiles.setUrl(st ? TILE_URLS.light[0] : TILE_URLS.street[0]);
+  if (st && !map.hasLayer(labels)) labels.addTo(map); else if (!st && map.hasLayer(labels)) map.removeLayer(labels);
+  const b = $('#fabStyle'); if (b) { b.setAttribute('aria-label', st ? 'Switch to the street map' : 'Switch to the parchment map'); b.title = b.getAttribute('aria-label'); }
+}
 const layers = { stops: [], food: [], routes: [], steps: [], home: null };
 let routeSegs = [], segLines = [], pendingDraws = [], stepTimer = null;
 const SEG_MS = 560;
@@ -1654,12 +1752,13 @@ function initMap() {
   map = L.map('map', { zoomControl: false, attributionControl: false, zoomSnap: .25, zoomDelta: .5, wheelPxPerZoomLevel: 90, maxZoom: 19, minZoom: 3 });
   const urls = () => mqDark.matches ? TILE_URLS.dark : TILE_URLS.light;
   tiles = L.tileLayer(urls()[0], { subdomains: 'abcd', maxZoom: 20, keepBuffer: 3 }).addTo(map);
-  labels = L.tileLayer(urls()[1], { subdomains: 'abcd', maxZoom: 20, minZoom: 15, opacity: .75 }).addTo(map);
+  labels = L.tileLayer(urls()[1], { subdomains: 'abcd', maxZoom: 20, minZoom: 15, opacity: .75 });
   (mqDark.addEventListener ? mqDark.addEventListener('change', () => { tiles.setUrl(urls()[0]); labels.setUrl(urls()[1]); }) : null);
   // Parchment laid over the tiles (multiply) so streets read as ink on paper
   const tp = map.createPane('texture'); tp.style.zIndex = 250; tp.style.pointerEvents = 'none';
   texEl = L.DomUtil.create('div', 'map-tex', tp);
   map.on('move', placeTex); map.on('moveend zoomend resize viewreset', placeTex); placeTex(true);
+  applyMapStyle();
   map.createPane('routes').style.zIndex = 410;
   map.createPane('steps').style.zIndex = 420;
   map.createPane('me').style.zIndex = 650;
@@ -1755,10 +1854,14 @@ function drawIn(layer, delay, dur) {
   pendingDraws.push(done);
 }
 const FORK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 1-4 0V3M5 10v11"/><path d="M19 3c-2.2 1.6-3 4.6-3 8h3v10"/></svg>';
+const CUP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3c0 1.5 1 1.5 1 3M12 3c0 1.5 1 1.5 1 3"/></svg>';
+const DONUT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.6"/><path d="M8 7.5l.8.6M15.5 7.4l-.6.8M7 14.5l.9-.3M16.4 15.5l-.8-.5"/></svg>';
+const foodIcon = f => f.type === 'coffee' ? CUP : f.type === 'sweet' ? DONUT : FORK;
+const FOOD_TYPE = { coffee: 'Coffee', sweet: 'Sweet treat', food: 'Food' };
 function pinHTML(item, delay, cls) {
   const st = `style="--delay:${delay}ms"`;
   if (item.kind === 'stop') return `<div class="mk mk-stop ${cls || ''}" ${st}><span class="mk-halo"></span><div class="mk-medal">${photo(item, 160, true)}</div><span class="mk-num">${item.state === 'done' ? '✓' : item.order}</span><span class="mk-label">${esc(item.name)}</span></div>`;
-  return `<div class="mk mk-food ${cls || ''}" ${st}><span class="mk-halo"></span><div class="mk-medal">${photo(item, 120, true)}</div><span class="mk-fork">${FORK}</span><span class="mk-label">${esc(item.name)}</span></div>`;
+  return `<div class="mk mk-food ${cls || ''}" ${st}><span class="mk-halo"></span><div class="mk-medal">${photo(item, 120, true)}</div><span class="mk-fork">${foodIcon(item)}</span><span class="mk-label">${esc(item.name)}</span></div>`;
 }
 function addStops(opts = {}) {
   const day = curDay(); if (!map || !day || layers.stops.length) return;
@@ -1860,7 +1963,7 @@ function buildSteps() {
   }
   stepTimer = 'on';
   // the walkers' name scroll leads the footprints along, like the Marauder's Map
-  if (!RM && heads.length > 2) {
+  if (false && !RM && heads.length > 2) { // name scroll retired: real people now show their own footprints
     const wk = L.marker(heads[0], { pane: 'steps', interactive: false, keyboard: false, icon: L.divIcon({ className: 'walker-wrap step-wrap', iconSize: [0, 0], html: `<span class="walker-dot"></span><span class="walker">${esc(walkerName(0))}</span>` }) }).addTo(map);
     layers.steps.push(wk);
     const t0 = performance.now();
@@ -2077,7 +2180,7 @@ $('#cardPortus').addEventListener('click', portus);
 
 /* ═════════════════════════ "You are here" ═════════════════════════ */
 const Loc = {
-  watch: null, pos: null, marker: null, circle: null, wantFly: false, heading: null, raf: 0,
+  watch: null, pos: null, last: null, marker: null, circle: null, wantFly: false, heading: null, raf: 0,
   start(fly) {
     if (!navigator.geolocation) { toast("This phone can't share its location."); return; }
     this.wantFly = fly;
@@ -2109,19 +2212,152 @@ const Loc = {
       this.circle = L.circle(ll, { radius: p.coords.accuracy || 30, pane: 'steps', interactive: false, color: '#8A6A1C', weight: 1, opacity: .45, fillColor: '#E2C26A', fillOpacity: .08, dashArray: '2 5' }).addTo(map);
       this.marker = L.marker(ll, { pane: 'me', interactive: false, keyboard: false, icon: L.divIcon({ className: 'me-wrap', iconSize: [0, 0], html: `<div class="me"><div class="me-glow"></div><div class="me-feet"><i>${SHOE}</i><i>${SHOE}</i></div><div class="me-label">You are here</div></div>` }) }).addTo(map);
     } else { this.marker.setLatLng(ll); this.circle.setLatLng(ll).setRadius(p.coords.accuracy || 30); }
-    this.paintHeading();
+    this.paintHeading(); this.last = p;
+    Share.publish(p);
     if (this.wantFly) this.fly();
   },
   fly() { this.wantFly = false; if (!this.pos || !map) return; flyToItem({ lat: this.pos[0], lng: this.pos[1] }, Sheet.visible() + 60, Math.max(map.getZoom(), 16)); },
   error(e) {
-    if (e.code === 1) { toast('Location is switched off for this app. Allow it in your phone settings to appear on the map.'); if (this.watch != null) navigator.geolocation.clearWatch(this.watch); this.watch = null; $('#fabLocate').classList.remove('is-on'); }
+    if (e.code === 1) { if (Share.on) { Share.on = false; store.set('sharing', false); Share.updateDot(); } toast('Location is switched off for this app. Allow it in your phone settings to appear on the map.'); if (this.watch != null) navigator.geolocation.clearWatch(this.watch); this.watch = null; $('#fabLocate').classList.remove('is-on'); }
     else if (this.wantFly) toast("Couldn't find you just now. Try again in a moment.");
   }
 };
 $('#fabLocate').addEventListener('click', () => Loc.start(true));
 $('#fabHome').addEventListener('click', () => HOME && focusItem(HOME));
+$('#fabStyle').addEventListener('click', () => { mapStyle = mapStyle === 'parchment' ? 'street' : 'parchment'; store.set('mapStyle', mapStyle); applyMapStyle(); Sound.turn(); });
 if (navigator.permissions && navigator.permissions.query) navigator.permissions.query({ name: 'geolocation' }).then(r => { if (r.state === 'granted') Loc.start(false); }).catch(() => {});
 let toastTimer = 0;
+/* ═════════════════════════ The group: who's where ═════════════════════════
+   Each phone encrypts its position with the group's key before sending it through ntfy.sh,
+   a free public message relay. The key comes from the private invite link (#join=...), which is
+   never stored in this file, so the relay and anyone reading the code only see scrambled data.
+   Positions are only sent while the app is open. */
+const RELAY = 'https://ntfy.sh';
+const b64 = u => btoa(String.fromCharCode(...u)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const unb64 = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((s.length + 3) % 4)), c => c.charCodeAt(0));
+const Group = {
+  code: null, key: null, topic: null, ready: Promise.resolve(false),
+  init() {
+    const m = location.hash.match(/join=([A-Za-z0-9_-]{8,64})/);
+    if (m) { store.set('group', m[1]); try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* keep the hash */ } }
+    this.code = store.get('group', null);
+    this.ready = (async () => {
+      if (!this.code || !window.crypto || !crypto.subtle) return false;
+      const enc = new TextEncoder(), hex = b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+      this.topic = 'portus_' + hex(await crypto.subtle.digest('SHA-256', enc.encode('topic:' + this.code))).slice(0, 32);
+      this.key = await crypto.subtle.importKey('raw', await crypto.subtle.digest('SHA-256', enc.encode('key:' + this.code)), 'AES-GCM', false, ['encrypt', 'decrypt']);
+      return true;
+    })().catch(() => false);
+  },
+  async seal(obj) { const iv = crypto.getRandomValues(new Uint8Array(12)); const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, this.key, new TextEncoder().encode(JSON.stringify(obj)))); return b64(iv) + '.' + b64(ct); },
+  async open(str) { try { const [a, b] = String(str).split('.'); return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(a) }, this.key, unb64(b)))); } catch (e) { return null; } }
+};
+function fmtAgo(ms) { const m = Math.round(ms / 60000); return m < 1 ? 'just now' : m < 60 ? `${m} min ago` : `${Math.round(m / 60)} hr ago`; }
+const Share = {
+  me: store.get('me', null), on: store.get('sharing', false), people: {}, markers: {}, es: null, lastSent: 0, lastLL: null,
+  async boot() {
+    Group.init();
+    if (await Group.ready) this.listen();
+    if (this.on && this.me) Loc.start(false);
+    setInterval(() => { this.repaint(); if (!$('#people').hidden && peopleStep === 'list') renderPeople(); }, 30000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && Loc.last) this.publish(Loc.last, true); });
+    this.updateDot();
+  },
+  listen() {
+    if (this.es || !window.EventSource) return;
+    try {
+      this.es = new EventSource(`${RELAY}/${Group.topic}/sse?since=6h`);
+      this.es.onmessage = async ev => {
+        let d; try { d = JSON.parse(ev.data); } catch (e) { return; }
+        if (d.event && d.event !== 'message') return;
+        const p = await Group.open(d.message);
+        if (!p || !p.n || p.n === this.me) return;
+        const old = this.people[p.n]; if (old && old.t >= p.t) return;
+        this.people[p.n] = p; this.paint(p.n); this.updateDot();
+        if (!$('#people').hidden && peopleStep === 'list') renderPeople();
+      };
+    } catch (e) { /* relay unreachable: the map still works */ }
+  },
+  async publish(pos, force) {
+    if (!pos || !this.on || !this.me || !(await Group.ready)) return;
+    const now = Date.now(), ll = [pos.coords.latitude, pos.coords.longitude];
+    const moved = this.lastLL ? haversine({ lat: ll[0], lng: ll[1] }, { lat: this.lastLL[0], lng: this.lastLL[1] }) * 1000 : Infinity;
+    if (!force && (now - this.lastSent < 8000 || (now - this.lastSent < 30000 && moved < 25))) return;
+    this.lastSent = now; this.lastLL = ll;
+    const body = await Group.seal({ n: this.me, lat: +ll[0].toFixed(5), lng: +ll[1].toFixed(5), acc: Math.round(pos.coords.accuracy || 0), h: Loc.heading == null ? null : Math.round(Loc.heading), t: now });
+    fetch(`${RELAY}/${Group.topic}`, { method: 'POST', body }).catch(() => {});
+  },
+  start() {
+    this.on = true; store.set('sharing', true); this.lastSent = 0;
+    Loc.start(true); if (Loc.last) this.publish(Loc.last, true);
+    this.updateDot(); toast('Sharing your footprints with the group while the app is open.');
+  },
+  async stop() {
+    this.on = false; store.set('sharing', false); this.updateDot();
+    if (this.me && await Group.ready) fetch(`${RELAY}/${Group.topic}`, { method: 'POST', body: await Group.seal({ n: this.me, off: true, t: Date.now() }) }).catch(() => {});
+  },
+  paint(name) {
+    const p = this.people[name]; if (!map || !p) return;
+    const age = Date.now() - p.t;
+    if (p.off || age > 6 * 3600e3 || p.lat == null) { if (this.markers[name]) { this.markers[name].remove(); delete this.markers[name]; } return; }
+    const html = `<div class="me friend${age > 20 * 60e3 ? ' stale' : ''}"><div class="me-feet" style="transform:rotate(${p.h || 0}deg)"><i>${SHOE}</i><i>${SHOE}</i></div><div class="me-label">${esc(name)}<small>${esc(fmtAgo(age))}</small></div></div>`;
+    const icon = L.divIcon({ className: 'me-wrap', iconSize: [0, 0], html });
+    if (!this.markers[name]) this.markers[name] = L.marker([p.lat, p.lng], { pane: 'me', interactive: false, keyboard: false, icon }).addTo(map);
+    else this.markers[name].setLatLng([p.lat, p.lng]).setIcon(icon);
+  },
+  repaint() { Object.keys(this.people).forEach(n => this.paint(n)); },
+  updateDot() { const live = Object.values(this.people).some(p => !p.off && Date.now() - p.t < 30 * 60e3); $('#peopleDot').hidden = !(live || this.on); }
+};
+let peopleStep = 'list';
+function openPeople(step) { peopleStep = step || (Share.me ? 'list' : 'who'); $('#people').hidden = false; renderPeople(); }
+function closePeople() { $('#people').hidden = true; }
+function renderPeople() {
+  const b = $('#peopleBody'), names = marauders(), hasGroup = !!Group.code;
+  if (peopleStep === 'who') {
+    b.innerHTML = `<div class="pp-kicker">I solemnly swear that I am up to no good</div><h2 class="pp-title" id="peopleTitle">Who goes there?</h2>
+      <p class="pp-text">Pick your name so the others can see your footprints on the map.</p>
+      <div class="pp-names">${names.map(m => `<button class="pp-name" type="button" data-name="${esc(m.name)}">${esc(m.name)}<small>${esc(m.alias !== m.name ? m.alias : '')}</small></button>`).join('')}</div>`;
+  } else if (peopleStep === 'share') {
+    b.innerHTML = `<div class="pp-kicker">Mischief awaits, ${esc(Share.me)}</div><h2 class="pp-title" id="peopleTitle">Share where you are?</h2>
+      ${hasGroup
+        ? `<p class="pp-text">The others will see your footprints and name on the map while the app is open on your phone. You can switch it off here at any time.</p>
+           <button class="pp-btn primary" type="button" data-act="share">Share my location</button><button class="pp-btn" type="button" data-act="later">Not now</button>`
+        : `<p class="pp-text">To see each other, open the invite link from your group chat once on this phone.</p>
+           <button class="pp-btn primary" type="button" data-act="justme">Show just me on the map</button><button class="pp-btn" type="button" data-act="later">Not now</button>`}`;
+  } else {
+    const rows = names.map(m => {
+      if (m.name === Share.me) return `<div class="pp-row"><b>${esc(m.name)}</b><span>You · ${Share.on ? 'sharing your location' : 'not sharing'}</span>${Loc.pos ? '<button class="pp-show" type="button" data-show="__me">Show</button>' : ''}</div>`;
+      const p = Share.people[m.name];
+      const st = !p ? 'not sharing yet' : p.off ? 'stopped sharing' : `seen ${fmtAgo(Date.now() - p.t)}`;
+      return `<div class="pp-row"><b>${esc(m.name)}</b><span>${st}</span>${p && !p.off && p.lat != null ? `<button class="pp-show" type="button" data-show="${esc(m.name)}">Show</button>` : ''}</div>`;
+    }).join('');
+    b.innerHTML = `<div class="pp-kicker">Messrs ${esc(names.map(m => m.alias).join(', '))}</div><h2 class="pp-title" id="peopleTitle">The Marauders</h2>${rows}
+      ${hasGroup ? (Share.on ? '<button class="pp-btn" type="button" data-act="stop">Stop sharing my location</button>' : '<button class="pp-btn primary" type="button" data-act="share">Share my location</button>')
+        : '<p class="pp-note">To see each other, open the invite link from your group chat once on this phone.</p>'}
+      <button class="pp-btn" type="button" data-act="who">I'm not ${esc(Share.me || 'listed')}</button>
+      <p class="pp-note">Locations are encrypted on each phone and only sent while the app is open.</p>`;
+  }
+}
+$('#peopleBody').addEventListener('click', e => {
+  const nm = e.target.closest('[data-name]');
+  if (nm) { const was = Share.me; Share.me = nm.dataset.name; store.set('me', Share.me); if (was && was !== Share.me && Share.on) Share.publish(Loc.last, true); peopleStep = 'share'; renderPeople(); return; }
+  const act = e.target.closest('[data-act]'), sh = e.target.closest('[data-show]');
+  if (sh) {
+    const n = sh.dataset.show, p = n === '__me' ? (Loc.pos && { lat: Loc.pos[0], lng: Loc.pos[1] }) : Share.people[n];
+    if (p) { closePeople(); flyToItem({ lat: p.lat, lng: p.lng }, Sheet.visible() + 60, Math.max(map ? map.getZoom() : 16, 16)); }
+    return;
+  }
+  if (!act) return;
+  const a = act.dataset.act;
+  if (a === 'share') { Share.start(); closePeople(); }
+  else if (a === 'justme') { Loc.start(true); closePeople(); }
+  else if (a === 'later') closePeople();
+  else if (a === 'stop') { Share.stop(); renderPeople(); toast('Stopped sharing your location.'); }
+  else if (a === 'who') { peopleStep = 'who'; renderPeople(); }
+});
+$('#peopleClose').addEventListener('click', closePeople);
+$('#people').addEventListener('click', e => { if (e.target.id === 'people') closePeople(); });
+$('#fabPeople').addEventListener('click', () => openPeople());
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3600); }
 
 /* ═════════════════════════ Mischief Managed ═════════════════════════
@@ -2723,6 +2959,7 @@ function onAppReady() {
   tick();
   setInterval(tick, 15000);
   WX.load(); loadAllWiki();
+  Share.boot().then(() => { if (!Share.me) setTimeout(() => openPeople('who'), 700); });
   DAYS.forEach(d => d.stops.forEach((s, k) => { if (k) Routes.want(d.stops[k - 1], s); }));
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { tick(); renderTabs(); updateTabs(); } });
 }

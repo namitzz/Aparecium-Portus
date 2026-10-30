@@ -22,7 +22,7 @@ Everything about the trip lives in the `TRIP_DATA` object at the very top of `in
 - `photo` is your own image URL and takes priority over `wiki`. With neither, an illuminated initial is shown instead.
 - `trip.marauders` is the group. Each person's `alias` is inked on the folded map's cover, Marauder-style ("Messrs Nimbus, Mandrake, Elderwand, Lumos & Snitch… are proud to present"). Their real `name` walks around the map on footprints.
 - A stop's optional `travel` field overrides the travel note shown before it. Walks under 2.5 km are worked out along real streets, so the route on the map and the "14 min walk" note are both real.
-- A restaurant's `days` lists the day numbers it belongs to.
+- A restaurant's `days` lists the day numbers it belongs to. `type` is `coffee`, `sweet` or `food` and sets its icon. `area` groups the list along the day's route.
 - `trip.travelThere` and `trip.travelHome` become the vintage train tickets on the first and last days.
 
 ## Hosting
@@ -37,6 +37,14 @@ Location, compass and offline mode need HTTPS, so host it anywhere that serves s
 - `?now=2026-10-31T11:50`: preview the app as if it were that moment, in trip time. The clock keeps running from there.
 - `?intro=full` · `?intro=quick` · `?intro=skip`: force a particular opening animation.
 
+## The group: seeing each other on the map
+
+After the opening, the app asks **"Who goes there?"**. Each person picks their name, then chooses whether to share their location. Everyone who shares appears on the map as named footprints, with "seen 4 min ago". The footprints button opens the group list, where you can jump to anyone or stop sharing.
+
+- To see each other, each phone must open the group's private **invite link** once (`…/Aparecium-Portus/#join=<code>`). The code is deliberately not stored in this repository.
+- Positions are encrypted on the phone (AES-GCM, with a key derived from the invite code) before being relayed through [ntfy.sh](https://ntfy.sh), a free public message relay. The relay only ever sees scrambled data.
+- Locations are only sent while the app is open on that phone. Websites can't track in the background, so a friend's footprints show the last time they had the app open.
+
 ## Live extras (no accounts or keys needed)
 
 - **Walking routes:** routing.openstreetmap.de (OpenStreetMap). Walks under 2.5 km are drawn along the real streets, with real walk times.
@@ -49,7 +57,7 @@ Everything above is cached on the phone after the first load, and the app still 
 
 ## Notes
 
-- Map tiles come from CARTO (Voyager in light mode, Dark Matter in dark mode) with a sepia filter and parchment texture. They are free for light non-commercial use.
+- Map tiles come from CARTO and are free for light non-commercial use. The layers button switches between a clear **street map** with every street name, and the inked **parchment** look.
 - The full wand-and-unfolding opening plays every time the app opens. Tap **Skip** in the top corner to go straight to the map.
 - "Portus" opens Apple Maps on iPhone and Google Maps on Android. It picks walking directions when the previous stop is close by and public transport otherwise.
 - "Mischief Managed" plays by itself when the day's last stop ends. The day's map turns to ink, the ink draws back into the parchment until it's blank, then the map folds shut and opens on the next day. You can also trigger it with the seal at the end of each day's timeline.
