@@ -57,7 +57,7 @@ Everything above is cached on the phone after the first load, and the app still 
 
 ## Notes
 
-- Map tiles come from CARTO and are free for light non-commercial use. The layers button switches between a clear **street map** with every street name, and the inked **parchment** look.
+- The layers button opens a **Map style** picker: **Street map** (CARTO, every street name), **Satellite** (Esri World Imagery with road and place names on top), or the inked **Parchment** look. The choice is remembered on each phone.
 - The full wand-and-unfolding opening plays every time the app opens. Tap **Skip** in the top corner to go straight to the map.
 - "Portus" opens Apple Maps on iPhone and Google Maps on Android. It picks walking directions when the previous stop is close by and public transport otherwise.
 - "Mischief Managed" plays by itself when the day's last stop ends. The day's map turns to ink, the ink draws back into the parchment until it's blank, then the map folds shut and opens on the next day. You can also trigger it with the seal at the end of each day's timeline.
