@@ -98,15 +98,14 @@ const TRIP_DATA = {
           travel: "Short walk from Euston station"
         },
         {
-          id: "roti-king",
-          name: "Roti King",
-          time: "12:40", duration: 40,
-          activity: "Lunch: flaky roti canai and curry",
-          description: "A tiny basement Malaysian canteen famous for its roti canai with curry dipping sauce. It's cheap, fast and usually has a queue, which moves quickly.",
-          wiki: "Roti_King",
-          lat: 51.5293, lng: -0.1312,
-          bookingNote: "40 Doric Way, London NW1 1LH. 2 to 5 minutes' walk from our place. No bookings; join the queue.",
-          travel: "2 to 5 min walk"
+          id: "lunch-bishopsgate",
+          name: "Lunch near Horizon 22",
+          time: "13:15", duration: 65,
+          activity: "Find lunch around Bishopsgate (nothing booked)",
+          description: "Nothing is booked, so pick whatever looks good. Leadenhall Market, three minutes' walk away, is full of casual places. Ideas are in Food & Coffee under Bishopsgate.",
+          wiki: "Leadenhall_Market",
+          lat: 51.5128, lng: -0.0834,
+          travel: "Public transport to Bishopsgate, about 25 to 35 min (leave around 12:40)"
         },
         {
           id: "horizon-22",
@@ -117,7 +116,7 @@ const TRIP_DATA = {
           wiki: "22_Bishopsgate",
           lat: 51.5146, lng: -0.0828,
           bookingNote: "22 Bishopsgate, London EC2N 4BQ. Free, but tickets must be booked in advance. Bring ID for security.",
-          travel: "Public transport, about 25 to 35 min (leave around 13:20)",
+          travel: "About 3 min walk",
           link: "https://horizon22.co.uk/"
         },
         {
@@ -358,6 +357,14 @@ const TRIP_DATA = {
   /* ── Places to eat. "days" lists the day numbers each belongs to. ─────── */
   restaurants: [
     // Day 1: Saturday 31 October. "type" is "coffee", "sweet" or "food"; "area" groups them along the route.
+    { id: "roti-king", name: "Roti King", type: "food", area: "Euston (near our place)", cuisine: "Malaysian roti canai", priceLevel: "£", wiki: "Roti_King",
+      photo: "", lat: 51.5293, lng: -0.1312, note: "A suggestion if you're hungry on arrival. 40 Doric Way, 2 to 5 min walk. No bookings, quick queue.", days: [1] },
+    { id: "leadenhall-lunch", name: "Leadenhall Market", type: "food", area: "Bishopsgate", cuisine: "Casual lunch spots", priceLevel: "£–££", wiki: "Leadenhall_Market",
+      photo: "", lat: 51.5128, lng: -0.0834, note: "Lots of casual places under the Victorian roof, 3 min from Horizon 22", days: [1] },
+    { id: "bread-street", name: "Bread Street Kitchen", type: "food", area: "Bishopsgate", cuisine: "Gordon Ramsay, all-day dining", priceLevel: "£££",
+      photo: "", lat: 51.5146, lng: -0.0828, note: "59th floor of 22 Bishopsgate, the same tower as Horizon 22. Pricier.", days: [1] },
+    { id: "lucky-cat", name: "Lucky Cat", type: "food", area: "Bishopsgate", cuisine: "Asian-inspired, Gordon Ramsay", priceLevel: "£££",
+      photo: "", lat: 51.5147, lng: -0.0827, note: "60th floor of 22 Bishopsgate. More expensive.", days: [1] },
     { id: "rosslyn", name: "Rosslyn Coffee, Tower 42", type: "coffee", area: "Bishopsgate", cuisine: "Speciality coffee", priceLevel: "£",
       photo: "", lat: 51.5151, lng: -0.0843, note: "Excellent speciality coffee, two minutes from Horizon 22", days: [1] },
     { id: "qima", name: "Qima Café", type: "coffee", area: "Covent Garden", cuisine: "Yemeni coffee and pâtisserie", priceLevel: "££",
@@ -1731,6 +1738,31 @@ elBody.addEventListener('click', e => {
 /* ═════════════════════════ Map ═════════════════════════ */
 let map = null, tiles = null, streetTiles = null, labels = null, texEl = null, texPos = null;
 const CARTO_KEY = 'cb1_4yx7_1_ee436ff7519cb4d57aa719db'; // our CARTO basemaps key
+/* If a tile source fails (e.g. the key is refused for this website), the next one in the list is tried. */
+const TILE_SOURCES = {
+  street: [`https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${CARTO_KEY}`, 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+  parchment: [`https://basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png?key=${CARTO_KEY}`, 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+  labels: [`https://basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png?key=${CARTO_KEY}`, 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png', null]
+};
+// Builds a fresh layer on failover (Leaflet 1.9's setUrl/redraw can request fractional-zoom tiles)
+function resilientTiles(kind, opts, onSwap) {
+  const list = TILE_SOURCES[kind];
+  let i = store.get('tileSrc.' + kind, 0); if (!list[i]) i = 0;
+  const make = () => {
+    const layer = L.tileLayer(list[i] || '', Object.assign({ subdomains: 'abcd', maxZoom: 20, keepBuffer: 3 }, opts));
+    let bad = 0, good = 0;
+    layer.on('tileload', () => { good++; });
+    layer.on('tileerror', () => {
+      if (++bad < 4 || good > 0 || list[i + 1] === undefined) return;
+      i++; store.set('tileSrc.' + kind, i);
+      const m = layer._map, next = make();
+      if (m) { m.removeLayer(layer); if (list[i]) next.addTo(m); }
+      onSwap(next);
+    });
+    return layer;
+  };
+  return make();
+}
 const TILE_URLS = {
   street: [`https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${CARTO_KEY}`, null],
   light: [`https://basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png?key=${CARTO_KEY}`, `https://basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png?key=${CARTO_KEY}`],
@@ -1756,10 +1788,9 @@ function initMap() {
   if (typeof L === 'undefined') { $('#map').innerHTML = '<div class="map-error">The map could not be summoned. Check the connection and reopen the app.</div>'; return false; }
   map = L.map('map', { zoomControl: false, attributionControl: false, zoomSnap: .25, zoomDelta: .5, wheelPxPerZoomLevel: 90, maxZoom: 19, minZoom: 3 });
   const urls = () => mqDark.matches ? TILE_URLS.dark : TILE_URLS.light;
-  tiles = L.tileLayer(urls()[0], { maxZoom: 20, keepBuffer: 3 });
-  streetTiles = L.tileLayer(TILE_URLS.street[0], { maxZoom: 20, keepBuffer: 3 });
-  labels = L.tileLayer(urls()[1], { maxZoom: 20, minZoom: 15, opacity: .75 });
-  (mqDark.addEventListener ? mqDark.addEventListener('change', () => { tiles.setUrl(urls()[0]); labels.setUrl(urls()[1]); }) : null);
+  tiles = resilientTiles('parchment', {}, l => { tiles = l; });
+  streetTiles = resilientTiles('street', {}, l => { streetTiles = l; });
+  labels = resilientTiles('labels', { minZoom: 15, opacity: .75 }, l => { labels = l; });
   // Parchment laid over the tiles (multiply) so streets read as ink on paper
   const tp = map.createPane('texture'); tp.style.zIndex = 250; tp.style.pointerEvents = 'none';
   texEl = L.DomUtil.create('div', 'map-tex', tp);
