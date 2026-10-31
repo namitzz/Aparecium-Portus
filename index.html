@@ -122,13 +122,13 @@ const TRIP_DATA = {
         },
         {
           id: "uber-boat",
-          name: "Uber Boat from Tower Pier",
+          name: "Uber Boat: Tower Pier to Embankment",
           time: "15:40", duration: 60,
-          activity: "Up the Thames by river boat towards the West End",
-          description: "Thames Clippers boats leave Tower Millennium Pier every 20 minutes or so. Sit outside at the back for the views of Tower Bridge and the City as you pull away.",
+          activity: "Up the Thames by river boat, towards the theatre",
+          description: "Westbound Thames Clippers boats leave Tower Millennium Pier every 20 minutes or so; get off at Embankment Pier, about 15 minutes' walk from Covent Garden. Sit outside at the back for Tower Bridge and the City as you pull away.",
           wiki: "Tower_Millennium_Pier",
           lat: 51.5070, lng: -0.0799,
-          bookingNote: "Time to confirm. Tap in with a contactless card or buy tickets in the Uber app.",
+          bookingNote: "No need to book: tap in with a contactless card at the pier, or buy tickets in the Uber app. Take any westbound boat.",
           travel: "About 12 min walk to the pier"
         },
         {
@@ -139,7 +139,7 @@ const TRIP_DATA = {
           description: "The old market hall and piazza, busy with performers on a Saturday evening. This is the best patch on the route for coffee, so grab one here.",
           wiki: "Covent_Garden",
           lat: 51.5117, lng: -0.1240,
-          travel: "From the boat, about 15 min walk"
+          travel: "From Embankment Pier, about 15 min walk"
         },
         {
           id: "neals-yard",
@@ -152,22 +152,23 @@ const TRIP_DATA = {
         },
         {
           id: "leicester-square",
-          name: "Leicester Square and dinner",
+          name: "Leicester Square: dinner, wherever looks good",
           time: "17:40", duration: 110,
-          activity: "Dinner and something sweet before the show",
-          description: "Pick a dinner spot from the Food list and save room for doughnuts or pastries. The Palace Theatre is a few minutes' walk up Charing Cross Road.",
+          activity: "Wander and find dinner, and something sweet, before the show",
+          description: "No booking: have a look around and pick whatever looks good. The Food & Coffee list has ideas nearby (Bancone, Mildreds, Homeslice, Donutelier). The Palace Theatre is a few minutes' walk up Charing Cross Road.",
           wiki: "Leicester_Square",
           lat: 51.5103, lng: -0.1301
         },
         {
           id: "palace-theatre",
-          name: "Palace Theatre: the show",
-          time: "19:30", duration: 180,
-          activity: "The show (to confirm)",
-          description: "The Palace Theatre on Cambridge Circus, home of Harry Potter and the Cursed Child.",
-          wiki: "Palace_Theatre,_London",
+          name: "Harry Potter and the Cursed Child",
+          time: "19:30", duration: 210,
+          activity: "Cursed Child at the Palace Theatre, on Halloween night",
+          description: "The stage play picks up nineteen years after the final book, at the Palace Theatre on Cambridge Circus. The stage effects are best enjoyed knowing as little as possible beforehand. #KeepTheSecrets",
+          wiki: "Harry_Potter_and_the_Cursed_Child",
           lat: 51.5133, lng: -0.1295,
-          bookingNote: "Show and start time to confirm. Arrive 30 minutes early for bag checks."
+          bookingNote: "Check the start time on the tickets. Arrive 30 minutes early for bag checks.",
+          link: "https://www.harrypottertheplay.com/uk/"
         }
       ]
     },
@@ -1728,10 +1729,11 @@ elBody.addEventListener('click', e => {
 });
 
 /* ═════════════════════════ Map ═════════════════════════ */
-let map = null, tiles = null, labels = null, texEl = null, texPos = null;
+let map = null, tiles = null, streetTiles = null, labels = null, texEl = null, texPos = null;
+const CARTO_KEY = 'cb1_4yx7_1_ee436ff7519cb4d57aa719db'; // our CARTO basemaps key
 const TILE_URLS = {
-  street: ['https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', null],
-  light: ['https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png'],
+  street: [`https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${CARTO_KEY}`, null],
+  light: [`https://basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png?key=${CARTO_KEY}`, `https://basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png?key=${CARTO_KEY}`],
   dark: ['https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', 'https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png']
 };
 /* "street": a clear, readable street map with every name on it. "parchment": the inked Marauder's look. */
@@ -1740,7 +1742,10 @@ function applyMapStyle() {
   if (!map) return;
   const st = mapStyle === 'parchment';
   $('#map').classList.toggle('street', !st);
-  tiles.setUrl(st ? TILE_URLS.light[0] : TILE_URLS.street[0]);
+  // swap whole layers: changing a layer's URL in place can request tiles at fractional zooms (blank map)
+  const want = st ? tiles : streetTiles, other = st ? streetTiles : tiles;
+  if (map.hasLayer(other)) map.removeLayer(other);
+  if (!map.hasLayer(want)) want.addTo(map);
   if (st && !map.hasLayer(labels)) labels.addTo(map); else if (!st && map.hasLayer(labels)) map.removeLayer(labels);
   const b = $('#fabStyle'); if (b) { b.setAttribute('aria-label', st ? 'Switch to the street map' : 'Switch to the parchment map'); b.title = b.getAttribute('aria-label'); }
 }
@@ -1751,8 +1756,9 @@ function initMap() {
   if (typeof L === 'undefined') { $('#map').innerHTML = '<div class="map-error">The map could not be summoned. Check the connection and reopen the app.</div>'; return false; }
   map = L.map('map', { zoomControl: false, attributionControl: false, zoomSnap: .25, zoomDelta: .5, wheelPxPerZoomLevel: 90, maxZoom: 19, minZoom: 3 });
   const urls = () => mqDark.matches ? TILE_URLS.dark : TILE_URLS.light;
-  tiles = L.tileLayer(urls()[0], { subdomains: 'abcd', maxZoom: 20, keepBuffer: 3 }).addTo(map);
-  labels = L.tileLayer(urls()[1], { subdomains: 'abcd', maxZoom: 20, minZoom: 15, opacity: .75 });
+  tiles = L.tileLayer(urls()[0], { maxZoom: 20, keepBuffer: 3 });
+  streetTiles = L.tileLayer(TILE_URLS.street[0], { maxZoom: 20, keepBuffer: 3 });
+  labels = L.tileLayer(urls()[1], { maxZoom: 20, minZoom: 15, opacity: .75 });
   (mqDark.addEventListener ? mqDark.addEventListener('change', () => { tiles.setUrl(urls()[0]); labels.setUrl(urls()[1]); }) : null);
   // Parchment laid over the tiles (multiply) so streets read as ink on paper
   const tp = map.createPane('texture'); tp.style.zIndex = 250; tp.style.pointerEvents = 'none';
