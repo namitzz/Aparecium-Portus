@@ -453,6 +453,7 @@ const TRIP_DATA = {
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <style>
+@supports not (color: color-mix(in srgb, red 50%, blue)) { :root { --route: #3A1A16 !important; } }
 @property --accent { syntax: '<color>'; inherits: true; initial-value: #6B1E2A; }
 
 :root {
@@ -522,7 +523,7 @@ img { display: block; }
 #map.leaflet-container, #map { position: absolute; inset: 0; z-index: 0; isolation: isolate; font-family: var(--f-body); background: var(--map-bg); }
 #map .leaflet-tile-pane { filter: var(--tile-filter); }
 #map.street .leaflet-tile-pane { filter: sepia(.28) saturate(.9) contrast(1.03) brightness(1.01); }
-#map.street .map-tex { opacity: .28; }
+#map.street .map-tex { display: none; }
 #map.street .map-vignette { opacity: .5; }
 #map.sat .leaflet-tile-pane { filter: none; }
 #map.sat .map-tex { display: none; }
@@ -538,7 +539,7 @@ img { display: block; }
 .sw-sat { background: radial-gradient(circle at 30% 30%, #6F8A5A, #3E5236 45%, #2C3B2B 70%), #2C3B2B; }
 .sw-parch { background: linear-gradient(135deg, #F1E6CB, #DCC697); }
 .map-tex {
-  position: absolute; left: 0; top: 0; width: 5400px; height: 5400px; pointer-events: none; mix-blend-mode: multiply;
+  position: absolute; left: 0; top: 0; width: 3600px; height: 3600px; pointer-events: none; mix-blend-mode: multiply;
   background-color: var(--tex-tint);
   background-image:
     linear-gradient(90deg, transparent 0 299px, rgba(80, 50, 20, .09) 299px 300px, rgba(80, 50, 20, .04) 300px 304px, transparent 304px),
@@ -866,6 +867,9 @@ img { display: block; }
 .pp-row b { font-family: var(--f-fell); font-size: 19px; font-weight: 400; min-width: 64px; }
 .pp-row span { flex: 1; font-size: 14px; color: var(--text-soft); font-style: italic; line-height: 1.25; }
 .pp-show { min-height: 40px; padding: 0 12px; border: 1px solid var(--rule-strong); border-radius: 4px; font-size: 14px; }
+.pp-join { margin-top: 6px; }
+.pp-join label { display: block; font-size: 15px; color: var(--text-soft); margin: 4px 2px 6px; }
+.pp-join input { width: 100%; min-height: 46px; padding: 8px 10px; border: 1px solid var(--rule-strong); border-radius: 4px; background: rgba(255, 255, 255, .6); color: var(--text); font: 16px var(--f-body); -webkit-user-select: text; user-select: text; }
 .pp-note { font-size: 14px; line-height: 1.35; color: var(--text-soft); font-style: italic; margin: 12px 0 0; text-align: center; }
 .me-label small { display: block; margin-top: 2px; font: 11px/1 var(--f-body); opacity: .7; text-align: center; }
 .friend .me-label { font-weight: 600; }
@@ -1352,6 +1356,12 @@ function paintSoundBtn() { const b = $('#sndBtn'); b.innerHTML = Sound.on ? SND_
 paintSoundBtn();
 $('#sndBtn').addEventListener('click', () => Sound.toggle());
 document.addEventListener('pointerdown', () => Sound.init(), { once: true, capture: true });
+// iOS only unlocks web audio on touchend/click: resume and play one silent sample there
+['touchend', 'click'].forEach(ev => document.addEventListener(ev, function unlock() {
+  const c = Sound.init(); if (!c) return;
+  try { const src = c.createBufferSource(); src.buffer = c.createBuffer(1, 1, 22050); src.connect(c.destination); src.start(0); } catch (e) { /* already unlocked */ }
+  if (c.state === 'running') { document.removeEventListener('touchend', unlock, true); document.removeEventListener('click', unlock, true); }
+}, { capture: true, passive: true }));
 
 /* ═════════════════════════ Ink writing (letter by letter, stroke then fill) ═════════════════════════ */
 const NS = 'http://www.w3.org/2000/svg';
@@ -1862,7 +1872,7 @@ function initMap() {
 }
 function placeTex(force) {
   if (!texEl || !map) return;
-  const S = 5400, sz = map.getSize(), c = map.containerPointToLayerPoint([sz.x / 2, sz.y / 2]);
+  const S = 3600, sz = map.getSize(), c = map.containerPointToLayerPoint([sz.x / 2, sz.y / 2]);
   if (!texPos || force === true || Math.abs(c.x - (texPos.x + S / 2)) > S / 2 - sz.x || Math.abs(c.y - (texPos.y + S / 2)) > S / 2 - sz.y) {
     const base = texPos || L.point(0, 0);
     texPos = L.point(base.x + Math.round((c.x - S / 2 - base.x) / 1800) * 1800, base.y + Math.round((c.y - S / 2 - base.y) / 1800) * 1800);
@@ -2272,10 +2282,11 @@ const Loc = {
     if (this.watch == null) {
       this.watch = navigator.geolocation.watchPosition(p => this.update(p), e => this.error(e), { enableHighAccuracy: true, maximumAge: 15000, timeout: 25000 });
       this.orient(); if (fly) toast('Searching for you on the map…');
-    } else if (this.pos && fly) this.fly();
+    } else { if (fly && !this.oriented) this.orient(); if (this.pos && fly) this.fly(); }
     $('#fabLocate').classList.add('is-on');
   },
   orient() {
+    if (this.oriented) return;
     const handler = e => {
       let h = null;
       if (typeof e.webkitCompassHeading === 'number') h = e.webkitCompassHeading; else if (e.absolute && typeof e.alpha === 'number') h = 360 - e.alpha;
@@ -2283,9 +2294,9 @@ const Loc = {
       if (!this.raf) this.raf = requestAnimationFrame(() => { this.raf = 0; this.paintHeading(); });
     };
     try {
-      if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') DeviceOrientationEvent.requestPermission().then(s => { if (s === 'granted') addEventListener('deviceorientation', handler); }).catch(() => {});
-      else if ('ondeviceorientationabsolute' in window) addEventListener('deviceorientationabsolute', handler);
-      else if (window.DeviceOrientationEvent) addEventListener('deviceorientation', handler);
+      if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') DeviceOrientationEvent.requestPermission().then(s => { if (s === 'granted') { this.oriented = true; addEventListener('deviceorientation', handler); } }).catch(() => {});
+      else if ('ondeviceorientationabsolute' in window) { this.oriented = true; addEventListener('deviceorientationabsolute', handler); }
+      else if (window.DeviceOrientationEvent) { this.oriented = true; addEventListener('deviceorientation', handler); }
     } catch (e) { /* no compass */ }
   },
   paintHeading() { const el = this.marker && this.marker.getElement(), f = el && el.querySelector('.me-feet'); if (f && this.heading != null) f.style.transform = `rotate(${Math.round(this.heading)}deg)`; },
@@ -2328,7 +2339,7 @@ const Group = {
   code: null, key: null, topic: null, ready: Promise.resolve(false),
   init() {
     const m = location.hash.match(/join=([A-Za-z0-9_-]{8,64})/);
-    if (m) { store.set('group', m[1]); try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* keep the hash */ } }
+    if (m) store.set('group', m[1]); // the #join stays in the address, so "Add to Home Screen" keeps it
     this.code = store.get('group', null);
     this.ready = (async () => {
       if (!this.code || !window.crypto || !crypto.subtle) return false;
@@ -2337,6 +2348,11 @@ const Group = {
       this.key = await crypto.subtle.importKey('raw', await crypto.subtle.digest('SHA-256', enc.encode('key:' + this.code)), 'AES-GCM', false, ['encrypt', 'decrypt']);
       return true;
     })().catch(() => false);
+  },
+  join(text) {
+    const m = String(text || '').match(/join=([A-Za-z0-9_-]{8,64})/) || String(text || '').trim().match(/^([A-Za-z0-9_-]{16,64})$/);
+    if (!m) return false;
+    store.set('group', m[1]); this.init(); return true;
   },
   async seal(obj) { const iv = crypto.getRandomValues(new Uint8Array(12)); const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, this.key, new TextEncoder().encode(JSON.stringify(obj)))); return b64(iv) + '.' + b64(ct); },
   async open(str) { try { const [a, b] = String(str).split('.'); return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(a) }, this.key, unb64(b)))); } catch (e) { return null; } }
@@ -2411,7 +2427,7 @@ function renderPeople() {
       ${hasGroup
         ? `<p class="pp-text">The others will see your footprints and name on the map while the app is open on your phone. You can switch it off here at any time.</p>
            <button class="pp-btn primary" type="button" data-act="share">Share my location</button><button class="pp-btn" type="button" data-act="later">Not now</button>`
-        : `<p class="pp-text">To see each other, open the invite link from your group chat once on this phone.</p>
+        : `<p class="pp-text">To see each other, this phone needs the group's invite link.</p><div class="pp-join"><label for="joinInput">Paste the invite link from the group chat</label><input id="joinInput" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://…#join=…"><button class="pp-btn primary" type="button" data-act="join">Join the group</button></div>
            <button class="pp-btn primary" type="button" data-act="justme">Show just me on the map</button><button class="pp-btn" type="button" data-act="later">Not now</button>`}`;
   } else {
     const rows = names.map(m => {
@@ -2422,7 +2438,7 @@ function renderPeople() {
     }).join('');
     b.innerHTML = `<div class="pp-kicker">Messrs ${esc(names.map(m => m.alias).join(', '))}</div><h2 class="pp-title" id="peopleTitle">The Marauders</h2>${rows}
       ${hasGroup ? (Share.on ? '<button class="pp-btn" type="button" data-act="stop">Stop sharing my location</button>' : '<button class="pp-btn primary" type="button" data-act="share">Share my location</button>')
-        : '<p class="pp-note">To see each other, open the invite link from your group chat once on this phone.</p>'}
+        : '<p class="pp-note">To see each other, this phone needs the group\'s invite link.</p><div class="pp-join"><label for="joinInput">Paste the invite link from the group chat</label><input id="joinInput" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://…#join=…"><button class="pp-btn primary" type="button" data-act="join">Join the group</button></div>'}
       <button class="pp-btn" type="button" data-act="who">I'm not ${esc(Share.me || 'listed')}</button>
       <p class="pp-note">Locations are encrypted on each phone and only sent while the app is open.</p>`;
   }
@@ -2441,6 +2457,10 @@ $('#peopleBody').addEventListener('click', e => {
   if (a === 'share') { Share.start(); closePeople(); }
   else if (a === 'justme') { Loc.start(true); closePeople(); }
   else if (a === 'later') closePeople();
+  else if (a === 'join') {
+    if (Group.join($('#joinInput').value)) { Group.ready.then(ok => { if (ok) { Share.listen(); toast('Joined the group.'); } }); peopleStep = Share.me ? 'share' : 'who'; renderPeople(); }
+    else toast("That doesn't look like the invite link. Copy the whole link from the group chat.");
+  }
   else if (a === 'stop') { Share.stop(); renderPeople(); toast('Stopped sharing your location.'); }
   else if (a === 'who') { peopleStep = 'who'; renderPeople(); }
 });

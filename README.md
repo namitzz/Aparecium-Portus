@@ -44,6 +44,7 @@ After the opening, the app asks **"Who goes there?"**. Each person picks their n
 - To see each other, each phone must open the group's private **invite link** once (`…/Aparecium-Portus/#join=<code>`). The code is deliberately not stored in this repository.
 - Positions are encrypted on the phone (AES-GCM, with a key derived from the invite code) before being relayed through [ntfy.sh](https://ntfy.sh), a free public message relay. The relay only ever sees scrambled data.
 - Locations are only sent while the app is open on that phone. Websites can't track in the background, so a friend's footprints show the last time they had the app open.
+- **iPhone:** a Home Screen app has its own storage, separate from Safari. If the group list says the phone needs the invite link, paste the whole link from the group chat into the box there. Open the invite link in Safari *before* tapping Share → Add to Home Screen, so the saved app keeps it.
 
 ## Live extras (no accounts or keys needed)
 
@@ -64,3 +65,4 @@ Everything above is cached on the phone after the first load, and the app still 
 - The app always uses the light parchment look, whatever the phone's dark-mode setting. Samsung Internet's own dark mode can still recolour websites; if it does, turn on Samsung Internet → Settings → Labs → "Use website dark theme".
 - The manifest uses `"display": "fullscreen"`, which hides the Android status bar. Change it to `"standalone"` if you'd rather keep the phone's clock visible.
 - With "Reduce motion" turned on in the phone's settings, every animation becomes a simple fade.
+- **iPhone sound:** the ring/silent switch mutes web sounds, so flip it to ring to hear them. For the compass-facing footprints, tap the locate button and allow "Motion & Orientation" when asked.
