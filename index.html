@@ -2275,7 +2275,7 @@ $('#cardPortus').addEventListener('click', portus);
 
 /* ═════════════════════════ "You are here" ═════════════════════════ */
 const Loc = {
-  watch: null, pos: null, last: null, marker: null, circle: null, wantFly: false, heading: null, raf: 0,
+  watch: null, pos: null, last: null, retry: 0, marker: null, circle: null, wantFly: false, heading: null, raf: 0,
   start(fly) {
     if (!navigator.geolocation) { toast("This phone can't share its location."); return; }
     this.wantFly = fly;
@@ -2315,7 +2315,17 @@ const Loc = {
   fly() { this.wantFly = false; if (!this.pos || !map) return; flyToItem({ lat: this.pos[0], lng: this.pos[1] }, Sheet.visible() + 60, Math.max(map.getZoom(), 16)); },
   error(e) {
     if (e.code === 1) { if (Share.on) { Share.on = false; store.set('sharing', false); Share.updateDot(); } toast('Location is switched off for this app. Allow it in your phone settings to appear on the map.'); if (this.watch != null) navigator.geolocation.clearWatch(this.watch); this.watch = null; $('#fabLocate').classList.remove('is-on'); }
-    else if (this.wantFly) toast("Couldn't find you just now. Try again in a moment.");
+    else {
+      if (this.wantFly) toast("Couldn't find you just now. Try again in a moment.");
+      // timeout or no signal (e.g. underground): restart the watch rather than give up
+      if (Share.on) { clearTimeout(this.retry); this.retry = setTimeout(() => this.restart(), 5000); }
+    }
+  },
+  restart() {
+    if (!navigator.geolocation) return;
+    if (this.watch != null) navigator.geolocation.clearWatch(this.watch);
+    this.watch = null; this.start(false);
+    navigator.geolocation.getCurrentPosition(p => this.update(p), () => {}, { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 });
   }
 };
 $('#fabLocate').addEventListener('click', () => Loc.start(true));
@@ -2359,13 +2369,19 @@ const Group = {
 };
 function fmtAgo(ms) { const m = Math.round(ms / 60000); return m < 1 ? 'just now' : m < 60 ? `${m} min ago` : `${Math.round(m / 60)} hr ago`; }
 const Share = {
-  me: store.get('me', null), on: store.get('sharing', false), people: {}, markers: {}, es: null, lastSent: 0, lastLL: null,
+  me: store.get('me', null), on: store.get('sharing', null) !== false, awake: store.get('awake', true), lock: null, people: {}, markers: {}, es: null, lastSent: 0, lastLL: null,
   async boot() {
     Group.init();
     if (await Group.ready) this.listen();
-    if (this.on && this.me) Loc.start(false);
+    if (this.on && this.me) { Loc.start(false); this.keepAwake(); }
     setInterval(() => { this.repaint(); if (!$('#people').hidden && peopleStep === 'list') renderPeople(); }, 30000);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden && Loc.last) this.publish(Loc.last, true); });
+    // heartbeat: keep "last seen" fresh even when standing still
+    setInterval(() => { if (this.on && Loc.last && !document.hidden) this.publish(Loc.last, true); }, 60000);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden || !this.on || !this.me) return;
+      Loc.restart(); this.keepAwake();            // phones pause location in the background: pick it straight back up
+      if (Loc.last) this.publish(Loc.last, true);
+    });
     this.updateDot();
   },
   listen() {
@@ -2395,10 +2411,17 @@ const Share = {
   start() {
     this.on = true; store.set('sharing', true); this.lastSent = 0;
     Loc.start(true); if (Loc.last) this.publish(Loc.last, true);
-    this.updateDot(); toast('Sharing your footprints with the group while the app is open.');
+    this.keepAwake();
+    this.updateDot(); toast('Sharing your location with the group.');
   },
+  /* Keep the screen on while sharing, so the app (and the location) keeps running */
+  async keepAwake() {
+    if (!this.on || !this.awake || !('wakeLock' in navigator) || document.hidden) return;
+    try { if (!this.lock || this.lock.released) this.lock = await navigator.wakeLock.request('screen'); } catch (e) { /* battery saver or unsupported */ }
+  },
+  releaseAwake() { try { if (this.lock) this.lock.release(); } catch (e) { /* already released */ } this.lock = null; },
   async stop() {
-    this.on = false; store.set('sharing', false); this.updateDot();
+    this.on = false; store.set('sharing', false); this.updateDot(); this.releaseAwake();
     if (this.me && await Group.ready) fetch(`${RELAY}/${Group.topic}`, { method: 'POST', body: await Group.seal({ n: this.me, off: true, t: Date.now() }) }).catch(() => {});
   },
   paint(name) {
@@ -2420,7 +2443,7 @@ function renderPeople() {
   const b = $('#peopleBody'), names = marauders(), hasGroup = !!Group.code;
   if (peopleStep === 'who') {
     b.innerHTML = `<div class="pp-kicker">I solemnly swear that I am up to no good</div><h2 class="pp-title" id="peopleTitle">Who goes there?</h2>
-      <p class="pp-text">Pick your name so the others can see your footprints on the map.</p>
+      <p class="pp-text">Pick your name. Your location is then shared with the group whenever the app is open, so you can find each other. You can stop it from the group list.</p>
       <div class="pp-names">${names.map(m => `<button class="pp-name" type="button" data-name="${esc(m.name)}">${esc(m.name)}<small>${esc(m.alias !== m.name ? m.alias : '')}</small></button>`).join('')}</div>`;
   } else if (peopleStep === 'share') {
     b.innerHTML = `<div class="pp-kicker">Mischief awaits, ${esc(Share.me)}</div><h2 class="pp-title" id="peopleTitle">Share where you are?</h2>
@@ -2439,13 +2462,16 @@ function renderPeople() {
     b.innerHTML = `<div class="pp-kicker">Messrs ${esc(names.map(m => m.alias).join(', '))}</div><h2 class="pp-title" id="peopleTitle">The Marauders</h2>${rows}
       ${hasGroup ? (Share.on ? '<button class="pp-btn" type="button" data-act="stop">Stop sharing my location</button>' : '<button class="pp-btn primary" type="button" data-act="share">Share my location</button>')
         : '<p class="pp-note">To see each other, this phone needs the group\'s invite link.</p><div class="pp-join"><label for="joinInput">Paste the invite link from the group chat</label><input id="joinInput" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://…#join=…"><button class="pp-btn primary" type="button" data-act="join">Join the group</button></div>'}
+      ${Share.on && 'wakeLock' in navigator ? `<button class="pp-btn" type="button" data-act="awake">Keep screen on while sharing: ${Share.awake ? 'On' : 'Off'}</button>` : ''}
       <button class="pp-btn" type="button" data-act="who">I'm not ${esc(Share.me || 'listed')}</button>
-      <p class="pp-note">Locations are encrypted on each phone and only sent while the app is open.</p>`;
+      <p class="pp-note">Locations are encrypted on each phone. Phones only allow a website to send location while it's open on screen, so keep the app open (the screen stays on while sharing) to stay visible.</p>`;
   }
 }
 $('#peopleBody').addEventListener('click', e => {
   const nm = e.target.closest('[data-name]');
-  if (nm) { const was = Share.me; Share.me = nm.dataset.name; store.set('me', Share.me); if (was && was !== Share.me && Share.on) Share.publish(Loc.last, true); peopleStep = 'share'; renderPeople(); return; }
+  if (nm) { const was = Share.me; Share.me = nm.dataset.name; store.set('me', Share.me); if (was && was !== Share.me && Share.on) Share.publish(Loc.last, true);
+    if (Group.code && store.get('sharing', null) !== false) { Share.start(); closePeople(); return; }
+    peopleStep = 'share'; renderPeople(); return; }
   const act = e.target.closest('[data-act]'), sh = e.target.closest('[data-show]');
   if (sh) {
     const n = sh.dataset.show, p = n === '__me' ? (Loc.pos && { lat: Loc.pos[0], lng: Loc.pos[1] }) : Share.people[n];
@@ -2457,6 +2483,7 @@ $('#peopleBody').addEventListener('click', e => {
   if (a === 'share') { Share.start(); closePeople(); }
   else if (a === 'justme') { Loc.start(true); closePeople(); }
   else if (a === 'later') closePeople();
+  else if (a === 'awake') { Share.awake = !Share.awake; store.set('awake', Share.awake); if (Share.awake) Share.keepAwake(); else Share.releaseAwake(); renderPeople(); }
   else if (a === 'join') {
     if (Group.join($('#joinInput').value)) { Group.ready.then(ok => { if (ok) { Share.listen(); toast('Joined the group.'); } }); peopleStep = Share.me ? 'share' : 'who'; renderPeople(); }
     else toast("That doesn't look like the invite link. Copy the whole link from the group chat.");

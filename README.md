@@ -39,7 +39,7 @@ Location, compass and offline mode need HTTPS, so host it anywhere that serves s
 
 ## The group: seeing each other on the map
 
-After the opening, the app asks **"Who goes there?"**. Each person picks their name, then chooses whether to share their location. Everyone who shares appears on the map as named footprints, with "seen 4 min ago". The footprints button opens the group list, where you can jump to anyone or stop sharing.
+After the opening, the app asks **"Who goes there?"**. Picking your name turns location sharing on, and it switches itself back on every time the app opens until you tap "Stop sharing" in the group list. While sharing, the screen is kept on (toggle in the group list), location restarts by itself if the phone drops it, and a heartbeat every minute keeps "last seen" fresh. Everyone who shares appears on the map as named footprints, with "seen 4 min ago". The footprints button opens the group list, where you can jump to anyone or stop sharing.
 
 - To see each other, each phone must open the group's private **invite link** once (`…/Aparecium-Portus/#join=<code>`). The code is deliberately not stored in this repository.
 - Positions are encrypted on the phone (AES-GCM, with a key derived from the invite code) before being relayed through [ntfy.sh](https://ntfy.sh), a free public message relay. The relay only ever sees scrambled data.
