@@ -172,69 +172,11 @@ const TRIP_DATA = {
       ]
     },
 
-    // ── DAY 2 (PLACEHOLDER) ──
+    // ── DAY 2: SUNDAY 1 NOVEMBER (PLACEHOLDER plan) ──
     {
       date: "2026-11-01",
-      title: "Day 2: The Making of Harry Potter",
+      title: "Day 2: Royal London and the River",
       accentColour: "#1F3B2C",
-      stops: [
-        {
-          id: "euston-am",
-          name: "London Euston",
-          time: "08:40", duration: 20,
-          activity: "Meet under the departure boards for the Watford Junction train",
-          description: "Trains to Watford Junction run every few minutes and take about 20 minutes. The Studio Tour shuttle bus waits outside the station.",
-          wiki: "London_Euston_station",
-          lat: 51.5282, lng: -0.1337
-        },
-        {
-          id: "wb-studio",
-          name: "Warner Bros. Studio Tour",
-          time: "10:00", duration: 270,
-          activity: "The Great Hall, Diagon Alley, the Hogwarts Express and Butterbeer",
-          description: "The real sets, costumes and props from all eight films, in the studios where they were made. Allow at least four hours; most people want more.",
-          wiki: "Warner_Bros._Studio_Tour_London_–_The_Making_of_Harry_Potter",
-          lat: 51.6904, lng: -0.4181,
-          travel: "Train and shuttle bus, about 50 min",
-          bookingNote: "Timed tickets. Arrive 20 minutes before the slot.",
-          link: "https://www.wbstudiotour.co.uk/"
-        },
-        {
-          id: "leadenhall",
-          name: "Leadenhall Market",
-          time: "16:15", duration: 40,
-          activity: "Find the blue door used as the Leaky Cauldron entrance",
-          description: "A painted Victorian covered market in the City. It stood in for Diagon Alley in the first film, and the optician's door on Bull's Head Passage was the Leaky Cauldron.",
-          wiki: "Leadenhall_Market",
-          lat: 51.5128, lng: -0.0834,
-          travel: "Train back and the Tube, about 1 hr 15 min"
-        },
-        {
-          id: "millennium-bridge",
-          name: "Millennium Bridge",
-          time: "17:15", duration: 30,
-          activity: "Cross the bridge the Death Eaters wrecked",
-          description: "The steel footbridge from St Paul's to Tate Modern, famously destroyed in the opening of Half-Blood Prince. Best at dusk, with the city lighting up.",
-          wiki: "Millennium_Bridge,_London",
-          lat: 51.5095, lng: -0.0985
-        },
-        {
-          id: "st-pauls",
-          name: "St Paul's Cathedral",
-          time: "17:55", duration: 35,
-          activity: "Evensong, or a look at the dome lit up at night",
-          description: "Wren's great dome has watched over the City since 1710. Sunday evensong is free and open to all.",
-          wiki: "St_Paul's_Cathedral",
-          lat: 51.5138, lng: -0.0984
-        }
-      ]
-    },
-
-    // ── DAY 3 (PLACEHOLDER) ──
-    {
-      date: "2026-11-02",
-      title: "Day 3: Royal London and the River",
-      accentColour: "#2C3E6B",
       stops: [
         {
           id: "westminster-abbey",
@@ -293,6 +235,64 @@ const TRIP_DATA = {
           wiki: "20_Fenchurch_Street",
           lat: 51.5112, lng: -0.0835,
           bookingNote: "Free, but it must be booked. Slots open three weeks ahead."
+        }
+      ]
+    },
+
+    // ── DAY 3: MONDAY 2 NOVEMBER (PLACEHOLDER times) ──
+    {
+      date: "2026-11-02",
+      title: "Day 3: The Making of Harry Potter",
+      accentColour: "#2C3E6B",
+      stops: [
+        {
+          id: "euston-am",
+          name: "London Euston",
+          time: "08:40", duration: 20,
+          activity: "Meet under the departure boards for the Watford Junction train",
+          description: "Trains to Watford Junction run every few minutes and take about 20 minutes. The Studio Tour shuttle bus waits outside the station.",
+          wiki: "London_Euston_station",
+          lat: 51.5282, lng: -0.1337
+        },
+        {
+          id: "wb-studio",
+          name: "Warner Bros. Studio Tour",
+          time: "10:00", duration: 270,
+          activity: "The Great Hall, Diagon Alley, the Hogwarts Express and Butterbeer",
+          description: "The real sets, costumes and props from all eight films, in the studios where they were made. Allow at least four hours; most people want more.",
+          wiki: "Warner_Bros._Studio_Tour_London_–_The_Making_of_Harry_Potter",
+          lat: 51.6904, lng: -0.4181,
+          travel: "Train and shuttle bus, about 50 min",
+          bookingNote: "Timed tickets. Arrive 20 minutes before the slot.",
+          link: "https://www.wbstudiotour.co.uk/"
+        },
+        {
+          id: "leadenhall",
+          name: "Leadenhall Market",
+          time: "16:15", duration: 40,
+          activity: "Find the blue door used as the Leaky Cauldron entrance",
+          description: "A painted Victorian covered market in the City. It stood in for Diagon Alley in the first film, and the optician's door on Bull's Head Passage was the Leaky Cauldron.",
+          wiki: "Leadenhall_Market",
+          lat: 51.5128, lng: -0.0834,
+          travel: "Train back and the Tube, about 1 hr 15 min"
+        },
+        {
+          id: "millennium-bridge",
+          name: "Millennium Bridge",
+          time: "17:15", duration: 30,
+          activity: "Cross the bridge the Death Eaters wrecked",
+          description: "The steel footbridge from St Paul's to Tate Modern, famously destroyed in the opening of Half-Blood Prince. Best at dusk, with the city lighting up.",
+          wiki: "Millennium_Bridge,_London",
+          lat: 51.5095, lng: -0.0985
+        },
+        {
+          id: "st-pauls",
+          name: "St Paul's Cathedral",
+          time: "17:55", duration: 35,
+          activity: "Evensong, or a look at the dome lit up at night",
+          description: "Wren's great dome has watched over the City since 1710. Sunday evensong is free and open to all.",
+          wiki: "St_Paul's_Cathedral",
+          lat: 51.5138, lng: -0.0984
         }
       ]
     },
@@ -408,19 +408,19 @@ const TRIP_DATA = {
     { id: "mildreds", name: "Mildreds", type: "food", area: "Leicester Square", cuisine: "Vegetarian and vegan", priceLevel: "££",
       photo: "", lat: 51.5112, lng: -0.1273, note: "Vegetarian-friendly dinner. 79 St Martin's Lane", days: [1] },
 
-    // Day 2 (PLACEHOLDER)
+    // Day 3 (PLACEHOLDER)
     { id: "backlot-cafe", name: "The Backlot Café", cuisine: "Studio café", priceLevel: "£",
-      photo: "", lat: 51.6907, lng: -0.4172, note: "Try the Butterbeer, both fizzy and ice cream", days: [2] },
+      photo: "", lat: 51.6907, lng: -0.4172, note: "Try the Butterbeer, both fizzy and ice cream", days: [3] },
     { id: "cheshire-cheese", name: "Ye Olde Cheshire Cheese", cuisine: "Historic pub", priceLevel: "££", wiki: "Ye_Olde_Cheshire_Cheese",
-      photo: "", lat: 51.5144, lng: -0.1074, note: "Steak and ale pie in a 1667 pub", days: [2] },
+      photo: "", lat: 51.5144, lng: -0.1074, note: "Steak and ale pie in a 1667 pub", days: [3] },
     { id: "duck-waffle", name: "Duck & Waffle", cuisine: "British, 40 floors up", priceLevel: "£££", wiki: "Duck_&_Waffle",
       photo: "", lat: 51.5160, lng: -0.0810, note: "Try the signature duck and waffle", days: [2], bookingTime: "19:30" },
 
-    // Day 3 (PLACEHOLDER)
+    // Day 2 (PLACEHOLDER)
     { id: "borough-market", name: "Borough Market", cuisine: "Street food", priceLevel: "£", wiki: "Borough_Market",
-      photo: "", lat: 51.5055, lng: -0.0910, note: "Try the toasted cheese at Kappacasein", days: [3] },
+      photo: "", lat: 51.5055, lng: -0.0910, note: "Try the toasted cheese at Kappacasein", days: [2] },
     { id: "padella", name: "Padella", cuisine: "Fresh pasta", priceLevel: "££",
-      photo: "", lat: 51.5054, lng: -0.0902, note: "Try the pici cacio e pepe. Queue early.", days: [3] },
+      photo: "", lat: 51.5054, lng: -0.0902, note: "Try the pici cacio e pepe. Queue early.", days: [2] },
     { id: "anchor", name: "The Anchor Bankside", cuisine: "Riverside pub", priceLevel: "££", wiki: "The_Anchor,_Bankside",
       photo: "", lat: 51.5078, lng: -0.0938, note: "Fish and chips by the river", days: [3], bookingTime: "20:00" },
 
